@@ -1,0 +1,2955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xSousa.exe</title>
+  <style>
+    :root {
+      --wallpaper: url("https://i.imgur.com/uGRFZEs.jpg");
+      --taskbar-top: #3b89ef;
+      --taskbar-mid: #2a74db;
+      --taskbar-low: #2a74db;
+      --taskbar-bottom: #14499d;
+      --window-top: #4f9df8;
+      --window-mid: #2a7be4;
+      --window-low: #2a7be4;
+      --window-bottom: #1f59b8;
+      --start-green-1: #8eff71;
+      --start-green-2: #49b93e;
+      --start-green-3: #2a8a28;
+      --start-green-4: #206b21;
+      --grid-x: 96px;
+      --grid-y: 86px;
+      --grid-left: 22px;
+      --grid-top: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--wallpaper) center center / cover no-repeat fixed;
+      color: #111;
+      user-select: none;
+    }
+
+    .desktop {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .desktop.locked {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* LOGIN SCREEN */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.16), rgba(255,255,255,0) 28%),
+        linear-gradient(to bottom, #0d4aa6 0%, #0c58ba 30%, #0a4ea9 60%, #083b85 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .login-screen.hidden {
+      display: none;
+    }
+
+    .login-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.12), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.10), transparent 25%);
+      pointer-events: none;
+    }
+
+    .login-shell {
+      position: relative;
+      width: 100%;
+      max-width: 980px;
+      padding: 40px 24px 90px;
+      text-align: center;
+    }
+
+    .login-xp-title {
+      position: absolute;
+      top: 28px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 34px;
+      font-weight: bold;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
+    }
+
+    .login-xp-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      background:
+        linear-gradient(to right, #f35325 0 50%, #81bc06 50% 100%),
+        linear-gradient(to right, #05a6f0 0 50%, #ffba08 50% 100%);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+    }
+
+    .login-center-card {
+      width: 320px;
+      max-width: calc(100vw - 40px);
+      margin: 80px auto 0;
+      padding: 26px 24px 24px;
+      border-radius: 18px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.20);
+      backdrop-filter: blur(2px);
+    }
+
+    .login-avatar-wrap {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      padding: 6px;
+      background: linear-gradient(to bottom, #ffffff, #dbeaff);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .login-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #fff;
+      background: #dbeaff;
+    }
+
+    .login-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .login-profile-name {
+      font-size: 29px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
+    }
+
+    .login-profile-subtitle {
+      font-size: 14px;
+      color: #dbe9ff;
+      margin-bottom: 20px;
+    }
+
+    .login-red-btn {
+      min-width: 140px;
+      height: 42px;
+      border: 1px solid #8d1f1f;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, #ff8585 0%, #e53939 45%, #b81616 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.35),
+        0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    .login-red-btn:hover { filter: brightness(1.05); }
+    .login-red-btn:active { transform: translateY(1px); }
+    .login-red-btn:disabled {
+      opacity: 0.92;
+      cursor: default;
+    }
+
+    .login-loading {
+      display: none;
+      margin-top: 18px;
+      color: #eef5ff;
+      font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .login-loading.active { display: block; }
+
+    .login-loading-dots::after {
+      content: "";
+      animation: loginDots 1s steps(4, end) infinite;
+    }
+
+    @keyframes loginDots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+      100% { content: ""; }
+    }
+
+    .login-bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      background: linear-gradient(to top, rgba(0,0,0,0.24), rgba(0,0,0,0.04));
+      border-top: 1px solid rgba(255,255,255,0.14);
+      color: #dbe9ff;
+      font-size: 12px;
+    }
+
+    .login-shutdown-btn {
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 8px;
+      background: linear-gradient(to bottom, #ffb35a, #e8871e);
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 8px 14px;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
+    }
+
+    .window {
+      position: absolute;
+      background: #f4f7fb;
+      border: 1px solid #083b8c;
+      border-radius: 8px 8px 0 0;
+      box-shadow:
+        0 0 0 1px #7eb6ff inset,
+        0 0 0 2px #2c66b8 inset,
+        6px 10px 25px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      z-index: 20;
+    }
+
+    .window.hidden { display: none; }
+
+    .main-window { top: 70px; left: 90px; width: 760px; max-width: calc(100vw - 40px); }
+    .player-window { top: 100px; left: 860px; width: 420px; max-width: calc(100vw - 40px); background: #dbe8f8; z-index: 30; }
+    .settings-window { top: 160px; left: 240px; width: 470px; max-width: calc(100vw - 40px); z-index: 40; }
+    .solitaire-window { top: 90px; left: 330px; width: 860px; max-width: calc(100vw - 40px); z-index: 45; }
+    .leaderboard-window { top: 120px; left: 420px; width: 360px; max-width: calc(100vw - 40px); z-index: 46; }
+    .msn-window { top: 130px; left: 620px; width: 390px; max-width: calc(100vw - 40px); z-index: 47; }
+    .clock-window { top: 210px; left: calc(100vw - 340px); width: 300px; z-index: 120; }
+    .win-popup { top: 220px; left: 420px; width: 360px; z-index: 200; }
+    .external-link-window { top: 240px; left: 400px; width: 390px; z-index: 250; }
+
+    .titlebar {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px 0 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      background: linear-gradient(
+        to bottom,
+        var(--window-top) 0%,
+        var(--window-mid) 45%,
+        var(--window-low) 46%,
+        var(--window-bottom) 100%
+      );
+      border-bottom: 1px solid #0b3d91;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
+      cursor: move;
+    }
+
+    .player-titlebar { background: linear-gradient(to bottom, #76b4ff 0%, #478de4 40%, #2f72d2 60%, #225bb0 100%); }
+    .settings-titlebar { background: linear-gradient(to bottom, #5aa3ff 0%, #3b81df 45%, #2e6ccc 46%, #265ab2 100%); }
+    .solitaire-titlebar,
+    .leaderboard-titlebar { background: linear-gradient(to bottom, #3b9d56 0%, #26763d 45%, #1f6a35 46%, #18562a 100%); }
+    .msn-titlebar { background: linear-gradient(to bottom, #79b8ff 0%, #4d8ee4 40%, #3975c7 60%, #2759a6 100%); }
+    .clock-titlebar { background: linear-gradient(to bottom, #5aa3ff 0%, #3f87e2 45%, #2c6fca 46%, #2259af 100%); }
+    .error-titlebar { background: linear-gradient(to bottom, #4e99ff 0%, #2e7add 46%, #1f5fbe 100%); }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .title-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, #fff, #b9d6ff);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset;
+      flex: 0 0 auto;
+    }
+
+    .media-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #d7f0ff 25%, #56b6ff 55%, #1b6fd1 100%); }
+    .gear-icon { border-radius: 50%; background: radial-gradient(circle at center, #fff 0%, #d8ebff 20%, #7fb5ff 55%, #2f6ec8 100%); }
+    .cards-icon { border-radius: 4px; background: linear-gradient(to bottom, #ffffff, #dff1ff); }
+    .msn-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e7f7ff 25%, #8be38f 55%, #2ea34d 100%); }
+    .clock-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #eef5ff 30%, #88b7ff 58%, #2d68c4 100%); }
+    .error-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd8d8 28%, #ff7f7f 60%, #cc2f2f 100%); }
+
+    .title-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 4px;
+      flex: 0 0 auto;
+    }
+
+    .win-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      border: 1px solid #0c3f86;
+      background: linear-gradient(to bottom, #f4c86b 0%, #f0a93a 100%);
+      color: #fff;
+      font-weight: bold;
+      display: grid;
+      place-items: center;
+      line-height: 1;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.45) inset;
+      cursor: pointer;
+    }
+
+    .win-btn.minimize {
+      background: linear-gradient(to bottom, #9fc5ff 0%, #5e99ed 100%);
+    }
+
+    .content {
+      background: linear-gradient(to bottom, #ffffff, #eef4fb);
+      padding: 28px;
+      min-height: 410px;
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .left { flex: 1; min-width: 280px; user-select: text; }
+
+    h1 {
+      margin: 0 0 18px 0;
+      font-size: 31px;
+      color: #1e3d75;
+    }
+
+    .welcome {
+      margin-bottom: 18px;
+      font-size: 15px;
+      color: #3a4d6b;
+    }
+
+    .info-box {
+      border: 1px solid #9db9e8;
+      background: linear-gradient(to bottom, #ffffff, #eaf3ff);
+      padding: 16px 18px;
+      box-shadow: 0 1px 0 #fff inset;
+    }
+
+    .info-line {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #1f2b3d;
+    }
+
+    .label {
+      display: inline-block;
+      width: 90px;
+      color: #214f93;
+      font-weight: bold;
+    }
+
+    a {
+      color: #0a58ca;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .right {
+      width: 220px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .aero-card {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(215,232,255,0.78) 45%, rgba(147,196,255,0.45) 100%);
+      border: 1px solid rgba(126,174,236,0.95);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -10px 18px rgba(92,155,230,0.18), 0 8px 22px rgba(38,74,125,0.25);
+      overflow: hidden;
+    }
+
+    .aero-card::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      width: 78%;
+      height: 34%;
+      border-radius: 999px;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.88), rgba(255,255,255,0.3), rgba(255,255,255,0));
+      transform: rotate(-9deg);
+      z-index: 3;
+    }
+
+    .avatar {
+      position: absolute;
+      inset: 10px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.75);
+      background: #dbeaff;
+      z-index: 2;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .player-body {
+      background: linear-gradient(to bottom, #eef6ff, #d7e9fb 40%, #bdd8f4 100%);
+      padding: 10px;
+    }
+
+    .player-screen {
+      border: 1px solid #6a92c8;
+      background: #0f2033;
+      padding: 8px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+    }
+
+    .player-screen iframe {
+      display: block;
+      width: 100%;
+      height: 220px;
+      border: 0;
+      background: #000;
+    }
+
+    .player-controls, .settings-buttons, .popup-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .player-controls {
+      margin-top: 8px;
+      justify-content: center;
+      padding: 8px 0 2px;
+    }
+
+    .settings-buttons, .popup-buttons {
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .player-btn, .xp-btn, .solitaire-btn, .msn-btn {
+      min-width: 38px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid #6e93c4;
+      background: linear-gradient(to bottom, #ffffff, #d6e8ff);
+      color: #234d89;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+      padding: 0 10px;
+      font-family: inherit;
+    }
+
+    .player-status {
+      margin-top: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: #214b84;
+      background: linear-gradient(to bottom, #f8fbff, #dcebff);
+      border: 1px solid #9dbbe8;
+      line-height: 1.4;
+    }
+
+    .settings-body, .popup-body, .leaderboard-body, .external-link-body {
+      background: linear-gradient(to bottom, #ffffff, #ebf3ff);
+      padding: 14px;
+    }
+
+    .settings-group {
+      border: 1px solid #9ebeed;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .settings-group h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #1d4e96;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+    }
+
+    .row label {
+      width: 120px;
+      font-size: 13px;
+      color: #223b67;
+      font-weight: bold;
+    }
+
+    .row input[type="text"], .row select {
+      flex: 1;
+      min-width: 180px;
+      height: 28px;
+      border: 1px solid #7ea3d6;
+      background: #fff;
+      padding: 0 8px;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    .row input[type="color"] {
+      width: 60px;
+      height: 30px;
+      border: 1px solid #7ea3d6;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .desktop-icon {
+      position: absolute;
+      width: 96px;
+      color: #fff;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.25;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.78);
+      cursor: default;
+      padding: 4px;
+      border-radius: 6px;
+      transition: left 0.12s ease, top 0.12s ease;
+    }
+
+    .desktop-icon:hover { background: rgba(255,255,255,0.08); }
+    .desktop-icon.selected { background: rgba(65,135,255,0.22); outline: 1px solid rgba(180,220,255,0.5); }
+    .desktop-icon.dragging { opacity: 0.95; z-index: 999; transition: none; }
+
+    .desktop-icon-box {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 8px auto;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.7);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(173,212,255,0.88));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .desktop-icon.aero .desktop-icon-box {
+      background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(186,226,255,0.92) 45%, rgba(122,186,255,0.78) 100%);
+    }
+
+    .desktop-icon.aero .desktop-icon-box::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      width: 72%;
+      height: 34%;
+      border-radius: 999px;
+      background: linear-gradient(to bottom right, rgba(255,255,255,0.95), rgba(255,255,255,0.32), rgba(255,255,255,0));
+      transform: rotate(-10deg);
+      z-index: 3;
+    }
+
+    .desktop-icon.aero .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 9px;
+      background: linear-gradient(to bottom, rgba(64,143,235,0.32), rgba(255,255,255,0.08));
+    }
+
+    .desktop-icon-label {
+      width: 100%;
+      text-align: center;
+    }
+
+    .desktop-icon.youtube .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 14px;
+      width: 32px;
+      height: 22px;
+      border-radius: 7px;
+      background: #ff2b2b;
+      z-index: 2;
+    }
+
+    .desktop-icon.youtube .desktop-icon-box::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      top: 19px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid #fff;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      z-index: 4;
+    }
+
+    .desktop-icon.music .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d7f0ff 25%, #56b6ff 55%, #1b6fd1 100%);
+      z-index: 2;
+    }
+
+    .desktop-icon.music .desktop-icon-box::before {
+      content: "♪";
+      position: absolute;
+      right: 8px;
+      bottom: 5px;
+      color: #185da8;
+      font-size: 19px;
+      font-weight: bold;
+      z-index: 4;
+    }
+
+    .desktop-icon.settings .desktop-icon-box::after {
+      content: "⚙";
+      position: absolute;
+      font-size: 25px;
+      color: #2d6bba;
+      z-index: 4;
+    }
+
+    .desktop-icon.mainapp .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border-radius: 8px;
+      background: linear-gradient(to bottom, #4fa0ff 0%, #2d7de1 38%, #1f62c2 39%, #1d57ab 100%);
+      z-index: 2;
+    }
+
+    .desktop-icon.mainapp .desktop-icon-box::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 14px;
+      background: linear-gradient(to bottom, #ffffff, #cfe3ff);
+      border-radius: 2px;
+      z-index: 4;
+    }
+
+    .desktop-icon.steam .desktop-icon-box img,
+    .desktop-icon.solitaire .desktop-icon-box img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      display: block;
+      position: relative;
+      z-index: 4;
+    }
+
+    .desktop-icon.messenger .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, #dff7ff 25%, #89df92 55%, #2ea34d 100%);
+      z-index: 3;
+    }
+
+    .desktop-icon.messenger .desktop-icon-box::before {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      right: 8px;
+      bottom: 7px;
+      border-radius: 50%;
+      background: #19c53a;
+      border: 2px solid #fff;
+      z-index: 4;
+    }
+
+    .start-menu {
+      position: absolute;
+      left: 0;
+      bottom: 40px;
+      width: 360px;
+      height: 460px;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+      border: 1px solid #1d4e96;
+      display: none;
+      z-index: 60;
+    }
+
+    .start-menu.open { display: block; }
+
+    .start-top {
+      height: 62px;
+      background: linear-gradient(to bottom, #3d8df4, #2469cf);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      font-weight: bold;
+      font-size: 20px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    }
+
+    .start-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .start-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .start-body {
+      display: flex;
+      height: calc(100% - 62px - 42px);
+      background: #fff;
+    }
+
+    .start-left, .start-right {
+      padding: 12px 10px;
+      position: relative;
+    }
+
+    .start-left {
+      width: 58%;
+      background: #fff;
+    }
+
+    .start-right {
+      width: 42%;
+      background: linear-gradient(to bottom, #dcecff, #c1dbff);
+      border-left: 1px solid #9ebeed;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 16px;
+    }
+
+    .start-side-block {
+      height: 32px;
+      border-radius: 6px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(218,233,255,0.85));
+      border: 1px solid rgba(125,161,216,0.8);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-side-block::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #ffffff, #95c2ff);
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #10233f;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-item:hover {
+      background: linear-gradient(to bottom, #2c7ae7, #1f65cc);
+      color: #fff;
+    }
+
+    .menu-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #fff, #a8caff);
+      border: 1px solid rgba(0,0,0,0.15);
+      flex: 0 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-icon.main::before,
+    .menu-icon.folder::before,
+    .menu-icon.mail::before,
+    .menu-icon.steam::before,
+    .menu-icon.youtube::before,
+    .menu-icon.settings::before,
+    .menu-icon.messenger::before,
+    .menu-icon.cards::before,
+    .menu-icon.rank::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+    }
+
+    .menu-icon.main::before { background: linear-gradient(to bottom, #56a9ff, #236bcc); border-radius: 3px; }
+    .menu-icon.folder::before { background: linear-gradient(to bottom, #ffd25a, #e7a724); border-radius: 3px; }
+    .menu-icon.mail::before { background: linear-gradient(to bottom, #ffffff, #d5e7ff); border: 1px solid #7da1d3; border-radius: 2px; }
+    .menu-icon.steam::before { background: radial-gradient(circle at 35% 35%, #fff, #dce7ff 25%, #5f86d9 65%, #2d4b89 100%); border-radius: 50%; }
+    .menu-icon.youtube::before { background: #ff2b2b; border-radius: 4px; }
+    .menu-icon.settings::before { content: "⚙"; inset: 0; display: grid; place-items: center; color: #2d6bba; font-size: 14px; }
+    .menu-icon.messenger::before { background: radial-gradient(circle at 35% 35%, #fff, #dff7ff 25%, #89df92 55%, #2ea34d 100%); border-radius: 50%; }
+    .menu-icon.cards::before { background: linear-gradient(to bottom, #fff, #f0f0f0); border: 1px solid #b8b8b8; border-radius: 3px; }
+    .menu-icon.rank::before { background: linear-gradient(to bottom, #fff2a8, #ebb63c); border-radius: 3px; }
+
+    .menu-icon.youtube::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 5px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid #fff;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+
+    .menu-arrow {
+      margin-left: auto;
+      font-weight: bold;
+    }
+
+    .games-submenu {
+      position: absolute;
+      left: 100%;
+      top: 210px;
+      width: 180px;
+      background: #fff;
+      border: 1px solid #7ea6d9;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      z-index: 80;
+      padding: 6px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+      pointer-events: none;
+    }
+
+    .games-submenu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .games-submenu.closing {
+      opacity: 0;
+      visibility: visible;
+      transform: translateX(6px);
+      pointer-events: none;
+    }
+
+    .start-bottom {
+      height: 42px;
+      background: linear-gradient(to bottom, #2b72d2, #1d58ad);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+    }
+
+    .power-btn {
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #ffb35a, #e8871e);
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset;
+    }
+
+    .taskbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40px;
+      display: flex;
+      align-items: stretch;
+      background: linear-gradient(to bottom, var(--taskbar-top) 0%, var(--taskbar-mid) 35%, var(--taskbar-low) 70%, var(--taskbar-bottom) 100%);
+      border-top: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 -1px 0 rgba(0,0,0,0.25) inset;
+      z-index: 50;
+    }
+
+    .start-button {
+      width: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      font-style: italic;
+      font-size: 22px;
+      font-weight: bold;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+      border-right: 1px solid rgba(0,0,0,0.25);
+      background: radial-gradient(circle at 30% 30%, var(--start-green-1) 0%, var(--start-green-2) 45%, var(--start-green-3) 80%, var(--start-green-4) 100%);
+      border-radius: 0 12px 12px 0;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.45), inset -8px 0 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .start-button.active { filter: brightness(0.92); }
+
+    .start-logo {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background:
+        linear-gradient(to right, #f35325 0 50%, #81bc06 50% 100%),
+        linear-gradient(to right, #05a6f0 0 50%, #ffba08 50% 100%);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.55);
+    }
+
+    .task-buttons {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      overflow: hidden;
+    }
+
+    .task-button {
+      min-width: 120px;
+      max-width: 220px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 12px;
+      background: linear-gradient(to bottom, rgba(125,181,255,0.72), rgba(66,126,214,0.9));
+      border: 1px solid rgba(14,61,133,0.9);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tray {
+      width: 120px;
+      border-left: 1px solid rgba(255,255,255,0.15);
+      background: linear-gradient(to bottom, #2e7ae0, #1652ad);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+      flex-direction: column;
+      line-height: 1.1;
+      cursor: pointer;
+    }
+
+    .solitaire-body {
+      background: linear-gradient(to bottom, #0a7f32, #056126);
+      min-height: 560px;
+      padding: 12px;
+      color: #fff;
+    }
+
+    .solitaire-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 13px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .scoreboard {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 10px;
+      border-radius: 6px;
+      min-width: 210px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .solitaire-board {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .solitaire-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: nowrap;
+    }
+
+    .pile-slot {
+      width: 92px;
+      height: 128px;
+      border: 2px dashed rgba(255,255,255,0.25);
+      border-radius: 8px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .card {
+      width: 92px;
+      height: 128px;
+      background: linear-gradient(to bottom, #fff, #f6f6f6);
+      border: 1px solid #9b9b9b;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      color: #111;
+      position: relative;
+      cursor: grab;
+      user-select: none;
+      padding: 8px;
+      font-weight: bold;
+    }
+
+    .card.red { color: #c31919; }
+
+    .card.back {
+      background: linear-gradient(to bottom, #4fa0ff, #1f62c2);
+      border-color: #0d458e;
+      color: transparent;
+    }
+
+    .card-value { font-size: 20px; line-height: 1; }
+    .card-suit { font-size: 18px; line-height: 1.2; }
+
+    .card-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .tableau-pile {
+      width: 92px;
+      min-height: 360px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .tableau-pile .card {
+      position: absolute;
+      left: 0;
+    }
+
+    .leaderboard-list {
+      border: 1px solid #9ebeed;
+      background: #fff;
+      min-height: 240px;
+      max-height: 320px;
+      overflow: auto;
+      padding: 6px;
+    }
+
+    .leaderboard-row {
+      display: grid;
+      grid-template-columns: 34px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e4edf9;
+      font-size: 13px;
+      color: #204372;
+    }
+
+    .leaderboard-row:last-child { border-bottom: 0; }
+    .leaderboard-rank { font-weight: bold; color: #1c5aad; }
+    .leaderboard-name { font-weight: bold; }
+    .leaderboard-time { color: #245291; }
+    .leaderboard-empty {
+      padding: 20px;
+      text-align: center;
+      color: #43628f;
+      font-size: 13px;
+    }
+
+    .msn-body {
+      background: linear-gradient(to bottom, #f8fcff, #dcecff);
+      padding: 10px;
+      min-height: 330px;
+    }
+
+    .msn-list {
+      border: 1px solid #9ebeed;
+      background: #fff;
+      min-height: 240px;
+      padding: 8px;
+    }
+
+    .msn-contact {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px;
+      border-bottom: 1px solid #e6eefb;
+    }
+
+    .msn-mini-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c640;
+      flex: 0 0 auto;
+      margin-top: 4px;
+    }
+
+    .msn-contact.offline .msn-mini-dot { background: #a9a9a9; }
+    .msn-contact.away .msn-mini-dot { background: #f5c038; }
+
+    .msn-name-line {
+      font-weight: bold;
+      color: #214c84;
+      font-size: 13px;
+    }
+
+    .msn-game {
+      font-size: 12px;
+      color: #33557c;
+      margin-top: 2px;
+    }
+
+    .msn-footer {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .popup-text, .external-text {
+      font-size: 13px;
+      color: #1e3d75;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      user-select: text;
+    }
+
+    .popup-input {
+      width: 100%;
+      height: 30px;
+      border: 1px solid #7ea3d6;
+      padding: 0 8px;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+
+    .external-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .external-warning {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff7cf 0%, #ffd85c 45%, #f0a814 100%);
+      border: 1px solid #c98711;
+      position: relative;
+      margin-top: 2px;
+    }
+
+    .external-warning::before {
+      content: "!";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #7c4b00;
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .clock-body {
+      background: linear-gradient(to bottom, #ffffff, #e8f1ff);
+      padding: 12px;
+    }
+
+    .clock-digital {
+      text-align: center;
+      color: #17427f;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .analog-clock {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      position: relative;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(220,235,255,0.92) 48%, rgba(180,210,248,0.9) 100%);
+      border: 3px solid #5d86c4;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.85),
+        inset 0 -8px 15px rgba(52,95,160,0.14),
+        0 5px 15px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+
+    .clock-marks {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+    }
+
+    .clock-mark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 84px;
+      transform-origin: center top;
+      margin-left: -1px;
+      margin-top: -84px;
+    }
+
+    .clock-mark::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 8px;
+      background: #466ea9;
+      border-radius: 2px;
+    }
+
+    .clock-mark.major::before {
+      width: 4px;
+      height: 14px;
+      background: #234f8f;
+    }
+
+    .clock-center-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #2d5fa8;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .clock-hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(0deg);
+      border-radius: 999px;
+      z-index: 6;
+    }
+
+    .hour-hand {
+      width: 6px;
+      height: 46px;
+      background: linear-gradient(to bottom, #2d5fa8, #163b75);
+    }
+
+    .minute-hand {
+      width: 4px;
+      height: 64px;
+      background: linear-gradient(to bottom, #245291, #132f5f);
+    }
+
+    .second-hand {
+      width: 2px;
+      height: 72px;
+      background: #d82121;
+      z-index: 7;
+    }
+
+    .calendar-box {
+      border: 1px solid #99b9e8;
+      background: linear-gradient(to bottom, #ffffff, #eff6ff);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      color: #214f93;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .calendar-weekday {
+      color: #2e5d9f;
+      font-weight: bold;
+      padding: 4px 0;
+    }
+
+    .calendar-day {
+      padding: 6px 0;
+      border-radius: 4px;
+      color: #233d69;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid transparent;
+    }
+
+    .calendar-day.other-month {
+      color: #90a3bf;
+      background: transparent;
+    }
+
+    .calendar-day.today {
+      background: linear-gradient(to bottom, #67a9ff, #2f72d1);
+      color: #fff;
+      font-weight: bold;
+      border-color: #21569f;
+    }
+
+    @media (max-width: 900px) {
+      .main-window, .player-window, .settings-window, .solitaire-window, .leaderboard-window, .msn-window, .win-popup, .clock-window, .external-link-window {
+        width: calc(100vw - 30px);
+        left: 15px;
+      }
+      .main-window { top: 45px; }
+      .player-window { top: 430px; }
+      .settings-window { top: 140px; }
+      .solitaire-window { top: 80px; }
+      .leaderboard-window { top: 140px; }
+      .msn-window { top: 160px; }
+      .win-popup { top: 220px; }
+      .clock-window { top: 120px; }
+      .external-link-window { top: 220px; }
+      .content { flex-direction: column; }
+      .right { width: 100%; }
+      .start-menu { width: calc(100vw - 10px); left: 5px; }
+
+      .login-xp-title {
+        position: static;
+        justify-content: center;
+        margin-bottom: 22px;
+      }
+
+      .login-shell {
+        padding-top: 26px;
+      }
+
+      .login-center-card {
+        margin-top: 0;
+      }
+
+      .login-bottom-bar {
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        height: 78px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-screen" id="loginScreen">
+    <div class="login-shell">
+      <div class="login-xp-title">
+        <div class="login-xp-logo"></div>
+        <span>Windows XP</span>
+      </div>
+
+      <div class="login-center-card">
+        <div class="login-avatar-wrap">
+          <div class="login-avatar">
+            <img src="https://pbs.twimg.com/profile_images/1814310946015424512/Zey2ii2F_400x400.jpg" alt="User avatar">
+          </div>
+        </div>
+
+        <div class="login-profile-name">Enzo</div>
+        <div class="login-profile-subtitle">Click the button to log on</div>
+
+        <button class="login-red-btn" id="loginBtn" type="button">Log On</button>
+        <div class="login-loading" id="loginLoading">
+          Loading<span class="login-loading-dots"></span>
+        </div>
+      </div>
+
+      <div class="login-bottom-bar">
+        <span>To begin, click your user picture.</span>
+        <button class="login-shutdown-btn" id="loginShutdownBtn" type="button">Turn Off Computer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="desktop locked" id="desktop">
+    <div class="desktop-icon mainapp aero" id="desktopShortcut" data-icon-id="mainapp" style="top:24px; left:22px;">
+      <div class="desktop-icon-box"></div>
+      <div class="desktop-icon-label">xSousa</div>
+    </div>
+
+    <div class="desktop-icon youtube aero" id="youtubeShortcut" data-icon-id="youtube" style="top:110px; left:22px;">
+      <div class="desktop-icon-box"></div>
+      <div class="desktop-icon-label">YouTube</div>
+    </div>
+
+    <div class="desktop-icon music aero" id="musicShortcut" data-icon-id="music" style="top:196px; left:22px;">
+      <div class="desktop-icon-box"></div>
+      <div class="desktop-icon-label">Music Player</div>
+    </div>
+
+    <div class="desktop-icon settings aero" id="settingsShortcut" data-icon-id="settings" style="top:282px; left:22px;">
+      <div class="desktop-icon-box"></div>
+      <div class="desktop-icon-label">Settings</div>
+    </div>
+
+    <div class="desktop-icon steam aero" id="steamShortcut" data-icon-id="steam" style="top:368px; left:22px;">
+      <div class="desktop-icon-box">
+        <img src="https://static.wikia.nocookie.net/logopedia/images/4/46/SteamIcon2010.png/revision/latest?cb=20250831000122" alt="Steam">
+      </div>
+      <div class="desktop-icon-label">Steam</div>
+    </div>
+
+    <div class="desktop-icon solitaire aero" id="solitaireShortcut" data-icon-id="solitaire" style="top:454px; left:22px;">
+      <div class="desktop-icon-box">
+        <img src="https://www.rw-designer.com/icon-image/18916-256x256x32.png" alt="Solitaire">
+      </div>
+      <div class="desktop-icon-label">Solitaire</div>
+    </div>
+
+    <div class="desktop-icon messenger aero" id="msnShortcut" data-icon-id="msn" style="top:540px; left:22px;">
+      <div class="desktop-icon-box"></div>
+      <div class="desktop-icon-label">Messenger</div>
+    </div>
+
+    <div class="window main-window" id="mainWindow">
+      <div class="titlebar" id="titlebarMain">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text">xSousa.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="mainWindow">—</div>
+          <div class="win-btn" data-close="mainWindow">×</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="left">
+          <h1>Welcome to my website</h1>
+          <div class="welcome">Personal page inspired by Windows XP.</div>
+          <div class="info-box">
+            <div class="info-line"><span class="label">Instagram</span> <a href="#" data-external="https://instagram.com/enzoxsousa" data-appname="Instagram">@enzoxsousa</a></div>
+            <div class="info-line"><span class="label">Discord</span> xsousa</div>
+            <div class="info-line"><span class="label">Email</span> <a href="#" data-external="mailto:enzo@xsousa.com" data-appname="Email">enzo@xsousa.com</a></div>
+            <div class="info-line"><span class="label">Steam</span> <a href="#" data-external="https://steamcommunity.com/id/xSousa/" data-appname="Steam">steamcommunity.com/id/xSousa</a></div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="aero-card">
+            <div class="avatar">
+              <img src="https://pbs.twimg.com/profile_images/1814310946015424512/Zey2ii2F_400x400.jpg" alt="Profile avatar">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="window player-window hidden" id="playerWindow">
+      <div class="titlebar player-titlebar" id="titlebarPlayer">
+        <div class="title-left">
+          <div class="title-icon media-icon"></div>
+          <div class="title-text">MusicPlayer.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="playerWindow">—</div>
+          <div class="win-btn" data-close="playerWindow">×</div>
+        </div>
+      </div>
+      <div class="player-body">
+        <div class="player-screen">
+          <iframe id="ytPlayer" src="" title="Music Player" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="player-controls">
+          <button class="player-btn" id="reloadMusicBtn" type="button">Reload</button>
+          <button class="player-btn" id="openYoutubeBtn" type="button">Open</button>
+          <button class="player-btn" id="hidePlayerBtn" type="button">Minimize</button>
+        </div>
+        <div class="player-status" id="playerStatus">Tip: open this page through http://localhost:8000 or another local server to avoid YouTube error 153.</div>
+      </div>
+    </div>
+
+    <div class="window settings-window hidden" id="settingsWindow">
+      <div class="titlebar settings-titlebar" id="titlebarSettings">
+        <div class="title-left">
+          <div class="title-icon gear-icon"></div>
+          <div class="title-text">Settings.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="settingsWindow">—</div>
+          <div class="win-btn" data-close="settingsWindow">×</div>
+        </div>
+      </div>
+      <div class="settings-body">
+        <div class="settings-group">
+          <h3>Wallpaper</h3>
+          <div class="row">
+            <label for="bgPreset">Preset</label>
+            <select id="bgPreset">
+              <option value="xp">XP Hill</option>
+              <option value="sky">Blue Sky</option>
+              <option value="aero">Aero Glass</option>
+              <option value="dark">Dark Night</option>
+              <option value="custom">Custom URL</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="bgCustom">Image URL</label>
+            <input type="text" id="bgCustom" placeholder="https://example.com/image.jpg" />
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Taskbar Colors</h3>
+          <div class="row"><label for="taskbarTop">Top</label><input type="color" id="taskbarTop" value="#3b89ef"></div>
+          <div class="row"><label for="taskbarMid">Middle</label><input type="color" id="taskbarMid" value="#2a74db"></div>
+          <div class="row"><label for="taskbarBottom">Bottom</label><input type="color" id="taskbarBottom" value="#14499d"></div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Window Bar Colors</h3>
+          <div class="row"><label for="windowTop">Top</label><input type="color" id="windowTop" value="#4f9df8"></div>
+          <div class="row"><label for="windowMid">Middle</label><input type="color" id="windowMid" value="#2a7be4"></div>
+          <div class="row"><label for="windowBottom">Bottom</label><input type="color" id="windowBottom" value="#1f59b8"></div>
+        </div>
+
+        <div class="settings-buttons">
+          <button class="xp-btn" id="resetIconsBtn" type="button">Reset Icons</button>
+          <button class="xp-btn" id="xpThemeBtn" type="button">XP Default</button>
+          <button class="xp-btn" id="applySettingsBtn" type="button">Apply</button>
+          <button class="xp-btn" id="closeSettingsBtn" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="window solitaire-window hidden" id="solitaireWindow">
+      <div class="titlebar solitaire-titlebar" id="titlebarSolitaire">
+        <div class="title-left">
+          <div class="title-icon cards-icon"></div>
+          <div class="title-text">Solitaire.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="solitaireWindow">—</div>
+          <div class="win-btn" data-close="solitaireWindow">×</div>
+        </div>
+      </div>
+      <div class="solitaire-body">
+        <div class="solitaire-topbar">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="solitaire-btn" id="newGameBtn" type="button">New Game</button>
+            <button class="solitaire-btn" id="showLeaderboardBtn" type="button">Leaderboard</button>
+          </div>
+          <div class="scoreboard" id="scoreboard">Best time: none</div>
+        </div>
+        <div class="solitaire-board">
+          <div class="solitaire-row">
+            <div class="pile-slot" id="stockPile"></div>
+            <div class="pile-slot" id="wastePile"></div>
+            <div style="flex:1"></div>
+            <div class="pile-slot foundation" data-foundation="0"></div>
+            <div class="pile-slot foundation" data-foundation="1"></div>
+            <div class="pile-slot foundation" data-foundation="2"></div>
+            <div class="pile-slot foundation" data-foundation="3"></div>
+          </div>
+          <div class="solitaire-row" id="tableauRow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="window leaderboard-window hidden" id="leaderboardWindow">
+      <div class="titlebar leaderboard-titlebar" id="titlebarLeaderboard">
+        <div class="title-left">
+          <div class="title-icon cards-icon"></div>
+          <div class="title-text">Solitaire Leaderboard</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="leaderboardWindow">—</div>
+          <div class="win-btn" data-close="leaderboardWindow">×</div>
+        </div>
+      </div>
+      <div class="leaderboard-body">
+        <div class="leaderboard-list" id="leaderboardList"></div>
+        <div class="popup-buttons">
+          <button class="xp-btn" id="clearLeaderboardBtn" type="button">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="window msn-window hidden" id="msnWindow">
+      <div class="titlebar msn-titlebar" id="titlebarMsn">
+        <div class="title-left">
+          <div class="title-icon msn-icon"></div>
+          <div class="title-text">Messenger.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="msnWindow">—</div>
+          <div class="win-btn" data-close="msnWindow">×</div>
+        </div>
+      </div>
+      <div class="msn-body">
+        <div class="msn-list" id="msnList"></div>
+        <div class="msn-footer">
+          <button class="msn-btn" id="refreshSteamBtn" type="button">Refresh</button>
+          <button class="msn-btn" id="openSteamProfileBtn" type="button">Open xSousa</button>
+          <button class="msn-btn" id="openSteamProfileBtn2" type="button">Open RafaXIS</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="window clock-window hidden" id="clockWindow">
+      <div class="titlebar clock-titlebar" id="titlebarClock">
+        <div class="title-left">
+          <div class="title-icon clock-icon"></div>
+          <div class="title-text">Date and Time</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn" data-close="clockWindow">×</div>
+        </div>
+      </div>
+      <div class="clock-body">
+        <div class="clock-digital" id="clockDigital">00:00:00</div>
+        <div class="analog-clock" id="analogClock">
+          <div class="clock-marks" id="clockMarks"></div>
+          <div class="clock-hand hour-hand" id="hourHand"></div>
+          <div class="clock-hand minute-hand" id="minuteHand"></div>
+          <div class="clock-hand second-hand" id="secondHand"></div>
+          <div class="clock-center-dot"></div>
+        </div>
+        <div class="calendar-box">
+          <div class="calendar-header">
+            <span id="calendarMonthYear">Month 2026</span>
+            <span id="calendarTodayText">Today</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="window win-popup hidden" id="winPopup">
+      <div class="titlebar" id="titlebarPopup">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text">Solitaire.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn" id="closePopupBtn">×</div>
+        </div>
+      </div>
+      <div class="popup-body">
+        <div class="popup-text">
+          Congratulations, you won Solitaire.<br>
+          Enter your name for the leaderboard:
+        </div>
+        <input class="popup-input" id="winnerNameInput" maxlength="24" placeholder="Your name">
+        <div class="popup-buttons">
+          <button class="xp-btn" id="saveWinnerBtn" type="button">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="window external-link-window hidden" id="externalLinkWindow">
+      <div class="titlebar error-titlebar" id="titlebarExternal">
+        <div class="title-left">
+          <div class="title-icon error-icon"></div>
+          <div class="title-text">Open External Link</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn" data-close="externalLinkWindow">×</div>
+        </div>
+      </div>
+      <div class="external-link-body">
+        <div class="external-row">
+          <div class="external-warning"></div>
+          <div class="external-text">
+            This application wants to open an external link.<br><br>
+            <strong id="externalAppLabel">Application</strong><br>
+            <span id="externalUrlLabel" style="word-break:break-all;"></span>
+          </div>
+        </div>
+        <div class="popup-buttons">
+          <button class="xp-btn" id="externalCancelBtn" type="button">Cancel</button>
+          <button class="xp-btn" id="externalOkBtn" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="start-menu" id="startMenu">
+      <div class="start-top" id="startTopName">
+        <div class="start-avatar">
+          <img src="https://pbs.twimg.com/profile_images/1814310946015424512/Zey2ii2F_400x400.jpg" alt="avatar">
+        </div>
+        <span>Enzo</span>
+      </div>
+
+      <div class="start-body">
+        <div class="start-left" id="startLeft">
+          <div class="menu-item" id="menuInstagram"><div class="menu-icon youtube"></div>Instagram</div>
+          <div class="menu-item" id="menuEmail"><div class="menu-icon mail"></div>Email</div>
+          <div class="menu-item" id="menuSteam"><div class="menu-icon steam"></div>Steam</div>
+          <div class="menu-item" id="menuYoutube"><div class="menu-icon youtube"></div>YouTube Channel</div>
+          <div class="menu-item" id="openWindowItem"><div class="menu-icon main"></div>Open website</div>
+          <div class="menu-item" id="openPlayerItem"><div class="menu-icon youtube"></div>Music Player</div>
+          <div class="menu-item" id="openMsnItem"><div class="menu-icon messenger"></div>Messenger</div>
+          <div class="menu-item" id="gamesMenuItem"><div class="menu-icon folder"></div>Games <span class="menu-arrow">▶</span></div>
+          <div class="menu-item" id="openSettingsItem"><div class="menu-icon settings"></div>Settings</div>
+
+          <div class="games-submenu" id="gamesSubmenu">
+            <div class="menu-item" id="openSolitaireItem"><div class="menu-icon cards"></div>Solitaire</div>
+            <div class="menu-item" id="openLeaderboardItem"><div class="menu-icon rank"></div>Leaderboard</div>
+          </div>
+        </div>
+
+        <div class="start-right">
+          <div class="start-side-block"></div>
+          <div class="start-side-block"></div>
+          <div class="start-side-block"></div>
+          <div class="start-side-block"></div>
+          <div class="start-side-block"></div>
+          <div class="start-side-block"></div>
+        </div>
+      </div>
+
+      <div class="start-bottom">
+        <button class="power-btn" id="closeStartBtn" type="button">Log Off</button>
+      </div>
+    </div>
+
+    <div class="taskbar">
+      <div class="start-button" id="startButton">
+        <div class="start-logo"></div>
+        start
+      </div>
+
+      <div class="task-buttons" id="taskButtons">
+        <div class="task-button" data-task="mainWindow"><div class="title-icon"></div>xSousa</div>
+        <div class="task-button hidden" data-task="playerWindow"><div class="title-icon media-icon"></div>Music Player</div>
+        <div class="task-button hidden" data-task="settingsWindow"><div class="title-icon gear-icon"></div>Settings</div>
+        <div class="task-button hidden" data-task="solitaireWindow"><div class="title-icon cards-icon"></div>Solitaire</div>
+        <div class="task-button hidden" data-task="msnWindow"><div class="title-icon msn-icon"></div>Messenger</div>
+      </div>
+
+      <div class="tray" id="trayClock">
+        <div id="clock">00:00</div>
+        <div id="dateLine">00/00/0000</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
+    const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?rel=0&controls=1&modestbranding=1";
+
+    const STEAM_PROFILES = [
+      { id: "xSousa", url: "https://steamcommunity.com/id/xSousa/" },
+      { id: "RafaXIS", url: "https://steamcommunity.com/id/RafaXIS/" }
+    ];
+
+    const wallpapers = {
+      xp: 'url("https://i.imgur.com/uGRFZEs.jpg")',
+      sky: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80")',
+      aero: 'url("https://images.unsplash.com/photo-1493246318656-5bfd4cfb29b8?auto=format&fit=crop&w=1600&q=80")',
+      dark: 'url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80")'
+    };
+
+    const DEFAULT_ICON_POSITIONS = {
+      mainapp: { left: 22, top: 24 },
+      youtube: { left: 22, top: 110 },
+      music: { left: 22, top: 196 },
+      settings: { left: 22, top: 282 },
+      steam: { left: 22, top: 368 },
+      solitaire: { left: 22, top: 454 },
+      msn: { left: 22, top: 540 }
+    };
+
+    const desktop = document.getElementById("desktop");
+    const GRID_X = 96;
+    const GRID_Y = 86;
+    const GRID_LEFT = 22;
+    const GRID_TOP = 24;
+    let pendingExternalUrl = null;
+    let draggedCardInfo = null;
+    let gamesCloseTimer = null;
+    let topZ = 100;
+    let alreadyWonThisGame = false;
+
+    const windowsMap = {
+      mainWindow: document.getElementById("mainWindow"),
+      playerWindow: document.getElementById("playerWindow"),
+      settingsWindow: document.getElementById("settingsWindow"),
+      solitaireWindow: document.getElementById("solitaireWindow"),
+      leaderboardWindow: document.getElementById("leaderboardWindow"),
+      msnWindow: document.getElementById("msnWindow"),
+      clockWindow: document.getElementById("clockWindow"),
+      winPopup: document.getElementById("winPopup"),
+      externalLinkWindow: document.getElementById("externalLinkWindow")
+    };
+
+    const APP_TITLES = {
+      mainWindow: "xSousa.exe",
+      playerWindow: "MusicPlayer.exe",
+      settingsWindow: "Settings.exe",
+      solitaireWindow: "Solitaire.exe",
+      leaderboardWindow: "Solitaire Leaderboard",
+      msnWindow: "Messenger.exe",
+      clockWindow: "Date and Time",
+      winPopup: "Solitaire.exe",
+      externalLinkWindow: "Open External Link"
+    };
+
+    const taskButtons = {};
+    document.querySelectorAll("[data-task]").forEach(btn => {
+      taskButtons[btn.dataset.task] = btn;
+    });
+
+    function updateBrowserTitle(activeWindowId = null) {
+      document.title = APP_TITLES[activeWindowId] || "xSousa.exe";
+    }
+
+    function bringToFront(win) {
+      if (!win) return;
+      topZ++;
+      win.style.zIndex = topZ;
+      updateBrowserTitle(win.id);
+    }
+
+    function setTaskState(windowId, active) {
+      const btn = taskButtons[windowId];
+      if (!btn) return;
+      btn.classList.toggle("hidden", !active);
+      btn.style.display = active ? "flex" : "none";
+    }
+
+    function showWindow(windowId) {
+      const win = windowsMap[windowId];
+      if (!win) return;
+      win.classList.remove("hidden");
+      if (taskButtons[windowId]) setTaskState(windowId, true);
+      bringToFront(win);
+    }
+
+    function hideWindow(windowId) {
+      const win = windowsMap[windowId];
+      if (!win) return;
+      win.classList.add("hidden");
+      if (taskButtons[windowId]) setTaskState(windowId, false);
+
+      const visibleWindows = Object.values(windowsMap).filter(w => !w.classList.contains("hidden"));
+      if (visibleWindows.length > 0) {
+        visibleWindows.sort((a, b) => (parseInt(b.style.zIndex || 0) - parseInt(a.style.zIndex || 0)));
+        updateBrowserTitle(visibleWindows[0].id);
+      } else {
+        updateBrowserTitle();
+      }
+    }
+
+    function toggleWindow(windowId) {
+      const win = windowsMap[windowId];
+      if (!win) return;
+      if (win.classList.contains("hidden")) showWindow(windowId);
+      else hideWindow(windowId);
+    }
+
+    document.querySelectorAll("[data-task]").forEach(btn => {
+      btn.addEventListener("click", () => toggleWindow(btn.dataset.task));
+    });
+
+    document.querySelectorAll("[data-minimize]").forEach(btn => {
+      btn.addEventListener("click", () => hideWindow(btn.dataset.minimize));
+    });
+
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => hideWindow(btn.dataset.close));
+    });
+
+    function makeDraggable(windowEl, handleEl) {
+      let isDragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      handleEl.addEventListener("mousedown", (e) => {
+        if (e.target.closest(".win-btn")) return;
+        isDragging = true;
+        bringToFront(windowEl);
+        const rect = windowEl.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging || windowEl.classList.contains("hidden")) return;
+
+        let left = e.clientX - offsetX;
+        let top = e.clientY - offsetY;
+
+        const maxLeft = window.innerWidth - windowEl.offsetWidth;
+        const maxTop = window.innerHeight - 60 - windowEl.offsetHeight;
+
+        left = Math.max(0, Math.min(left, maxLeft));
+        top = Math.max(0, Math.min(top, maxTop));
+
+        windowEl.style.left = left + "px";
+        windowEl.style.top = top + "px";
+      });
+
+      document.addEventListener("mouseup", () => { isDragging = false; });
+    }
+
+    makeDraggable(windowsMap.mainWindow, document.getElementById("titlebarMain"));
+    makeDraggable(windowsMap.playerWindow, document.getElementById("titlebarPlayer"));
+    makeDraggable(windowsMap.settingsWindow, document.getElementById("titlebarSettings"));
+    makeDraggable(windowsMap.solitaireWindow, document.getElementById("titlebarSolitaire"));
+    makeDraggable(windowsMap.leaderboardWindow, document.getElementById("titlebarLeaderboard"));
+    makeDraggable(windowsMap.msnWindow, document.getElementById("titlebarMsn"));
+    makeDraggable(windowsMap.clockWindow, document.getElementById("titlebarClock"));
+    makeDraggable(windowsMap.winPopup, document.getElementById("titlebarPopup"));
+    makeDraggable(windowsMap.externalLinkWindow, document.getElementById("titlebarExternal"));
+
+    Object.values(windowsMap).forEach(win => {
+      win.addEventListener("mousedown", () => bringToFront(win));
+    });
+
+    const startButton = document.getElementById("startButton");
+    const startMenu = document.getElementById("startMenu");
+    const closeStartBtn = document.getElementById("closeStartBtn");
+    const gamesMenuItem = document.getElementById("gamesMenuItem");
+    const gamesSubmenu = document.getElementById("gamesSubmenu");
+
+    function openStartMenu() {
+      startMenu.classList.add("open");
+      startButton.classList.add("active");
+    }
+
+    function closeStartMenu() {
+      startMenu.classList.remove("open");
+      startButton.classList.remove("active");
+      closeGamesSubmenuImmediate();
+    }
+
+    startButton.addEventListener("click", () => {
+      if (startMenu.classList.contains("open")) closeStartMenu();
+      else openStartMenu();
+    });
+
+    closeStartBtn.addEventListener("click", () => {
+      closeStartMenu();
+      lockDesktop();
+    });
+
+    function openGamesSubmenu() {
+      clearTimeout(gamesCloseTimer);
+      gamesSubmenu.classList.remove("closing");
+      gamesSubmenu.classList.add("open");
+    }
+
+    function closeGamesSubmenuDelayed() {
+      clearTimeout(gamesCloseTimer);
+      gamesCloseTimer = setTimeout(() => {
+        if (gamesSubmenu.matches(":hover") || gamesMenuItem.matches(":hover")) return;
+        gamesSubmenu.classList.remove("open");
+        gamesSubmenu.classList.add("closing");
+        setTimeout(() => {
+          if (!gamesSubmenu.matches(":hover") && !gamesMenuItem.matches(":hover")) {
+            gamesSubmenu.classList.remove("closing");
+          }
+        }, 260);
+      }, 1200);
+    }
+
+    function closeGamesSubmenuImmediate() {
+      clearTimeout(gamesCloseTimer);
+      gamesSubmenu.classList.remove("open", "closing");
+    }
+
+    gamesMenuItem.addEventListener("mouseenter", openGamesSubmenu);
+    gamesMenuItem.addEventListener("mouseleave", closeGamesSubmenuDelayed);
+    gamesSubmenu.addEventListener("mouseenter", openGamesSubmenu);
+    gamesSubmenu.addEventListener("mouseleave", closeGamesSubmenuDelayed);
+
+    document.addEventListener("click", (e) => {
+      if (!startMenu.contains(e.target) && !startButton.contains(e.target)) closeStartMenu();
+    });
+
+    function askExternalLink(url, appName = "Application") {
+      pendingExternalUrl = url;
+      document.getElementById("externalAppLabel").textContent = appName;
+      document.getElementById("externalUrlLabel").textContent = url;
+      showWindow("externalLinkWindow");
+    }
+
+    document.getElementById("externalCancelBtn").addEventListener("click", () => {
+      pendingExternalUrl = null;
+      hideWindow("externalLinkWindow");
+    });
+
+    document.getElementById("externalOkBtn").addEventListener("click", () => {
+      if (!pendingExternalUrl) return;
+      window.open(pendingExternalUrl, "_blank");
+      pendingExternalUrl = null;
+      hideWindow("externalLinkWindow");
+    });
+
+    document.querySelectorAll("[data-external]").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        askExternalLink(link.dataset.external, link.dataset.appname || "Application");
+      });
+    });
+
+    function hookExternalButton(id, url, name) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", () => askExternalLink(url, name));
+    }
+
+    hookExternalButton("menuInstagram", "https://instagram.com/enzoxsousa", "Instagram");
+    hookExternalButton("menuEmail", "mailto:enzo@xsousa.com", "Email");
+    hookExternalButton("menuSteam", "https://steamcommunity.com/id/xSousa/", "Steam");
+    hookExternalButton("menuYoutube", "https://www.youtube.com/@xSousa", "YouTube");
+
+    document.getElementById("openWindowItem").addEventListener("click", () => { showWindow("mainWindow"); closeStartMenu(); });
+    document.getElementById("openPlayerItem").addEventListener("click", () => { showWindow("playerWindow"); loadPlayer(); closeStartMenu(); });
+    document.getElementById("openSettingsItem").addEventListener("click", () => { showWindow("settingsWindow"); closeStartMenu(); });
+    document.getElementById("openSolitaireItem").addEventListener("click", () => { showWindow("solitaireWindow"); closeStartMenu(); });
+    document.getElementById("openLeaderboardItem").addEventListener("click", () => { renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
+    document.getElementById("openMsnItem").addEventListener("click", () => { showWindow("msnWindow"); loadSteamStatus(); closeStartMenu(); });
+
+    document.getElementById("desktopShortcut").addEventListener("dblclick", () => showWindow("mainWindow"));
+    document.getElementById("youtubeShortcut").addEventListener("dblclick", () => askExternalLink("https://www.youtube.com/@xSousa", "YouTube"));
+    document.getElementById("musicShortcut").addEventListener("dblclick", () => { showWindow("playerWindow"); loadPlayer(); });
+    document.getElementById("settingsShortcut").addEventListener("dblclick", () => showWindow("settingsWindow"));
+    document.getElementById("steamShortcut").addEventListener("dblclick", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Steam"));
+    document.getElementById("solitaireShortcut").addEventListener("dblclick", () => showWindow("solitaireWindow"));
+    document.getElementById("msnShortcut").addEventListener("dblclick", () => { showWindow("msnWindow"); loadSteamStatus(); });
+
+    const ytPlayer = document.getElementById("ytPlayer");
+    const playerStatus = document.getElementById("playerStatus");
+
+    function loadPlayer() {
+      if (!ytPlayer.src) ytPlayer.src = YOUTUBE_EMBED_URL;
+      playerStatus.textContent = "If YouTube still shows error 153, open this page through localhost instead of file://";
+    }
+
+    document.getElementById("hidePlayerBtn").addEventListener("click", () => hideWindow("playerWindow"));
+    document.getElementById("reloadMusicBtn").addEventListener("click", () => {
+      ytPlayer.src = YOUTUBE_EMBED_URL + "&t=" + Date.now();
+      showWindow("playerWindow");
+    });
+    document.getElementById("openYoutubeBtn").addEventListener("click", () => {
+      askExternalLink(YOUTUBE_WATCH_URL, "Music Player");
+    });
+
+    if (location.protocol === "file:") {
+      playerStatus.textContent = "YouTube embed may fail with error 153 on file://. Use localhost to make it work.";
+    } else {
+      loadPlayer();
+    }
+
+    const bgPreset = document.getElementById("bgPreset");
+    const bgCustom = document.getElementById("bgCustom");
+    const taskbarTop = document.getElementById("taskbarTop");
+    const taskbarMid = document.getElementById("taskbarMid");
+    const taskbarBottom = document.getElementById("taskbarBottom");
+    const windowTop = document.getElementById("windowTop");
+    const windowMid = document.getElementById("windowMid");
+    const windowBottom = document.getElementById("windowBottom");
+
+    function applyWallpaper(value, customValue) {
+      let wallpaperValue = wallpapers[value] || wallpapers.xp;
+      if (value === "custom" && customValue.trim()) wallpaperValue = `url("${customValue.trim()}")`;
+      document.documentElement.style.setProperty("--wallpaper", wallpaperValue);
+    }
+
+    function applySettings() {
+      applyWallpaper(bgPreset.value, bgCustom.value);
+      document.documentElement.style.setProperty("--taskbar-top", taskbarTop.value);
+      document.documentElement.style.setProperty("--taskbar-mid", taskbarMid.value);
+      document.documentElement.style.setProperty("--taskbar-low", taskbarMid.value);
+      document.documentElement.style.setProperty("--taskbar-bottom", taskbarBottom.value);
+      document.documentElement.style.setProperty("--window-top", windowTop.value);
+      document.documentElement.style.setProperty("--window-mid", windowMid.value);
+      document.documentElement.style.setProperty("--window-low", windowMid.value);
+      document.documentElement.style.setProperty("--window-bottom", windowBottom.value);
+
+      localStorage.setItem("xpSiteSettings", JSON.stringify({
+        bgPreset: bgPreset.value,
+        bgCustom: bgCustom.value,
+        taskbarTop: taskbarTop.value,
+        taskbarMid: taskbarMid.value,
+        taskbarBottom: taskbarBottom.value,
+        windowTop: windowTop.value,
+        windowMid: windowMid.value,
+        windowBottom: windowBottom.value
+      }));
+    }
+
+    function loadSettings() {
+      const saved = localStorage.getItem("xpSiteSettings");
+      if (!saved) return;
+      try {
+        const s = JSON.parse(saved);
+        bgPreset.value = s.bgPreset || "xp";
+        bgCustom.value = s.bgCustom || "";
+        taskbarTop.value = s.taskbarTop || "#3b89ef";
+        taskbarMid.value = s.taskbarMid || "#2a74db";
+        taskbarBottom.value = s.taskbarBottom || "#14499d";
+        windowTop.value = s.windowTop || "#4f9df8";
+        windowMid.value = s.windowMid || "#2a7be4";
+        windowBottom.value = s.windowBottom || "#1f59b8";
+        applySettings();
+      } catch {}
+    }
+
+    document.getElementById("applySettingsBtn").addEventListener("click", applySettings);
+    document.getElementById("closeSettingsBtn").addEventListener("click", () => {
+      applySettings();
+      hideWindow("settingsWindow");
+    });
+    document.getElementById("xpThemeBtn").addEventListener("click", () => {
+      bgPreset.value = "xp";
+      bgCustom.value = "";
+      taskbarTop.value = "#3b89ef";
+      taskbarMid.value = "#2a74db";
+      taskbarBottom.value = "#14499d";
+      windowTop.value = "#4f9df8";
+      windowMid.value = "#2a7be4";
+      windowBottom.value = "#1f59b8";
+      applySettings();
+    });
+
+    function gridToCell(left, top) {
+      return {
+        col: Math.round((left - GRID_LEFT) / GRID_X),
+        row: Math.round((top - GRID_TOP) / GRID_Y)
+      };
+    }
+
+    function cellToGrid(col, row, icon) {
+      const maxLeft = desktop.clientWidth - icon.offsetWidth;
+      const maxTop = desktop.clientHeight - 50 - icon.offsetHeight;
+      let left = GRID_LEFT + (col * GRID_X);
+      let top = GRID_TOP + (row * GRID_Y);
+      left = Math.max(GRID_LEFT, Math.min(left, maxLeft));
+      top = Math.max(GRID_TOP, Math.min(top, maxTop));
+      return { left, top };
+    }
+
+    function getOccupiedMap(excludeId = null) {
+      const occupied = new Map();
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        if (icon.dataset.iconId === excludeId) return;
+        const left = parseInt(icon.style.left, 10) || 0;
+        const top = parseInt(icon.style.top, 10) || 0;
+        const { col, row } = gridToCell(left, top);
+        occupied.set(`${col},${row}`, icon.dataset.iconId);
+      });
+      return occupied;
+    }
+
+    function findNearestFreeCell(targetCol, targetRow, excludeId = null) {
+      const occupied = getOccupiedMap(excludeId);
+      const maxCols = Math.max(1, Math.floor((desktop.clientWidth - GRID_LEFT) / GRID_X) + 1);
+      const maxRows = Math.max(1, Math.floor((desktop.clientHeight - 50 - GRID_TOP) / GRID_Y) + 1);
+
+      function isFree(col, row) {
+        if (col < 0 || row < 0 || col > maxCols || row > maxRows) return false;
+        return !occupied.has(`${col},${row}`);
+      }
+
+      if (isFree(targetCol, targetRow)) return { col: targetCol, row: targetRow };
+
+      for (let radius = 1; radius < 50; radius++) {
+        for (let r = -radius; r <= radius; r++) {
+          for (let c = -radius; c <= radius; c++) {
+            if (Math.abs(c) !== radius && Math.abs(r) !== radius) continue;
+            const col = targetCol + c;
+            const row = targetRow + r;
+            if (isFree(col, row)) return { col, row };
+          }
+        }
+      }
+
+      return { col: 0, row: 0 };
+    }
+
+    function snapIconToFreeSlot(icon, preferredLeft, preferredTop) {
+      const { col, row } = gridToCell(preferredLeft, preferredTop);
+      const free = findNearestFreeCell(col, row, icon.dataset.iconId);
+      const snapped = cellToGrid(free.col, free.row, icon);
+      icon.style.left = snapped.left + "px";
+      icon.style.top = snapped.top + "px";
+    }
+
+    function saveIconPositions() {
+      const positions = {};
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        positions[icon.dataset.iconId] = {
+          left: parseInt(icon.style.left, 10) || 0,
+          top: parseInt(icon.style.top, 10) || 0
+        };
+      });
+      localStorage.setItem("xpDesktopIcons", JSON.stringify(positions));
+    }
+
+    function normalizeAllIconsToGrid() {
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        const left = parseInt(icon.style.left, 10);
+        const top = parseInt(icon.style.top, 10);
+        if (Number.isNaN(left) || Number.isNaN(top)) {
+          const def = DEFAULT_ICON_POSITIONS[icon.dataset.iconId];
+          if (def) {
+            icon.style.left = def.left + "px";
+            icon.style.top = def.top + "px";
+          }
+        }
+      });
+
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        const left = parseInt(icon.style.left, 10) || 0;
+        const top = parseInt(icon.style.top, 10) || 0;
+        snapIconToFreeSlot(icon, left, top);
+      });
+    }
+
+    function loadIconPositions() {
+      let positions = DEFAULT_ICON_POSITIONS;
+      const saved = localStorage.getItem("xpDesktopIcons");
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === "object") positions = parsed;
+        } catch {}
+      }
+
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        const id = icon.dataset.iconId;
+        const pos = positions[id] || DEFAULT_ICON_POSITIONS[id];
+        if (pos) {
+          icon.style.left = pos.left + "px";
+          icon.style.top = pos.top + "px";
+        }
+      });
+
+      requestAnimationFrame(() => {
+        normalizeAllIconsToGrid();
+        saveIconPositions();
+      });
+    }
+
+    function resetIconPositions() {
+      localStorage.removeItem("xpDesktopIcons");
+      Object.entries(DEFAULT_ICON_POSITIONS).forEach(([id, pos]) => {
+        const icon = document.querySelector(`.desktop-icon[data-icon-id="${id}"]`);
+        if (icon) {
+          icon.style.left = pos.left + "px";
+          icon.style.top = pos.top + "px";
+        }
+      });
+      requestAnimationFrame(() => {
+        normalizeAllIconsToGrid();
+        saveIconPositions();
+      });
+    }
+
+    document.getElementById("resetIconsBtn").addEventListener("click", resetIconPositions);
+
+    function clearSelectedIcons() {
+      document.querySelectorAll(".desktop-icon.selected").forEach(el => el.classList.remove("selected"));
+    }
+
+    function makeDesktopIconDraggable(icon) {
+      let isDragging = false;
+      let startX = 0, startY = 0, originLeft = 0, originTop = 0, moved = false;
+
+      icon.addEventListener("mousedown", (e) => {
+        if (e.button !== 0 || e.detail > 1) return;
+        clearSelectedIcons();
+        icon.classList.add("selected");
+        isDragging = true;
+        moved = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        originLeft = parseInt(icon.style.left, 10) || 0;
+        originTop = parseInt(icon.style.top, 10) || 0;
+        icon.classList.add("dragging");
+        e.preventDefault();
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+
+        let newLeft = originLeft + dx;
+        let newTop = originTop + dy;
+        const maxLeft = desktop.clientWidth - icon.offsetWidth;
+        const maxTop = desktop.clientHeight - 50 - icon.offsetHeight;
+        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+        newTop = Math.max(0, Math.min(newTop, maxTop));
+        icon.style.left = newLeft + "px";
+        icon.style.top = newTop + "px";
+      });
+
+      document.addEventListener("mouseup", () => {
+        if (!isDragging) return;
+        isDragging = false;
+        icon.classList.remove("dragging");
+
+        const currentLeft = parseInt(icon.style.left, 10) || 0;
+        const currentTop = parseInt(icon.style.top, 10) || 0;
+        snapIconToFreeSlot(icon, currentLeft, currentTop);
+
+        if (moved) saveIconPositions();
+      });
+    }
+
+    document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(makeDesktopIconDraggable);
+    desktop.addEventListener("mousedown", (e) => {
+      if (!e.target.closest(".desktop-icon") && !e.target.closest("#trayClock")) clearSelectedIcons();
+    });
+
+    function createClockMarks() {
+      const clockMarks = document.getElementById("clockMarks");
+      clockMarks.innerHTML = "";
+      for (let i = 0; i < 60; i++) {
+        const mark = document.createElement("div");
+        mark.className = `clock-mark ${i % 5 === 0 ? "major" : ""}`;
+        mark.style.transform = `translate(-50%, -100%) rotate(${i * 6}deg)`;
+        clockMarks.appendChild(mark);
+      }
+    }
+
+    function renderCalendar(currentDate = new Date()) {
+      const calendarGrid = document.getElementById("calendarGrid");
+      const monthYear = document.getElementById("calendarMonthYear");
+      const todayText = document.getElementById("calendarTodayText");
+
+      const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+
+      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const weekdayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+      monthYear.textContent = `${monthNames[month]} ${year}`;
+      todayText.textContent = `Today: ${String(today.getDate()).padStart(2, "0")}/${String(month + 1).padStart(2, "0")}/${year}`;
+
+      calendarGrid.innerHTML = "";
+
+      weekdayNames.forEach(day => {
+        const el = document.createElement("div");
+        el.className = "calendar-weekday";
+        el.textContent = day;
+        calendarGrid.appendChild(el);
+      });
+
+      const firstDay = new Date(year, month, 1);
+      const startDay = firstDay.getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+      for (let i = startDay - 1; i >= 0; i--) {
+        const el = document.createElement("div");
+        el.className = "calendar-day other-month";
+        el.textContent = daysInPrevMonth - i;
+        calendarGrid.appendChild(el);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const el = document.createElement("div");
+        el.className = "calendar-day";
+        el.textContent = day;
+        if (today.getFullYear() === year && today.getMonth() === month && today.getDate() === day) {
+          el.classList.add("today");
+        }
+        calendarGrid.appendChild(el);
+      }
+
+      const totalCells = calendarGrid.children.length - 7;
+      const trailing = (7 - (totalCells % 7)) % 7;
+
+      for (let i = 1; i <= trailing; i++) {
+        const el = document.createElement("div");
+        el.className = "calendar-day other-month";
+        el.textContent = i;
+        calendarGrid.appendChild(el);
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const mm = String(now.getMinutes()).padStart(2, "0");
+      const ss = String(now.getSeconds()).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      const mo = String(now.getMonth() + 1).padStart(2, "0");
+      const yyyy = now.getFullYear();
+
+      document.getElementById("clock").textContent = `${hh}:${mm}`;
+      document.getElementById("dateLine").textContent = `${dd}/${mo}/${yyyy}`;
+      document.getElementById("clockDigital").textContent = `${hh}:${mm}:${ss}`;
+
+      const hourDeg = ((now.getHours() % 12) * 30) + (now.getMinutes() * 0.5) + (now.getSeconds() * (0.5 / 60));
+      const minuteDeg = (now.getMinutes() * 6) + (now.getSeconds() * 0.1);
+      const secondDeg = now.getSeconds() * 6;
+
+      document.getElementById("hourHand").style.transform = `translateX(-50%) rotate(${hourDeg}deg)`;
+      document.getElementById("minuteHand").style.transform = `translateX(-50%) rotate(${minuteDeg}deg)`;
+      document.getElementById("secondHand").style.transform = `translateX(-50%) rotate(${secondDeg}deg)`;
+
+      renderCalendar(now);
+    }
+
+    document.getElementById("trayClock").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (windowsMap.clockWindow.classList.contains("hidden")) showWindow("clockWindow");
+      else hideWindow("clockWindow");
+    });
+
+    const suits = ["♠", "♥", "♦", "♣"];
+    const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    let stock = [], waste = [], foundations = [[], [], [], []], tableau = [[], [], [], [], [], [], []];
+    let gameStartTime = 0;
+
+    function cardColor(suit) {
+      return suit === "♥" || suit === "♦" ? "red" : "black";
+    }
+
+    function createDeck() {
+      const deck = [];
+      const makeId = () => (crypto?.randomUUID ? crypto.randomUUID() : `card-${Date.now()}-${Math.random()}`);
+
+      for (const suit of suits) {
+        for (let i = 0; i < values.length; i++) {
+          deck.push({ suit, value: values[i], rank: i + 1, color: cardColor(suit), faceUp: false, id: makeId() });
+        }
+      }
+
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      return deck;
+    }
+
+    function newSolitaireGame() {
+      const deck = createDeck();
+      stock = [];
+      waste = [];
+      foundations = [[], [], [], []];
+      tableau = [[], [], [], [], [], [], []];
+      alreadyWonThisGame = false;
+      gameStartTime = Date.now();
+
+      for (let col = 0; col < 7; col++) {
+        for (let row = 0; row <= col; row++) {
+          const c = deck.pop();
+          c.faceUp = row === col;
+          tableau[col].push(c);
+        }
+      }
+
+      stock = deck;
+      renderSolitaire();
+    }
+
+    function makeCardEl(card, pileType, pileIndex, cardIndex) {
+      const el = document.createElement("div");
+      el.className = `card ${card.color}`;
+      if (!card.faceUp) {
+        el.className = "card back";
+        return el;
+      }
+      el.draggable = true;
+      el.dataset.pileType = pileType;
+      el.dataset.pileIndex = pileIndex;
+      el.dataset.cardIndex = cardIndex;
+      el.innerHTML = `
+        <div class="card-value">${card.value}</div>
+        <div class="card-suit">${card.suit}</div>
+        <div class="card-center">${card.suit}</div>
+      `;
+      el.addEventListener("dragstart", onCardDragStart);
+      return el;
+    }
+
+    function renderSolitaire() {
+      const stockPile = document.getElementById("stockPile");
+      const wastePile = document.getElementById("wastePile");
+      const foundationEls = document.querySelectorAll(".foundation");
+      const tableauRow = document.getElementById("tableauRow");
+
+      stockPile.innerHTML = "";
+      wastePile.innerHTML = "";
+      foundationEls.forEach(el => el.innerHTML = "");
+      tableauRow.innerHTML = "";
+
+      stockPile.onclick = () => {
+        if (stock.length > 0) {
+          const card = stock.pop();
+          card.faceUp = true;
+          waste.push(card);
+        } else {
+          stock = waste.reverse().map(c => ({ ...c, faceUp: false }));
+          waste = [];
+        }
+        renderSolitaire();
+      };
+
+      if (stock.length) {
+        stockPile.appendChild(Object.assign(document.createElement("div"), { className: "card back" }));
+      }
+
+      if (waste.length) {
+        wastePile.appendChild(makeCardEl(waste[waste.length - 1], "waste", 0, waste.length - 1));
+      }
+
+      foundationEls.forEach((el, i) => {
+        el.dataset.dropType = "foundation";
+        el.dataset.dropIndex = i;
+        el.addEventListener("dragover", e => e.preventDefault());
+        el.addEventListener("drop", onCardDrop);
+        if (foundations[i].length) {
+          el.appendChild(makeCardEl(foundations[i][foundations[i].length - 1], "foundation", i, foundations[i].length - 1));
+        }
+      });
+
+      tableau.forEach((pile, pileIndex) => {
+        const pileEl = document.createElement("div");
+        pileEl.className = "tableau-pile";
+        pileEl.dataset.dropType = "tableau";
+        pileEl.dataset.dropIndex = pileIndex;
+        pileEl.addEventListener("dragover", e => e.preventDefault());
+        pileEl.addEventListener("drop", onCardDrop);
+
+        if (pile.length === 0) {
+          const slot = document.createElement("div");
+          slot.className = "pile-slot";
+          pileEl.appendChild(slot);
+        } else {
+          pile.forEach((card, cardIndex) => {
+            const cardEl = makeCardEl(card, "tableau", pileIndex, cardIndex);
+            cardEl.style.top = `${cardIndex * 28}px`;
+            pileEl.appendChild(cardEl);
+          });
+        }
+
+        tableauRow.appendChild(pileEl);
+      });
+    }
+
+    function onCardDragStart(e) {
+      draggedCardInfo = {
+        pileType: e.currentTarget.dataset.pileType,
+        pileIndex: parseInt(e.currentTarget.dataset.pileIndex, 10),
+        cardIndex: parseInt(e.currentTarget.dataset.cardIndex, 10)
+      };
+    }
+
+    function getPile(type, index) {
+      if (type === "waste") return waste;
+      if (type === "foundation") return foundations[index];
+      if (type === "tableau") return tableau[index];
+      return null;
+    }
+
+    function canDropOnFoundation(card, foundationPile) {
+      if (foundationPile.length === 0) return card.rank === 1;
+      const top = foundationPile[foundationPile.length - 1];
+      return top.suit === card.suit && card.rank === top.rank + 1;
+    }
+
+    function canDropOnTableau(card, tableauPile) {
+      if (tableauPile.length === 0) return card.rank === 13;
+      const top = tableauPile[tableauPile.length - 1];
+      if (!top.faceUp) return false;
+      return top.color !== card.color && card.rank === top.rank - 1;
+    }
+
+    function onCardDrop(e) {
+      e.preventDefault();
+      if (!draggedCardInfo) return;
+
+      const targetType = e.currentTarget.dataset.dropType;
+      const targetIndex = parseInt(e.currentTarget.dataset.dropIndex, 10);
+      const fromPile = getPile(draggedCardInfo.pileType, draggedCardInfo.pileIndex);
+
+      if (!fromPile || fromPile.length === 0) return;
+
+      const movingCard = fromPile[draggedCardInfo.cardIndex];
+      if (!movingCard || !movingCard.faceUp) return;
+
+      if (draggedCardInfo.pileType === "waste" && draggedCardInfo.cardIndex !== fromPile.length - 1) return;
+      if (draggedCardInfo.pileType === "foundation" && draggedCardInfo.cardIndex !== fromPile.length - 1) return;
+
+      if (draggedCardInfo.pileType === "tableau" && draggedCardInfo.cardIndex < fromPile.length - 1) {
+        if (targetType !== "tableau") return;
+        const movingStack = fromPile.slice(draggedCardInfo.cardIndex);
+        if (!canDropOnTableau(movingStack[0], tableau[targetIndex])) return;
+        tableau[targetIndex].push(...movingStack);
+        fromPile.splice(draggedCardInfo.cardIndex, movingStack.length);
+      } else {
+        if (targetType === "foundation") {
+          if (!canDropOnFoundation(movingCard, foundations[targetIndex])) return;
+          foundations[targetIndex].push(movingCard);
+          fromPile.pop();
+        } else if (targetType === "tableau") {
+          if (!canDropOnTableau(movingCard, tableau[targetIndex])) return;
+          tableau[targetIndex].push(movingCard);
+          fromPile.pop();
+        }
+      }
+
+      if (draggedCardInfo.pileType === "tableau" && fromPile.length > 0) {
+        fromPile[fromPile.length - 1].faceUp = true;
+      }
+
+      draggedCardInfo = null;
+      renderSolitaire();
+      checkWin();
+    }
+
+    function getLeaderboard() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("xpSolitaireLeaderboard"));
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveLeaderboard(entries) {
+      localStorage.setItem("xpSolitaireLeaderboard", JSON.stringify(entries));
+    }
+
+    function addLeaderboardScore(name, seconds) {
+      const entries = getLeaderboard();
+      entries.push({ name, seconds, date: new Date().toISOString() });
+      entries.sort((a, b) => a.seconds - b.seconds);
+      saveLeaderboard(entries.slice(0, 10));
+      updateScoreboard();
+      renderLeaderboard();
+    }
+
+    function updateScoreboard() {
+      const entries = getLeaderboard();
+      const el = document.getElementById("scoreboard");
+      if (!entries.length) {
+        el.textContent = "Best time: none";
+        return;
+      }
+      el.innerHTML = `Best time: <strong>${entries[0].name}</strong><br>Time: ${entries[0].seconds}s`;
+    }
+
+    function renderLeaderboard() {
+      const list = document.getElementById("leaderboardList");
+      const entries = getLeaderboard();
+      list.innerHTML = "";
+
+      if (!entries.length) {
+        list.innerHTML = `<div class="leaderboard-empty">No scores yet.</div>`;
+        return;
+      }
+
+      entries.forEach((entry, index) => {
+        const row = document.createElement("div");
+        row.className = "leaderboard-row";
+        row.innerHTML = `
+          <div class="leaderboard-rank">#${index + 1}</div>
+          <div class="leaderboard-name">${entry.name}</div>
+          <div class="leaderboard-time">${entry.seconds}s</div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function showWinPopup() {
+      showWindow("winPopup");
+      const input = document.getElementById("winnerNameInput");
+      input.value = "";
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function checkWin() {
+      const won = foundations.every(p => p.length === 13);
+      if (won && !alreadyWonThisGame) {
+        alreadyWonThisGame = true;
+        showWinPopup();
+      }
+    }
+
+    document.getElementById("newGameBtn").addEventListener("click", newSolitaireGame);
+    document.getElementById("showLeaderboardBtn").addEventListener("click", () => {
+      renderLeaderboard();
+      showWindow("leaderboardWindow");
+    });
+    document.getElementById("closePopupBtn").addEventListener("click", () => hideWindow("winPopup"));
+    document.getElementById("saveWinnerBtn").addEventListener("click", () => {
+      const input = document.getElementById("winnerNameInput");
+      const name = input.value.trim() || "Anonymous";
+      const seconds = Math.max(1, Math.floor((Date.now() - gameStartTime) / 1000));
+      addLeaderboardScore(name, seconds);
+      hideWindow("winPopup");
+      showWindow("leaderboardWindow");
+    });
+    document.getElementById("clearLeaderboardBtn").addEventListener("click", () => {
+      localStorage.removeItem("xpSolitaireLeaderboard");
+      updateScoreboard();
+      renderLeaderboard();
+    });
+
+    newSolitaireGame();
+    updateScoreboard();
+    renderLeaderboard();
+
+    async function loadSteamStatus() {
+      const msnList = document.getElementById("msnList");
+      msnList.innerHTML = "";
+
+      for (const profile of STEAM_PROFILES) {
+        let data = null;
+        try {
+          const res = await fetch(`/api/steam-status?vanity=${encodeURIComponent(profile.id)}`);
+          if (!res.ok) throw new Error("bad");
+          data = await res.json();
+        } catch {
+          data = {
+            personaname: profile.id,
+            personastate: "Unavailable",
+            gameextrainfo: ""
+          };
+        }
+
+        const state = String(data.personastate || "Offline").toLowerCase();
+        const playing = !!data.gameextrainfo;
+
+        const row = document.createElement("div");
+        row.className = "msn-contact";
+
+        if (playing) {
+          row.classList.remove("offline", "away");
+        } else if (state.includes("away")) {
+          row.classList.add("away");
+        } else if (!state.includes("online")) {
+          row.classList.add("offline");
+        }
+
+        const statusText = playing
+          ? `Playing: ${data.gameextrainfo}`
+          : state.includes("online")
+            ? "Online"
+            : state.includes("away")
+              ? "Away"
+              : "Offline";
+
+        row.innerHTML = `
+          <div class="msn-mini-dot"></div>
+          <div>
+            <div class="msn-name-line">${data.personaname || profile.id}</div>
+            <div class="msn-game">${statusText}</div>
+          </div>
+        `;
+        msnList.appendChild(row);
+      }
+    }
+
+    document.getElementById("refreshSteamBtn").addEventListener("click", loadSteamStatus);
+    document.getElementById("openSteamProfileBtn").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Messenger"));
+    document.getElementById("openSteamProfileBtn2").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/RafaXIS/", "Messenger"));
+
+    /* LOGIN LOGIC */
+    const loginScreen = document.getElementById("loginScreen");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginLoading = document.getElementById("loginLoading");
+    const loginShutdownBtn = document.getElementById("loginShutdownBtn");
+
+    function unlockDesktop() {
+      loginScreen.classList.add("hidden");
+      desktop.classList.remove("locked");
+
+      requestAnimationFrame(() => {
+        loadIconPositions();
+        showWindow("mainWindow");
+        updateBrowserTitle("mainWindow");
+      });
+    }
+
+    function lockDesktop() {
+      loginScreen.classList.remove("hidden");
+      desktop.classList.add("locked");
+      closeStartMenu();
+
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Log On";
+      loginLoading.classList.remove("active");
+
+      Object.keys(windowsMap).forEach(id => hideWindow(id));
+      updateBrowserTitle();
+    }
+
+    function handleLogin() {
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Please wait";
+      loginLoading.classList.add("active");
+
+      setTimeout(() => {
+        unlockDesktop();
+      }, 2000);
+    }
+
+    loginBtn.addEventListener("click", handleLogin);
+
+    loginShutdownBtn.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <div style="
+          width:100vw;
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:linear-gradient(to bottom, #0b4fa9, #083b85);
+          color:#fff;
+          font-family:Tahoma, Verdana, Arial, sans-serif;
+          font-size:28px;
+          text-shadow:0 2px 4px rgba(0,0,0,0.35);
+        ">
+          It is now safe to turn off your computer.
+        </div>
+      `;
+    });
+
+    loadSteamStatus();
+    loadSettings();
+    createClockMarks();
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    hideWindow("playerWindow");
+    hideWindow("settingsWindow");
+    hideWindow("solitaireWindow");
+    hideWindow("leaderboardWindow");
+    hideWindow("msnWindow");
+    hideWindow("clockWindow");
+    hideWindow("winPopup");
+    hideWindow("externalLinkWindow");
+    updateBrowserTitle();
+  </script>
+</body>
+</html>
