@@ -1,0 +1,88 @@
+.taskbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 40px;
+      display: flex;
+      align-items: stretch;
+      background: linear-gradient(to bottom, var(--taskbar-top) 0%, var(--taskbar-mid) 35%, var(--taskbar-low) 70%, var(--taskbar-bottom) 100%);
+      border-top: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 -1px 0 rgba(0,0,0,0.25) inset;
+      z-index: 50;
+    }
+
+    .start-button {
+      width: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      font-style: italic;
+      font-size: 22px;
+      font-weight: bold;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+      border-right: 1px solid rgba(0,0,0,0.25);
+      background: radial-gradient(circle at 30% 30%, var(--start-green-1) 0%, var(--start-green-2) 45%, var(--start-green-3) 80%, var(--start-green-4) 100%);
+      border-radius: 0 12px 12px 0;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.45), inset -8px 0 10px rgba(0,0,0,0.1);
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .start-button.active { filter: brightness(0.92); }
+
+    .start-logo {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background:
+        linear-gradient(to right, #f35325 0 50%, #81bc06 50% 100%),
+        linear-gradient(to right, #05a6f0 0 50%, #ffba08 50% 100%);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.55);
+    }
+
+    .task-buttons {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      overflow: hidden;
+    }
+
+    .task-button {
+      min-width: 120px;
+      max-width: 220px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 12px;
+      background: linear-gradient(to bottom, rgba(125,181,255,0.72), rgba(66,126,214,0.9));
+      border: 1px solid rgba(14,61,133,0.9);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tray {
+      width: 120px;
+      border-left: 1px solid rgba(255,255,255,0.15);
+      background: linear-gradient(to bottom, #2e7ae0, #1652ad);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+      flex-direction: column;
+      line-height: 1.1;
+      cursor: pointer;
+    }

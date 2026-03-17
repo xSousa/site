@@ -1,0 +1,19 @@
+@media (max-width: 900px) {
+      .main-window, .player-window, .settings-window, .solitaire-window, .leaderboard-window, .msn-window, .minesweeper-window, .win-popup, .clock-window, .external-link-window {
+        width: calc(100vw - 30px);
+        left: 15px;
+      }
+      .main-window { top: 45px; }
+      .player-window { top: 430px; }
+      .settings-window { top: 140px; }
+      .solitaire-window { top: 80px; }
+      .leaderboard-window { top: 140px; }
+      .msn-window { top: 160px; }
+      .minesweeper-window { top: 180px; }
+      .win-popup { top: 220px; }
+      .clock-window { top: 120px; }
+      .external-link-window { top: 220px; }
+      .content { flex-direction: column; }
+      .right { width: 100%; }
+      .start-menu { width: calc(100vw - 10px); left: 5px; }
+    }

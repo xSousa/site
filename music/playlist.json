@@ -1,0 +1,16 @@
+{
+  "tracks": [
+    {
+      "title": "Track 01",
+      "artist": "Artist Name",
+      "src": "music/track01.mp3",
+      "duration": ""
+    },
+    {
+      "title": "Track 02",
+      "artist": "Artist Name",
+      "src": "music/track02.mp3",
+      "duration": ""
+    }
+  ]
+}

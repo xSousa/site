@@ -23,6 +23,8 @@
       --grid-y: 86px;
       --grid-left: 22px;
       --grid-top: 24px;
+      --cursor-url: url("https://www.clipartmax.com/png/full/179-1798503_free-vector-mouse-pointer-wolfram-es-clip-art-windows-xp-mouse-cursor.png") 2 2, auto;
+      --cursor-pointer: pointer;
     }
 
     * { box-sizing: border-box; }
@@ -39,6 +41,15 @@
       background: var(--wallpaper) center center / cover no-repeat fixed;
       color: #111;
       user-select: none;
+      cursor: var(--cursor-url);
+    }
+
+    a, button, select, input, .menu-item, .task-button, .start-button, .tray, .desktop-icon, .win-btn, .context-item, .player-btn, .xp-btn, .solitaire-btn, .msn-btn, .mine-cell, .mine-face {
+      cursor: var(--cursor-url);
+    }
+
+    input[type="text"], input[type="color"] {
+      cursor: text;
     }
 
     .desktop {
@@ -46,6 +57,196 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+    }
+
+    .desktop.locked {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.16), rgba(255,255,255,0) 28%),
+        linear-gradient(to bottom, #0d4aa6 0%, #0c58ba 30%, #0a4ea9 60%, #083b85 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .login-screen.hidden { display: none; }
+
+    .login-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.12), transparent 30%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.10), transparent 25%);
+      pointer-events: none;
+    }
+
+    .login-shell {
+      position: relative;
+      width: 100%;
+      max-width: 980px;
+      padding: 40px 24px 90px;
+      text-align: center;
+    }
+
+    .login-xp-title {
+      position: absolute;
+      top: 28px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 34px;
+      font-weight: bold;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
+    }
+
+    .login-xp-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      background:
+        linear-gradient(to right, #f35325 0 50%, #81bc06 50% 100%),
+        linear-gradient(to right, #05a6f0 0 50%, #ffba08 50% 100%);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+    }
+
+    .login-center-card {
+      width: 320px;
+      max-width: calc(100vw - 40px);
+      margin: 80px auto 0;
+      padding: 26px 24px 24px;
+      border-radius: 18px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.20);
+      backdrop-filter: blur(2px);
+    }
+
+    .login-avatar-wrap {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      padding: 6px;
+      background: linear-gradient(to bottom, #ffffff, #dbeaff);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .login-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #fff;
+      background: #dbeaff;
+    }
+
+    .login-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .login-profile-name {
+      font-size: 29px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
+    }
+
+    .login-profile-subtitle {
+      font-size: 14px;
+      color: #dbe9ff;
+      margin-bottom: 20px;
+    }
+
+    .login-red-btn {
+      min-width: 140px;
+      height: 42px;
+      border: 1px solid #8d1f1f;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, #ff8585 0%, #e53939 45%, #b81616 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.35),
+        0 6px 16px rgba(0,0,0,0.25);
+    }
+
+    .login-red-btn:hover { filter: brightness(1.05); }
+    .login-red-btn:active { transform: translateY(1px); }
+    .login-red-btn:disabled { opacity: 0.92; cursor: default; }
+
+    .login-loading {
+      display: none;
+      margin-top: 18px;
+      color: #eef5ff;
+      font-size: 14px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .login-loading.active { display: block; }
+
+    .login-loading-dots::after {
+      content: "";
+      animation: loginDots 1s steps(4, end) infinite;
+    }
+
+    @keyframes loginDots {
+      0% { content: ""; }
+      25% { content: "."; }
+      50% { content: ".."; }
+      75% { content: "..."; }
+      100% { content: ""; }
+    }
+
+    .login-bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      background: linear-gradient(to top, rgba(0,0,0,0.24), rgba(0,0,0,0.04));
+      border-top: 1px solid rgba(255,255,255,0.14);
+      color: #dbe9ff;
+      font-size: 12px;
+    }
+
+    .login-shutdown-btn {
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 8px;
+      background: linear-gradient(to bottom, #ffb35a, #e8871e);
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 8px 14px;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
     }
 
     .window {
@@ -69,6 +270,7 @@
     .solitaire-window { top: 90px; left: 330px; width: 860px; max-width: calc(100vw - 40px); z-index: 45; }
     .leaderboard-window { top: 120px; left: 420px; width: 360px; max-width: calc(100vw - 40px); z-index: 46; }
     .msn-window { top: 130px; left: 620px; width: 390px; max-width: calc(100vw - 40px); z-index: 47; }
+    .minesweeper-window { top: 100px; left: 520px; width: 430px; max-width: calc(100vw - 40px); z-index: 48; }
     .clock-window { top: 210px; left: calc(100vw - 340px); width: 300px; z-index: 120; }
     .win-popup { top: 220px; left: 420px; width: 360px; z-index: 200; }
     .external-link-window { top: 240px; left: 400px; width: 390px; z-index: 250; }
@@ -99,6 +301,7 @@
     .solitaire-titlebar,
     .leaderboard-titlebar { background: linear-gradient(to bottom, #3b9d56 0%, #26763d 45%, #1f6a35 46%, #18562a 100%); }
     .msn-titlebar { background: linear-gradient(to bottom, #79b8ff 0%, #4d8ee4 40%, #3975c7 60%, #2759a6 100%); }
+    .minesweeper-titlebar { background: linear-gradient(to bottom, #5d98f0 0%, #2f79de 45%, #1f63c5 46%, #1a4fa8 100%); }
     .clock-titlebar { background: linear-gradient(to bottom, #5aa3ff 0%, #3f87e2 45%, #2c6fca 46%, #2259af 100%); }
     .error-titlebar { background: linear-gradient(to bottom, #4e99ff 0%, #2e7add 46%, #1f5fbe 100%); }
 
@@ -123,8 +326,28 @@
     .gear-icon { border-radius: 50%; background: radial-gradient(circle at center, #fff 0%, #d8ebff 20%, #7fb5ff 55%, #2f6ec8 100%); }
     .cards-icon { border-radius: 4px; background: linear-gradient(to bottom, #ffffff, #dff1ff); }
     .msn-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e7f7ff 25%, #8be38f 55%, #2ea34d 100%); }
+    .mine-icon {
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f2f2f2 20%, #666 45%, #111 80%);
+      position: relative;
+    }
     .clock-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #eef5ff 30%, #88b7ff 58%, #2d68c4 100%); }
     .error-icon { border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd8d8 28%, #ff7f7f 60%, #cc2f2f 100%); }
+
+    .media-icon,
+    .gear-icon,
+    .msn-icon {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      border: 0;
+      box-shadow: none;
+      border-radius: 2px;
+    }
+
+    .media-icon { background-image: url("https://i.redd.it/dwsd58yvs5pe1.png"); }
+    .gear-icon { background-image: url("https://p1.hiclipart.com/preview/513/705/77/windows-live-for-xp-gray-setting-icon-png-clipart.jpg"); }
+    .msn-icon { background-image: url("https://www.freeiconspng.com/thumbs/msn-icon/msn-icon-30.png"); }
 
     .title-text {
       white-space: nowrap;
@@ -267,12 +490,96 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
     }
 
-    .player-screen iframe {
+    .player-screen audio {
       display: block;
       width: 100%;
-      height: 220px;
-      border: 0;
-      background: #000;
+      height: 34px;
+      margin-bottom: 10px;
+    }
+
+    .player-visualizer {
+      height: 144px;
+      border: 1px solid #07111d;
+      border-radius: 2px;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.04), rgba(255,255,255,0)),
+        repeating-linear-gradient(
+          to right,
+          rgba(72, 188, 255, 0.18) 0px,
+          rgba(72, 188, 255, 0.18) 4px,
+          transparent 4px,
+          transparent 10px
+        ),
+        linear-gradient(to bottom, #071423, #102a45 55%, #0a1728);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .player-visualizer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(130, 220, 255, 0.2), transparent 35%),
+        radial-gradient(circle at 70% 65%, rgba(130, 220, 255, 0.14), transparent 32%);
+      pointer-events: none;
+    }
+
+    .player-meta {
+      margin-top: 8px;
+      padding: 7px 8px;
+      font-size: 12px;
+      color: #1f4b84;
+      background: linear-gradient(to bottom, #f8fbff, #dcebff);
+      border: 1px solid #9dbbe8;
+      line-height: 1.4;
+    }
+
+    .playlist-panel {
+      margin-top: 10px;
+      border: 1px solid #90b0db;
+      background: linear-gradient(to bottom, #f7fbff, #dcecff);
+      max-height: 168px;
+      overflow: auto;
+      padding: 4px;
+    }
+
+    .playlist-item {
+      display: grid;
+      grid-template-columns: 28px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 4px;
+      color: #214c84;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .playlist-item:hover {
+      background: rgba(70, 126, 214, 0.12);
+    }
+
+    .playlist-item.active {
+      background: linear-gradient(to bottom, #4f95f0, #2e6fd1);
+      color: #fff;
+    }
+
+    .playlist-index {
+      font-weight: bold;
+      text-align: right;
+      opacity: 0.85;
+    }
+
+    .playlist-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .playlist-duration {
+      font-size: 11px;
+      opacity: 0.9;
     }
 
     .player-controls, .settings-buttons, .popup-buttons {
@@ -386,6 +693,14 @@
     .desktop-icon.selected { background: rgba(65,135,255,0.22); outline: 1px solid rgba(180,220,255,0.5); }
     .desktop-icon.dragging { opacity: 0.95; z-index: 999; transition: none; }
 
+    .selection-box {
+      position: absolute;
+      border: 1px dashed rgba(180, 220, 255, 0.95);
+      background: rgba(76, 147, 255, 0.18);
+      pointer-events: none;
+      z-index: 998;
+    }
+
     .desktop-icon-box {
       width: 52px;
       height: 52px;
@@ -428,7 +743,22 @@
 
     .desktop-icon-label {
       width: 100%;
+      max-width: 78px;
+      margin: 0 auto;
       text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .desktop-icon.selected .desktop-icon-label,
+    .desktop-icon:focus-within .desktop-icon-label,
+    .desktop-icon-label.editing {
+      max-width: 92px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: break-word;
     }
 
     .desktop-icon.youtube .desktop-icon-box::after {
@@ -507,7 +837,8 @@
     }
 
     .desktop-icon.steam .desktop-icon-box img,
-    .desktop-icon.solitaire .desktop-icon-box img {
+    .desktop-icon.solitaire .desktop-icon-box img,
+    .desktop-icon.minesweeper .desktop-icon-box img {
       width: 42px;
       height: 42px;
       object-fit: contain;
@@ -537,6 +868,271 @@
       background: #19c53a;
       border: 2px solid #fff;
       z-index: 4;
+    }
+
+    .desktop-icon.mainapp .desktop-icon-box::before,
+    .desktop-icon.mainapp .desktop-icon-box::after,
+    .desktop-icon.youtube .desktop-icon-box::before,
+    .desktop-icon.youtube .desktop-icon-box::after,
+    .desktop-icon.music .desktop-icon-box::before,
+    .desktop-icon.music .desktop-icon-box::after,
+    .desktop-icon.settings .desktop-icon-box::before,
+    .desktop-icon.settings .desktop-icon-box::after,
+    .desktop-icon.messenger .desktop-icon-box::before,
+    .desktop-icon.messenger .desktop-icon-box::after {
+      content: none;
+    }
+
+    .desktop-icon.custom-image .desktop-icon-box img,
+    .desktop-icon.folder .desktop-icon-box img,
+    .title-icon.custom-image-icon,
+    .menu-icon.custom-image-icon {
+      display: block;
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      position: relative;
+      z-index: 4;
+    }
+
+    .desktop-icon.custom-image .desktop-icon-box img,
+    .desktop-icon.folder .desktop-icon-box img {
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.22));
+    }
+
+    .desktop-icon.folder .desktop-icon-box {
+      background: linear-gradient(180deg, rgba(255,250,230,0.98), rgba(255,238,180,0.95) 40%, rgba(255,206,84,0.95) 100%);
+      border-color: rgba(255,255,255,0.8);
+    }
+
+    .desktop-icon.folder .desktop-icon-box::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      width: 18px;
+      height: 8px;
+      border-radius: 5px 5px 0 0;
+      background: linear-gradient(to bottom, #ffe7a0, #f1c14d);
+      z-index: 4;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+    }
+
+    .desktop-icon.folder .desktop-icon-box::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 18px;
+      width: 36px;
+      height: 22px;
+      border-radius: 5px;
+      background: linear-gradient(to bottom, #ffd96f, #e09c16);
+      z-index: 5;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset;
+    }
+
+    .desktop-icon-label.editing {
+      outline: 1px dotted rgba(255,255,255,0.9);
+      background: rgba(0,0,0,0.25);
+    }
+
+    .desktop-context-menu {
+      position: absolute;
+      min-width: 190px;
+      background: linear-gradient(to bottom, #fdfefe, #e9f2ff);
+      border: 1px solid #6c92c6;
+      box-shadow: 3px 4px 14px rgba(0,0,0,0.28);
+      padding: 4px;
+      z-index: 1200;
+      display: none;
+      user-select: none;
+    }
+
+    .desktop-context-menu.open { display: block; }
+
+    .context-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 3px;
+      color: #0f2a52;
+      font-size: 13px;
+      position: relative;
+      cursor: default;
+      white-space: nowrap;
+    }
+
+    .context-item:hover {
+      background: linear-gradient(to bottom, #2c7ae7, #1f65cc);
+      color: #fff;
+    }
+
+    .context-item.disabled { color: #7b8aa2; pointer-events: none; }
+
+    .context-separator {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #9db6dd 18%, #9db6dd 82%, transparent);
+      margin: 4px 2px;
+    }
+
+    .context-icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, #ffffff, #b9d6ff);
+      border: 1px solid rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .context-icon.folder::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: linear-gradient(to bottom, #ffe17f, #de9b1a);
+      border-radius: 3px;
+    }
+
+    .context-icon.refresh::before {
+      content: "↻";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #25579b;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .context-icon.open::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      background: linear-gradient(to bottom, #56a9ff, #236bcc);
+      border-radius: 3px;
+    }
+
+    .context-icon.rename::before {
+      content: "A";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #25579b;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .context-icon.delete::before {
+      content: "×";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #b41f1f;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .context-submenu {
+      position: absolute;
+      left: calc(100% - 4px);
+      top: -4px;
+      min-width: 180px;
+      background: linear-gradient(to bottom, #fdfefe, #e9f2ff);
+      border: 1px solid #6c92c6;
+      box-shadow: 3px 4px 14px rgba(0,0,0,0.28);
+      padding: 4px;
+      display: none;
+      z-index: 1210;
+    }
+
+    .context-item:hover > .context-submenu { display: block; }
+
+    .context-arrow { margin-left: auto; font-size: 12px; }
+
+    .folder-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+    .folder-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 6px;
+      border-radius: 6px;
+      text-align: center;
+      color: #204372;
+      cursor: pointer;
+      user-select: none;
+    }
+    .folder-item:hover {
+      background: rgba(67,133,232,0.12);
+      outline: 1px solid rgba(80,136,226,0.28);
+    }
+    .folder-item-box {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(196,225,255,0.9));
+      border: 1px solid rgba(255,255,255,0.82);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    .folder-item-box img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      display: block;
+    }
+    .folder-item-label {
+      font-size: 12px;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .folder-item-restore {
+      margin-top: 4px;
+      min-width: 0;
+      height: 24px;
+      padding: 0 8px;
+      font-size: 11px;
+    }
+    .folder-window { top: 150px; left: 260px; width: 420px; max-width: calc(100vw - 40px); z-index: 52; }
+    .folder-titlebar { background: linear-gradient(to bottom, #caa24f 0%, #b57f17 45%, #996811 46%, #7d5105 100%); }
+    .folder-body {
+      background: linear-gradient(to bottom, #ffffff, #f4f8ff);
+      padding: 14px;
+      min-height: 260px;
+    }
+
+    .folder-toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #d4e1f7;
+      color: #28518a;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .folder-empty {
+      border: 1px solid #c8d8f3;
+      background: linear-gradient(to bottom, #ffffff, #edf4ff);
+      padding: 16px;
+      color: #315180;
+      font-size: 13px;
+      line-height: 1.5;
+      border-radius: 6px;
     }
 
     .start-menu {
@@ -666,7 +1262,8 @@
     .menu-icon.settings::before,
     .menu-icon.messenger::before,
     .menu-icon.cards::before,
-    .menu-icon.rank::before {
+    .menu-icon.rank::before,
+    .menu-icon.mine::before {
       content: "";
       position: absolute;
       inset: 2px;
@@ -681,6 +1278,13 @@
     .menu-icon.messenger::before { background: radial-gradient(circle at 35% 35%, #fff, #dff7ff 25%, #89df92 55%, #2ea34d 100%); border-radius: 50%; }
     .menu-icon.cards::before { background: linear-gradient(to bottom, #fff, #f0f0f0); border: 1px solid #b8b8b8; border-radius: 3px; }
     .menu-icon.rank::before { background: linear-gradient(to bottom, #fff2a8, #ebb63c); border-radius: 3px; }
+    .menu-icon.mine::before { background: radial-gradient(circle at 35% 35%, #fff, #ddd 20%, #666 45%, #111 80%); border-radius: 50%; }
+    .menu-icon.ie::before {
+      inset: 1px;
+      background: center center / contain no-repeat url("https://pngimg.com/d/ie_logo_PNG4.png");
+      border-radius: 0;
+    }
+
 
     .menu-icon.youtube::after {
       content: "";
@@ -1019,6 +1623,131 @@
       margin-top: 10px;
     }
 
+    .minesweeper-body {
+      background: #c0c0c0;
+      padding: 12px;
+      min-height: 360px;
+      color: #000;
+    }
+
+    .minesweeper-panel {
+      border: 3px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
+      background: #c0c0c0;
+      padding: 10px;
+    }
+
+    .minesweeper-topbar {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      align-items: center;
+      gap: 10px;
+      border: 3px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
+      background: #c0c0c0;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .mine-counter-display {
+      background: #000;
+      color: #ff2a2a;
+      font-family: "Courier New", monospace;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: bold;
+      text-align: center;
+      padding: 6px 4px;
+      border: 2px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
+      letter-spacing: 2px;
+      min-width: 0;
+    }
+
+    .mine-face {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: #c0c0c0;
+      border: 3px solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mine-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .mine-select {
+      height: 28px;
+      border: 1px solid #7a7a7a;
+      background: #fff;
+      padding: 0 8px;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    .mine-board-wrap {
+      border: 3px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
+      background: #bdbdbd;
+      padding: 8px;
+      display: inline-block;
+      max-width: 100%;
+      overflow: auto;
+    }
+
+    .mine-board {
+      display: grid;
+      gap: 0;
+      background: #7b7b7b;
+      user-select: none;
+    }
+
+    .mine-cell {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: bold;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      background: #c0c0c0;
+      border: 3px solid;
+      border-color: #ffffff #808080 #808080 #ffffff;
+      cursor: pointer;
+      color: #111;
+      line-height: 1;
+    }
+
+    .mine-cell.revealed {
+      border: 1px solid #7b7b7b;
+      background: #c0c0c0;
+      cursor: default;
+    }
+
+    .mine-cell.mine-hit {
+      background: #e16b6b;
+    }
+
+    .mine-cell.n1 { color: #0000ff; }
+    .mine-cell.n2 { color: #008000; }
+    .mine-cell.n3 { color: #ff0000; }
+    .mine-cell.n4 { color: #000080; }
+    .mine-cell.n5 { color: #800000; }
+    .mine-cell.n6 { color: #008080; }
+    .mine-cell.n7 { color: #000000; }
+    .mine-cell.n8 { color: #7b7b7b; }
+
     .popup-text, .external-text {
       font-size: 13px;
       color: #1e3d75;
@@ -1221,8 +1950,251 @@
       border-color: #21569f;
     }
 
+
+    .desktop-icon.cmd .desktop-icon-box {
+      background: linear-gradient(135deg, #1e1e1e, #050505);
+      border-color: rgba(255,255,255,0.55);
+      overflow: hidden;
+    }
+
+    .desktop-icon.cmd .desktop-icon-box::before {
+      content: "C:\\>";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #c9ffc9;
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 0.2px;
+      z-index: 4;
+      text-shadow: 0 0 6px rgba(80,255,120,0.45);
+    }
+
+    .cmd-window { top: 110px; left: 180px; width: 620px; max-width: calc(100vw - 40px); z-index: 90; background: #0c0c0c; }
+    .cmd-titlebar { background: linear-gradient(to bottom, #4d8fe6 0%, #2f71cc 45%, #245fb5 46%, #1c4e97 100%); }
+    .cmd-icon {
+      border-radius: 2px;
+      background: center center / contain no-repeat url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2cc61f89-aa16-4ec1-86ad-8b18cacef76a/dgv3tvb-ee8b9f50-dbd6-4450-b231-839fdc740453.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8yY2M2MWY4OS1hYTE2LTRlYzEtODZhZC04YjE4Y2FjZWY3NmEvZGd2M3R2Yi1lZThiOWY1MC1kYmQ2LTQ0NTAtYjIzMS04MzlmZGM3NDA0NTMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ROFBP3O1cSQoZZ0N35lC-2Vm740_DJAdufTiLPxLnng");
+      position: relative;
+      overflow: hidden;
+      border: 0;
+      box-shadow: none;
+    }
+    .cmd-icon::before {
+      content: none;
+    }
+    .cmd-body {
+      background: #000;
+      color: #d6ffd6;
+      min-height: 360px;
+      padding: 10px;
+      font-family: "Lucida Console", "Courier New", monospace;
+      font-size: 14px;
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      user-select: text;
+      position: relative;
+      overflow: hidden;
+    }
+    .cmd-output {
+      flex: 1;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      padding-right: 4px;
+    }
+    .cmd-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: nowrap;
+      position: relative;
+      z-index: 2;
+    }
+    .cmd-prompt {
+      color: #ffffff;
+      white-space: nowrap;
+    }
+    .cmd-input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: #d6ffd6;
+      font: inherit;
+      caret-color: #d6ffd6;
+    }
+    .cmd-output-line { margin: 0 0 3px; }
+    .cmd-output-line.system { color: #ffffff; }
+    .cmd-output-line.error { color: #ff8a8a; }
+    .cmd-output-line.secret { color: #9df89d; text-shadow: 0 0 8px rgba(80,255,120,0.25); }
+    .cmd-output-line.dim { color: #9ac29a; }
+    .crt-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 9999;
+      transition: opacity 0.25s ease;
+      background:
+        linear-gradient(rgba(255,255,255,0.045), rgba(255,255,255,0.015)),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.14) 0px,
+          rgba(255,255,255,0.14) 1px,
+          rgba(0,0,0,0.22) 2px,
+          rgba(0,0,0,0.22) 4px
+        );
+      mix-blend-mode: screen;
+    }
+    .crt-overlay::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0.22) 70%, rgba(0,0,0,0.56) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(255,255,255,0.04) 45%, rgba(0,0,0,0.12) 100%);
+    }
+    .crt-overlay::after {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: linear-gradient(90deg, rgba(255,0,0,0.09), rgba(0,255,255,0.04), rgba(0,0,255,0.09));
+      opacity: 0.82;
+      animation: crt-flicker 0.11s infinite steps(2);
+    }
+    body.crt-enabled .crt-overlay { opacity: 1; }
+    body.crt-enabled .desktop,
+    body.crt-enabled .window,
+    body.crt-enabled .taskbar,
+    body.crt-enabled .start-menu {
+      filter: contrast(1.12) saturate(0.92) brightness(0.96);
+    }
+    @keyframes crt-flicker {
+      0% { transform: translate(0, 0); opacity: 0.62; }
+      50% { transform: translate(0.55px, -0.45px); opacity: 0.9; }
+      100% { transform: translate(-0.45px, 0.5px); opacity: 0.68; }
+    }
+
+
+    .browser-window { top: 85px; left: 180px; width: 920px; height: 640px; max-width: calc(100vw - 40px); max-height: calc(100vh - 70px); z-index: 95; }
+    .browser-titlebar { background: linear-gradient(to bottom, #5b9cf8 0%, #3d82e2 45%, #2f70ca 46%, #2258ab 100%); }
+    .ie-icon {
+      border-radius: 4px;
+      background: center center / contain no-repeat url('https://pngimg.com/d/ie_logo_PNG4.png');
+      box-shadow: none;
+    }
+    .ie-icon::before { content: ""; }
+    .browser-body { background: #ece9d8; display: flex; flex-direction: column; height: calc(100% - 30px); min-height: 0; }
+    .ie-toolbar, .ie-address-row, .ie-statusbar { display: flex; align-items: center; gap: 6px; padding: 6px 8px; }
+    .ie-toolbar {
+      background: linear-gradient(to bottom, #fdfefe, #dbeafc);
+      border-bottom: 1px solid #9db8df;
+      flex-wrap: wrap;
+    }
+    .ie-address-row {
+      background: linear-gradient(to bottom, #fefefe, #eff5ff);
+      border-bottom: 1px solid #b7cbe7;
+    }
+    .ie-btn {
+      min-width: 64px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid #7c9cc7;
+      background: linear-gradient(to bottom, #ffffff, #dbeaff);
+      color: #1f4a86;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.92);
+      font-family: inherit;
+      padding: 0 10px;
+    }
+    .ie-btn.small { min-width: 42px; padding: 0 8px; }
+    .ie-address-label { font-size: 12px; color: #294f82; font-weight: bold; }
+    .ie-address-input {
+      flex: 1;
+      min-width: 0;
+      height: 28px;
+      border: 1px solid #7e9fcf;
+      background: #fff;
+      padding: 0 8px;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      font-size: 13px;
+      color: #10233f;
+    }
+    .ie-view {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+      border-top: 1px solid #fff;
+      overflow: hidden;
+      display: flex;
+    }
+    .ie-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      display: block;
+      flex: 1 1 auto;
+    }
+    .ie-loading {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      z-index: 2;
+      padding: 4px 8px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #9eb8dd;
+      font-size: 11px;
+      color: #1d4a85;
+      display: none;
+    }
+    .ie-loading.active { display: block; }
+    .ie-statusbar {
+      justify-content: space-between;
+      background: linear-gradient(to bottom, #f6f9ff, #e5eefc);
+      border-top: 1px solid #b6cae6;
+      font-size: 12px;
+      color: #2c4f80;
+    }
+    .ie-status-left, .ie-status-right { min-width: 0; }
+    .ie-home {
+      padding: 18px;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
+      color: #173869;
+      background: linear-gradient(to bottom, #ffffff, #edf4ff 65%, #dfeeff 100%);
+      min-height: 100%;
+    }
+    .ie-home h2 { margin: 0 0 12px; color: #1b4e94; font-size: 24px; }
+    .ie-home p { margin: 0 0 12px; font-size: 13px; }
+    .ie-home-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .ie-home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #a5bee1;
+      background: linear-gradient(to bottom, #ffffff, #e4efff);
+      color: #11417e;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .ie-home-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .ie-home-logo { width: 42px; height: 42px; object-fit: contain; flex: 0 0 auto; }
+    .desktop-icon.browser .desktop-icon-box img { width: 42px; height: 42px; object-fit: contain; display: block; position: relative; z-index: 4; }
+
     @media (max-width: 900px) {
-      .main-window, .player-window, .settings-window, .solitaire-window, .leaderboard-window, .msn-window, .win-popup, .clock-window, .external-link-window {
+      .main-window, .player-window, .settings-window, .solitaire-window, .leaderboard-window, .msn-window, .minesweeper-window, .win-popup, .clock-window, .external-link-window, .browser-window {
         width: calc(100vw - 30px);
         left: 15px;
       }
@@ -1232,34 +2204,89 @@
       .solitaire-window { top: 80px; }
       .leaderboard-window { top: 140px; }
       .msn-window { top: 160px; }
+      .minesweeper-window { top: 180px; }
       .win-popup { top: 220px; }
       .clock-window { top: 120px; }
       .external-link-window { top: 220px; }
+      .browser-window { top: 70px; height: calc(100vh - 90px); }
       .content { flex-direction: column; }
       .right { width: 100%; }
       .start-menu { width: calc(100vw - 10px); left: 5px; }
+
+      .login-xp-title {
+        position: static;
+        justify-content: center;
+        margin-bottom: 22px;
+      }
+
+      .login-shell {
+        padding-top: 26px;
+      }
+
+      .login-center-card {
+        margin-top: 0;
+      }
+
+      .login-bottom-bar {
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        height: 78px;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="desktop" id="desktop">
-    <div class="desktop-icon mainapp aero" id="desktopShortcut" data-icon-id="mainapp" style="top:24px; left:22px;">
-      <div class="desktop-icon-box"></div>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-shell">
+      <div class="login-xp-title">
+        <div class="login-xp-logo"></div>
+        <span>Windows XP</span>
+      </div>
+
+      <div class="login-center-card">
+        <div class="login-avatar-wrap">
+          <div class="login-avatar">
+            <img src="https://pbs.twimg.com/profile_images/1814310946015424512/Zey2ii2F_400x400.jpg" alt="User avatar">
+          </div>
+        </div>
+
+        <div class="login-profile-name">Enzo</div>
+        <div class="login-profile-subtitle">Click the button to log on</div>
+
+        <button class="login-red-btn" id="loginBtn" type="button">Log On</button>
+        <div class="login-loading" id="loginLoading">
+          Loading<span class="login-loading-dots"></span>
+        </div>
+      </div>
+
+      <div class="login-bottom-bar">
+        <span>To begin, click your user picture.</span>
+        <button class="login-shutdown-btn" id="loginShutdownBtn" type="button">Turn Off Computer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="desktop locked" id="desktop">
+    <div class="desktop-icon mainapp aero custom-image" id="desktopShortcut" data-icon-id="mainapp" style="top:24px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://static.wikia.nocookie.net/the-microsoft-windows-xp/images/f/f9/XPIcon.png/revision/latest?cb=20191129153941" alt="xSousa"></div>
       <div class="desktop-icon-label">xSousa</div>
     </div>
 
-    <div class="desktop-icon youtube aero" id="youtubeShortcut" data-icon-id="youtube" style="top:110px; left:22px;">
-      <div class="desktop-icon-box"></div>
+    <div class="desktop-icon youtube aero custom-image" id="youtubeShortcut" data-icon-id="youtube" style="top:110px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/YouTube_icon_%282011-2013%29.svg/500px-YouTube_icon_%282011-2013%29.svg.png" alt="YouTube"></div>
       <div class="desktop-icon-label">YouTube</div>
     </div>
 
-    <div class="desktop-icon music aero" id="musicShortcut" data-icon-id="music" style="top:196px; left:22px;">
-      <div class="desktop-icon-box"></div>
+    <div class="desktop-icon music aero custom-image" id="musicShortcut" data-icon-id="music" style="top:196px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://i.redd.it/dwsd58yvs5pe1.png" alt="Media Player"></div>
       <div class="desktop-icon-label">Music Player</div>
     </div>
 
-    <div class="desktop-icon settings aero" id="settingsShortcut" data-icon-id="settings" style="top:282px; left:22px;">
-      <div class="desktop-icon-box"></div>
+    <div class="desktop-icon settings aero custom-image" id="settingsShortcut" data-icon-id="settings" style="top:282px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://p1.hiclipart.com/preview/513/705/77/windows-live-for-xp-gray-setting-icon-png-clipart.jpg" alt="Settings"></div>
       <div class="desktop-icon-label">Settings</div>
     </div>
 
@@ -1277,9 +2304,27 @@
       <div class="desktop-icon-label">Solitaire</div>
     </div>
 
-    <div class="desktop-icon messenger aero" id="msnShortcut" data-icon-id="msn" style="top:540px; left:22px;">
-      <div class="desktop-icon-box"></div>
+    <div class="desktop-icon messenger aero custom-image" id="msnShortcut" data-icon-id="msn" style="top:540px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://www.freeiconspng.com/thumbs/msn-icon/msn-icon-30.png" alt="Messenger"></div>
       <div class="desktop-icon-label">Messenger</div>
+    </div>
+
+
+    <div class="desktop-icon cmd aero custom-image" id="cmdShortcut" data-icon-id="cmd" style="top:712px; left:22px;">
+      <div class="desktop-icon-box"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2cc61f89-aa16-4ec1-86ad-8b18cacef76a/dgv3tvb-ee8b9f50-dbd6-4450-b231-839fdc740453.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8yY2M2MWY4OS1hYTE2LTRlYzEtODZhZC04YjE4Y2FjZWY3NmEvZGd2M3R2Yi1lZThiOWY1MC1kYmQ2LTQ0NTAtYjIzMS04MzlmZGM3NDA0NTMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ROFBP3O1cSQoZZ0N35lC-2Vm740_DJAdufTiLPxLnng" alt="Command Prompt"></div>
+      <div class="desktop-icon-label">Command Prompt</div>
+    </div>
+
+    <div class="desktop-icon minesweeper aero" id="minesweeperShortcut" data-icon-id="minesweeper" style="top:626px; left:22px;">
+      <div class="desktop-icon-box">
+        <img src="https://www.rw-designer.com/icon-image/18913-256x256x32.png" alt="Minesweeper">
+      </div>
+      <div class="desktop-icon-label">Minesweeper</div>
+    </div>
+
+    <div class="desktop-icon browser aero custom-image" id="browserShortcut" data-icon-id="browser" style="top:24px; left:118px;">
+      <div class="desktop-icon-box"><img src="https://pngimg.com/d/ie_logo_PNG4.png" alt="Internet Explorer"></div>
+      <div class="desktop-icon-label">Internet Explorer</div>
     </div>
 
     <div class="window main-window" id="mainWindow">
@@ -1327,14 +2372,20 @@
       </div>
       <div class="player-body">
         <div class="player-screen">
-          <iframe id="ytPlayer" src="" title="Music Player" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <audio id="audioPlayer" controls preload="metadata"></audio>
+          <div class="player-visualizer" aria-hidden="true"></div>
         </div>
         <div class="player-controls">
+          <button class="player-btn" id="prevTrackBtn">Prev</button>
+          <button class="player-btn" id="playPauseBtn">Play</button>
+          <button class="player-btn" id="nextTrackBtn">Next</button>
           <button class="player-btn" id="reloadMusicBtn">Reload</button>
-          <button class="player-btn" id="openYoutubeBtn">Open</button>
+          <button class="player-btn" id="openMusicFolderBtn">Folder</button>
           <button class="player-btn" id="hidePlayerBtn">Minimize</button>
         </div>
-        <div class="player-status" id="playerStatus">Tip: open this page through http://localhost:8000 or another local server to avoid YouTube error 153.</div>
+        <div class="player-meta" id="playerMeta">No track selected.</div>
+        <div class="playlist-panel" id="playlistPanel"></div>
+        <div class="player-status" id="playerStatus">Put your music inside <strong>music/</strong> and edit <strong>music/playlist.json</strong> to list the files. You can also use the Folder button for local testing in supported browsers.</div>
       </div>
     </div>
 
@@ -1380,6 +2431,18 @@
           <div class="row"><label for="windowTop">Top</label><input type="color" id="windowTop" value="#4f9df8"></div>
           <div class="row"><label for="windowMid">Middle</label><input type="color" id="windowMid" value="#2a7be4"></div>
           <div class="row"><label for="windowBottom">Bottom</label><input type="color" id="windowBottom" value="#1f59b8"></div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Mouse Cursor</h3>
+          <div class="row">
+            <label for="cursorPreset">Cursor</label>
+            <select id="cursorPreset">
+              <option value="xp-white">Windows XP White</option>
+              <option value="xp-black">Windows XP Black</option>
+              <option value="default">Browser Default</option>
+            </select>
+          </div>
         </div>
 
         <div class="settings-buttons">
@@ -1465,6 +2528,99 @@
       </div>
     </div>
 
+    <div class="window minesweeper-window hidden" id="minesweeperWindow">
+      <div class="titlebar minesweeper-titlebar" id="titlebarMinesweeper">
+        <div class="title-left">
+          <div class="title-icon mine-icon"></div>
+          <div class="title-text">Minesweeper.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="minesweeperWindow">—</div>
+          <div class="win-btn" data-close="minesweeperWindow">×</div>
+        </div>
+      </div>
+      <div class="minesweeper-body">
+        <div class="minesweeper-panel">
+          <div class="minesweeper-topbar">
+            <div class="mine-counter-display" id="mineCounter">010</div>
+            <div class="mine-face" id="mineFaceBtn">🙂</div>
+            <div class="mine-counter-display" id="mineTimer">000</div>
+          </div>
+
+          <div class="mine-controls">
+            <button class="solitaire-btn" id="newMinesweeperBtn">New Game</button>
+            <select class="mine-select" id="mineDifficulty">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+
+          <div class="mine-board-wrap">
+            <div class="mine-board" id="mineBoard"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="window cmd-window hidden" id="cmdWindow">
+      <div class="titlebar cmd-titlebar" id="titlebarCmd">
+        <div class="title-left">
+          <div class="title-icon cmd-icon"></div>
+          <div class="title-text">C:\\WINDOWS\\system32\\cmd.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="cmdWindow">—</div>
+          <div class="win-btn" data-close="cmdWindow">×</div>
+        </div>
+      </div>
+      <div class="cmd-body" id="cmdBody">
+        <div class="cmd-output" id="cmdOutput"></div>
+        <div class="cmd-line">
+          <span class="cmd-prompt">C:\\Documents and Settings\\Enzo&gt;</span>
+          <input class="cmd-input" id="cmdInput" type="text" spellcheck="false" autocomplete="off" />
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="window browser-window hidden" id="browserWindow">
+      <div class="titlebar browser-titlebar" id="titlebarBrowser">
+        <div class="title-left">
+          <div class="title-icon ie-icon"></div>
+          <div class="title-text">Microsoft Internet Explorer</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="browserWindow">—</div>
+          <div class="win-btn" data-close="browserWindow">×</div>
+        </div>
+      </div>
+      <div class="browser-body">
+        <div class="ie-toolbar">
+          <button class="ie-btn small" id="ieBackBtn">←</button>
+          <button class="ie-btn small" id="ieForwardBtn">→</button>
+          <button class="ie-btn small" id="ieRefreshBtn">↻</button>
+          <button class="ie-btn" id="ieHomeBtn">Home</button>
+          <button class="ie-btn" id="ieProxyBtn">Proxy</button>
+        </div>
+        <div class="ie-address-row">
+          <span class="ie-address-label">Address</span>
+          <input class="ie-address-input" id="ieAddressInput" type="text" spellcheck="false" value="https://example.com" />
+          <button class="ie-btn" id="ieGoBtn">Go</button>
+        </div>
+        <div class="ie-view">
+          <div class="ie-loading" id="ieLoading">Loading...</div>
+          <iframe class="ie-frame" id="ieFrame" sandbox="allow-forms allow-same-origin"></iframe>
+        </div>
+        <div class="ie-statusbar">
+          <div class="ie-status-left" id="ieStatusText">Ready</div>
+          <div class="ie-status-right" id="ieModeText">Proxy mode</div>
+        </div>
+      </div>
+    </div>
+
     <div class="window clock-window hidden" id="clockWindow">
       <div class="titlebar clock-titlebar" id="titlebarClock">
         <div class="title-left">
@@ -1542,6 +2698,62 @@
       </div>
     </div>
 
+
+    <div class="window folder-window hidden" id="folderWindow">
+      <div class="titlebar folder-titlebar" id="titlebarFolder">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text" id="folderWindowTitle">Folder</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="folderWindow">—</div>
+          <div class="win-btn" data-close="folderWindow">×</div>
+        </div>
+      </div>
+      <div class="folder-body">
+        <div class="folder-toolbar">📁 Desktop Folder</div>
+        <div class="folder-empty" id="folderWindowContent">
+          This folder is empty for now.<br>
+          Podes arrastar ícones do ambiente de trabalho para cima de uma pasta para os guardar aqui.
+        </div>
+      </div>
+    </div>
+
+    <div class="desktop-context-menu" id="desktopContextMenu">
+      <div class="context-item" data-context-action="open">
+        <div class="context-icon open"></div>
+        Open
+      </div>
+      <div class="context-item" data-context-action="rename">
+        <div class="context-icon rename"></div>
+        Rename
+      </div>
+      <div class="context-item" data-context-action="delete">
+        <div class="context-icon delete"></div>
+        Delete
+      </div>
+      <div class="context-separator"></div>
+      <div class="context-item" data-context-desktop-only="true">
+        <div class="context-icon folder"></div>
+        New
+        <span class="context-arrow">▶</span>
+        <div class="context-submenu">
+          <div class="context-item" data-context-action="new-folder">
+            <div class="context-icon folder"></div>
+            Folder
+          </div>
+        </div>
+      </div>
+      <div class="context-item" data-context-desktop-only="true" data-context-action="open-settings">
+        <div class="context-icon settings-mini"></div>
+        Properties
+      </div>
+      <div class="context-item" data-context-desktop-only="true" data-context-action="refresh">
+        <div class="context-icon refresh"></div>
+        Refresh
+      </div>
+    </div>
+
     <div class="start-menu" id="startMenu">
       <div class="start-top">
         <div class="start-avatar">
@@ -1557,14 +2769,17 @@
           <div class="menu-item" id="menuSteam"><div class="menu-icon steam"></div>Steam</div>
           <div class="menu-item" id="menuYoutube"><div class="menu-icon youtube"></div>YouTube Channel</div>
           <div class="menu-item" id="openWindowItem"><div class="menu-icon main"></div>Open website</div>
-          <div class="menu-item" id="openPlayerItem"><div class="menu-icon youtube"></div>Music Player</div>
+          <div class="menu-item" id="openPlayerItem"><div class="menu-icon main"></div>Music Player</div>
           <div class="menu-item" id="openMsnItem"><div class="menu-icon messenger"></div>Messenger</div>
+          <div class="menu-item" id="openCmdItem"><div class="menu-icon main"></div>Command Prompt</div>
+          <div class="menu-item" id="openBrowserItem"><div class="menu-icon ie"></div>Internet Explorer</div>
           <div class="menu-item" id="gamesMenuItem"><div class="menu-icon folder"></div>Games <span class="menu-arrow">▶</span></div>
           <div class="menu-item" id="openSettingsItem"><div class="menu-icon settings"></div>Settings</div>
 
           <div class="games-submenu" id="gamesSubmenu">
             <div class="menu-item" id="openSolitaireItem"><div class="menu-icon cards"></div>Solitaire</div>
             <div class="menu-item" id="openLeaderboardItem"><div class="menu-icon rank"></div>Leaderboard</div>
+            <div class="menu-item" id="openMinesweeperItem"><div class="menu-icon mine"></div>Minesweeper</div>
           </div>
         </div>
 
@@ -1595,6 +2810,9 @@
         <div class="task-button hidden" data-task="settingsWindow"><div class="title-icon gear-icon"></div>Settings</div>
         <div class="task-button hidden" data-task="solitaireWindow"><div class="title-icon cards-icon"></div>Solitaire</div>
         <div class="task-button hidden" data-task="msnWindow"><div class="title-icon msn-icon"></div>Messenger</div>
+        <div class="task-button hidden" data-task="cmdWindow"><div class="title-icon cmd-icon"></div>Command Prompt</div>
+        <div class="task-button hidden" data-task="browserWindow"><div class="title-icon ie-icon"></div>Internet Explorer</div>
+        <div class="task-button hidden" data-task="minesweeperWindow"><div class="title-icon mine-icon"></div>Minesweeper</div>
       </div>
 
       <div class="tray" id="trayClock">
@@ -1604,9 +2822,10 @@
     </div>
   </div>
 
+  <div class="crt-overlay" id="crtOverlay"></div>
+
   <script>
-    const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
-    const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?rel=0&controls=1&modestbranding=1";
+    const DEFAULT_PLAYLIST_URL = "music/playlist.json";
 
     const STEAM_PROFILES = [
       { id: "xSousa", url: "https://steamcommunity.com/id/xSousa/" },
@@ -1627,8 +2846,21 @@
       settings: { left: 22, top: 282 },
       steam: { left: 22, top: 368 },
       solitaire: { left: 22, top: 454 },
-      msn: { left: 22, top: 540 }
+      msn: { left: 22, top: 540 },
+      minesweeper: { left: 22, top: 626 },
+      cmd: { left: 22, top: 712 },
+      browser: { left: 118, top: 24 }
     };
+
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
 
     const desktop = document.getElementById("desktop");
     const GRID_X = 96;
@@ -1648,7 +2880,11 @@
       solitaireWindow: document.getElementById("solitaireWindow"),
       leaderboardWindow: document.getElementById("leaderboardWindow"),
       msnWindow: document.getElementById("msnWindow"),
+      minesweeperWindow: document.getElementById("minesweeperWindow"),
+      cmdWindow: document.getElementById("cmdWindow"),
+      browserWindow: document.getElementById("browserWindow"),
       clockWindow: document.getElementById("clockWindow"),
+      folderWindow: document.getElementById("folderWindow"),
       winPopup: document.getElementById("winPopup"),
       externalLinkWindow: document.getElementById("externalLinkWindow")
     };
@@ -1660,6 +2896,9 @@
       solitaireWindow: "Solitaire.exe",
       leaderboardWindow: "Solitaire Leaderboard",
       msnWindow: "Messenger.exe",
+      minesweeperWindow: "Minesweeper.exe",
+      cmdWindow: "Command Prompt",
+      browserWindow: "Microsoft Internet Explorer",
       clockWindow: "Date and Time",
       winPopup: "Solitaire.exe",
       externalLinkWindow: "Open External Link"
@@ -1769,7 +3008,11 @@
     makeDraggable(windowsMap.solitaireWindow, document.getElementById("titlebarSolitaire"));
     makeDraggable(windowsMap.leaderboardWindow, document.getElementById("titlebarLeaderboard"));
     makeDraggable(windowsMap.msnWindow, document.getElementById("titlebarMsn"));
+    makeDraggable(windowsMap.minesweeperWindow, document.getElementById("titlebarMinesweeper"));
+    makeDraggable(windowsMap.cmdWindow, document.getElementById("titlebarCmd"));
+    makeDraggable(windowsMap.browserWindow, document.getElementById("titlebarBrowser"));
     makeDraggable(windowsMap.clockWindow, document.getElementById("titlebarClock"));
+    makeDraggable(windowsMap.folderWindow, document.getElementById("titlebarFolder"));
     makeDraggable(windowsMap.winPopup, document.getElementById("titlebarPopup"));
     makeDraggable(windowsMap.externalLinkWindow, document.getElementById("titlebarExternal"));
 
@@ -1799,7 +3042,10 @@
       else openStartMenu();
     });
 
-    closeStartBtn.addEventListener("click", closeStartMenu);
+    closeStartBtn.addEventListener("click", () => {
+      closeStartMenu();
+      lockDesktop();
+    });
 
     function openGamesSubmenu() {
       clearTimeout(gamesCloseTimer);
@@ -1873,40 +3119,425 @@
     document.getElementById("openWindowItem").addEventListener("click", () => { showWindow("mainWindow"); closeStartMenu(); });
     document.getElementById("openPlayerItem").addEventListener("click", () => { showWindow("playerWindow"); loadPlayer(); closeStartMenu(); });
     document.getElementById("openSettingsItem").addEventListener("click", () => { showWindow("settingsWindow"); closeStartMenu(); });
+    document.getElementById("openBrowserItem").addEventListener("click", () => { showWindow("browserWindow"); initBrowserWindow(); closeStartMenu(); });
     document.getElementById("openSolitaireItem").addEventListener("click", () => { showWindow("solitaireWindow"); closeStartMenu(); });
     document.getElementById("openLeaderboardItem").addEventListener("click", () => { renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
     document.getElementById("openMsnItem").addEventListener("click", () => { showWindow("msnWindow"); loadSteamStatus(); closeStartMenu(); });
+    document.getElementById("openMinesweeperItem").addEventListener("click", () => { showWindow("minesweeperWindow"); closeStartMenu(); });
+    document.getElementById("openCmdItem").addEventListener("click", () => { openCmdWindow(); closeStartMenu(); });
 
-    document.getElementById("desktopShortcut").addEventListener("dblclick", () => showWindow("mainWindow"));
-    document.getElementById("youtubeShortcut").addEventListener("dblclick", () => askExternalLink("https://www.youtube.com/@xSousa", "YouTube"));
-    document.getElementById("musicShortcut").addEventListener("dblclick", () => { showWindow("playerWindow"); loadPlayer(); });
-    document.getElementById("settingsShortcut").addEventListener("dblclick", () => showWindow("settingsWindow"));
-    document.getElementById("steamShortcut").addEventListener("dblclick", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Steam"));
-    document.getElementById("solitaireShortcut").addEventListener("dblclick", () => showWindow("solitaireWindow"));
-    document.getElementById("msnShortcut").addEventListener("dblclick", () => { showWindow("msnWindow"); loadSteamStatus(); });
 
-    const ytPlayer = document.getElementById("ytPlayer");
+    function openDesktopIcon(icon) {
+      if (!icon) return;
+      const iconId = icon.dataset.iconId || "";
+
+      if (iconId === "mainapp") return showWindow("mainWindow");
+      if (iconId === "youtube") return askExternalLink("https://www.youtube.com/@xSousa", "YouTube");
+      if (iconId === "music") return loadPlayer();
+      if (iconId === "settings") return showWindow("settingsWindow");
+      if (iconId === "steam") return askExternalLink("https://steamcommunity.com/id/xSousa/", "Steam");
+      if (iconId === "solitaire") return showWindow("solitaireWindow");
+      if (iconId === "msn") { showWindow("msnWindow"); loadSteamStatus(); return; }
+      if (iconId === "cmd") return openCmdWindow();
+      if (iconId === "browser") { showWindow("browserWindow"); initBrowserWindow(); return; }
+      if (iconId === "minesweeper") return showWindow("minesweeperWindow");
+      if (iconId.startsWith("folder-")) return openFolderWindow(icon);
+    }
+
+
+    const cmdOutput = document.getElementById("cmdOutput");
+    const cmdInput = document.getElementById("cmdInput");
+    let cmdHistory = [];
+    let cmdHistoryIndex = -1;
+    let crtEffectEnabled = false;
+
+    function appendCmdLine(text = "", className = "") {
+      const line = document.createElement("div");
+      line.className = "cmd-output-line" + (className ? " " + className : "");
+      line.textContent = text;
+      cmdOutput.appendChild(line);
+      cmdOutput.scrollTop = cmdOutput.scrollHeight;
+    }
+
+    function appendCmdHtml(htmlText, className = "") {
+      const line = document.createElement("div");
+      line.className = "cmd-output-line" + (className ? " " + className : "");
+      line.innerHTML = htmlText;
+      cmdOutput.appendChild(line);
+      cmdOutput.scrollTop = cmdOutput.scrollHeight;
+    }
+
+    function setCrtEffect(enabled) {
+      crtEffectEnabled = !!enabled;
+      document.body.classList.toggle("crt-enabled", crtEffectEnabled);
+      appendCmdLine(crtEffectEnabled ? "CRT filter enabled." : "CRT filter disabled.", "secret");
+    }
+
+    function printCmdWelcome() {
+      if (cmdOutput.dataset.booted === "true") return;
+      cmdOutput.dataset.booted = "true";
+      appendCmdLine("Microsoft Windows XP [Version 5.1.2600]", "system");
+      appendCmdLine("(C) Copyright 1985-2001 Microsoft Corp.", "system");
+      appendCmdLine("");
+      appendCmdLine('Type "help" for available commands.', "dim");
+      appendCmdLine("");
+    }
+
+    function openCmdWindow() {
+      showWindow("cmdWindow");
+      printCmdWelcome();
+      setTimeout(() => cmdInput.focus(), 30);
+    }
+
+    function runCmdCommand(rawInput) {
+      const input = rawInput.trim();
+      appendCmdLine(`C:\\Documents and Settings\\Enzo>${rawInput}`, "system");
+
+      if (!input) return appendCmdLine("");
+
+      const lower = input.toLowerCase();
+
+      if (lower === "help") {
+        appendCmdLine("help      Show available commands");
+        appendCmdLine("cls       Clear the screen");
+        appendCmdLine("dir       List desktop items");
+        appendCmdLine("ver       Show Windows version");
+        appendCmdLine("date      Show current date");
+        appendCmdLine("time      Show current time");
+        appendCmdLine("start     Open an app (music, messenger, settings, solitaire, minesweeper, cmd)");
+        appendCmdLine("echo      Print text");
+        appendCmdLine("exit      Minimize Command Prompt");
+        appendCmdLine("shader    Toggle CRT shader (secret)");
+        appendCmdLine("");
+        return;
+      }
+
+      if (lower === "cls") {
+        cmdOutput.innerHTML = "";
+        return;
+      }
+
+      if (lower === "ver") {
+        appendCmdLine("Microsoft Windows XP [Version 5.1.2600]");
+        return;
+      }
+
+      if (lower === "date") {
+        appendCmdLine(new Date().toLocaleDateString("pt-PT"));
+        return;
+      }
+
+      if (lower === "time") {
+        appendCmdLine(new Date().toLocaleTimeString("pt-PT"));
+        return;
+      }
+
+      if (lower === "dir") {
+        const labels = Array.from(document.querySelectorAll(".desktop-icon .desktop-icon-label"))
+          .map(el => el.textContent.trim())
+          .filter(Boolean);
+        appendCmdLine(" Directory of Desktop");
+        appendCmdLine("");
+        labels.forEach((label, index) => appendCmdLine(`${String(index + 1).padStart(2, "0")}   ${label}`));
+        appendCmdLine("");
+        appendCmdLine(`${labels.length} item(s)`);
+        return;
+      }
+
+      if (lower.startsWith("echo ")) {
+        appendCmdLine(rawInput.slice(rawInput.indexOf(" ") + 1));
+        return;
+      }
+
+      if (lower === "exit") {
+        hideWindow("cmdWindow");
+        return;
+      }
+
+      if (lower.startsWith("start ")) {
+        const target = lower.slice(6).trim();
+        const commandMap = {
+          music: () => loadPlayer(),
+          messenger: () => { showWindow("msnWindow"); loadSteamStatus(); },
+          settings: () => showWindow("settingsWindow"),
+          solitaire: () => showWindow("solitaireWindow"),
+          minesweeper: () => showWindow("minesweeperWindow"),
+          cmd: () => openCmdWindow(),
+          xsousa: () => showWindow("mainWindow")
+        };
+        if (commandMap[target]) {
+          commandMap[target]();
+          appendCmdLine(`Opening ${target}...`);
+        } else {
+          appendCmdLine(`Cannot start "${target}".`, "error");
+        }
+        return;
+      }
+
+      if (lower === "shader" || lower === "shader crt") {
+        appendCmdLine("Shader command accepted.", "secret");
+        setCrtEffect(!crtEffectEnabled);
+        return;
+      }
+
+      if (lower === "shader on" || lower === "shader crt on") {
+        appendCmdLine("Shader command accepted.", "secret");
+        setCrtEffect(true);
+        return;
+      }
+
+      if (lower === "shader off" || lower === "shader crt off") {
+        appendCmdLine("Shader command accepted.", "secret");
+        setCrtEffect(false);
+        return;
+      }
+
+      appendCmdLine(`'${input}' is not recognized as an internal or external command, operable program or batch file.`, "error");
+    }
+
+    cmdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const value = cmdInput.value;
+        if (value.trim()) {
+          cmdHistory.push(value);
+          cmdHistoryIndex = cmdHistory.length;
+        }
+        runCmdCommand(value);
+        cmdInput.value = "";
+      } else if (e.key === "ArrowUp") {
+        if (!cmdHistory.length) return;
+        e.preventDefault();
+        cmdHistoryIndex = Math.max(0, cmdHistoryIndex - 1);
+        cmdInput.value = cmdHistory[cmdHistoryIndex] || "";
+      } else if (e.key === "ArrowDown") {
+        if (!cmdHistory.length) return;
+        e.preventDefault();
+        cmdHistoryIndex = Math.min(cmdHistory.length, cmdHistoryIndex + 1);
+        cmdInput.value = cmdHistory[cmdHistoryIndex] || "";
+      }
+    });
+
+    windowsMap.cmdWindow.addEventListener("mousedown", () => {
+      setTimeout(() => cmdInput.focus(), 20);
+    });
+
+    const audioPlayer = document.getElementById("audioPlayer");
     const playerStatus = document.getElementById("playerStatus");
+    const playerMeta = document.getElementById("playerMeta");
+    const playlistPanel = document.getElementById("playlistPanel");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    let currentPlaylist = [];
+    let currentTrackIndex = -1;
+
+    function formatPlayerTime(seconds) {
+      if (!Number.isFinite(seconds) || seconds <= 0) return "--:--";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function normalizeTrack(entry, index) {
+      if (typeof entry === "string") {
+        const clean = entry.split("/").pop();
+        return {
+          title: clean.replace(/\.[^.]+$/, ""),
+          artist: "Unknown Artist",
+          src: entry,
+          duration: ""
+        };
+      }
+
+      const src = entry.src || entry.file || "";
+      const title = entry.title || (src ? src.split("/").pop().replace(/\.[^.]+$/, "") : `Track ${index + 1}`);
+      return {
+        title,
+        artist: entry.artist || "Unknown Artist",
+        src,
+        duration: entry.duration || ""
+      };
+    }
+
+    function renderPlaylist() {
+      playlistPanel.innerHTML = "";
+
+      if (!currentPlaylist.length) {
+        playlistPanel.innerHTML = '<div class="playlist-item"><div class="playlist-index">--</div><div class="playlist-name">No music found.</div><div class="playlist-duration">--:--</div></div>';
+        playerMeta.textContent = "No track selected.";
+        playPauseBtn.textContent = "Play";
+        return;
+      }
+
+      currentPlaylist.forEach((track, index) => {
+        const row = document.createElement("div");
+        row.className = "playlist-item" + (index === currentTrackIndex ? " active" : "");
+        row.innerHTML = `
+          <div class="playlist-index">${String(index + 1).padStart(2, "0")}</div>
+          <div class="playlist-name">${track.title} — ${track.artist}</div>
+          <div class="playlist-duration">${track.duration || "--:--"}</div>
+        `;
+        row.addEventListener("click", () => {
+          playTrack(index);
+        });
+        playlistPanel.appendChild(row);
+      });
+    }
+
+    function updatePlayerMeta() {
+      if (currentTrackIndex < 0 || !currentPlaylist[currentTrackIndex]) {
+        playerMeta.textContent = "No track selected.";
+        return;
+      }
+
+      const track = currentPlaylist[currentTrackIndex];
+      const elapsed = formatPlayerTime(audioPlayer.currentTime || 0);
+      const total = formatPlayerTime(audioPlayer.duration || 0);
+      playerMeta.innerHTML = `<strong>${track.title}</strong><br>${track.artist} · ${elapsed} / ${total}`;
+    }
+
+    function playTrack(index, autoplay = true) {
+      if (!currentPlaylist.length || !currentPlaylist[index]) return;
+      currentTrackIndex = index;
+      audioPlayer.src = currentPlaylist[index].src;
+      updatePlayerMeta();
+      renderPlaylist();
+      showWindow("playerWindow");
+      if (autoplay) {
+        audioPlayer.play().catch(() => {
+          playerStatus.textContent = "Loaded. Click Play if the browser blocked autoplay.";
+        });
+      }
+    }
 
     function loadPlayer() {
-      if (!ytPlayer.src) ytPlayer.src = YOUTUBE_EMBED_URL;
-      playerStatus.textContent = "If YouTube still shows error 153, open this page through localhost instead of file://";
+      showWindow("playerWindow");
+      if (!currentPlaylist.length) {
+        loadPlaylistFromManifest();
+      } else {
+        renderPlaylist();
+        updatePlayerMeta();
+      }
+    }
+
+    function loadPlaylist(tracks, statusText) {
+      currentPlaylist = tracks.filter(track => track && track.src);
+      currentTrackIndex = currentPlaylist.length ? 0 : -1;
+      renderPlaylist();
+      if (statusText) playerStatus.innerHTML = statusText;
+      if (currentTrackIndex >= 0) {
+        audioPlayer.src = currentPlaylist[currentTrackIndex].src;
+        updatePlayerMeta();
+      } else {
+        audioPlayer.removeAttribute("src");
+        audioPlayer.load();
+        updatePlayerMeta();
+      }
+    }
+
+    async function loadPlaylistFromManifest() {
+      try {
+        const response = await fetch(DEFAULT_PLAYLIST_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("manifest");
+        const data = await response.json();
+        const rawTracks = Array.isArray(data) ? data : (data.tracks || []);
+        const tracks = rawTracks.map(normalizeTrack);
+        loadPlaylist(
+          tracks,
+          'Playlist loaded from <strong>music/playlist.json</strong>. Put your audio files inside <strong>music/</strong>.'
+        );
+      } catch (err) {
+        loadPlaylist([], 'No playlist found yet. Create <strong>music/playlist.json</strong> and list your tracks there, or use the Folder button for local testing.');
+      }
+    }
+
+    async function openLocalMusicFolder() {
+      if (window.showDirectoryPicker) {
+        try {
+          const dirHandle = await window.showDirectoryPicker();
+          const tracks = [];
+          for await (const entry of dirHandle.values()) {
+            if (entry.kind !== "file") continue;
+            if (!/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(entry.name)) continue;
+            const file = await entry.getFile();
+            tracks.push({
+              title: file.name.replace(/\.[^.]+$/, ""),
+              artist: "Local folder",
+              src: URL.createObjectURL(file),
+              duration: ""
+            });
+          }
+          tracks.sort((a, b) => a.title.localeCompare(b.title));
+          loadPlaylist(tracks, 'Loaded from a local folder. This only works after you choose a folder and depends on browser support.');
+          if (tracks.length) playTrack(0, false);
+          return;
+        } catch (err) {
+          playerStatus.textContent = "Folder selection cancelled.";
+          return;
+        }
+      }
+
+      const picker = document.createElement("input");
+      picker.type = "file";
+      picker.multiple = true;
+      picker.accept = ".mp3,.wav,.ogg,.m4a,.aac,.flac,audio/*";
+      picker.addEventListener("change", () => {
+        const files = Array.from(picker.files || []);
+        const tracks = files.map((file) => ({
+          title: file.name.replace(/\.[^.]+$/, ""),
+          artist: "Local files",
+          src: URL.createObjectURL(file),
+          duration: ""
+        }));
+        tracks.sort((a, b) => a.title.localeCompare(b.title));
+        loadPlaylist(tracks, "Loaded from local files.");
+        if (tracks.length) playTrack(0, false);
+      });
+      picker.click();
     }
 
     document.getElementById("hidePlayerBtn").addEventListener("click", () => hideWindow("playerWindow"));
-    document.getElementById("reloadMusicBtn").addEventListener("click", () => {
-      ytPlayer.src = YOUTUBE_EMBED_URL + "&t=" + Date.now();
-      showWindow("playerWindow");
+    document.getElementById("reloadMusicBtn").addEventListener("click", () => loadPlaylistFromManifest());
+    document.getElementById("openMusicFolderBtn").addEventListener("click", () => openLocalMusicFolder());
+    document.getElementById("prevTrackBtn").addEventListener("click", () => {
+      if (!currentPlaylist.length) return;
+      const nextIndex = currentTrackIndex <= 0 ? currentPlaylist.length - 1 : currentTrackIndex - 1;
+      playTrack(nextIndex);
     });
-    document.getElementById("openYoutubeBtn").addEventListener("click", () => {
-      askExternalLink(YOUTUBE_WATCH_URL, "Music Player");
+    document.getElementById("nextTrackBtn").addEventListener("click", () => {
+      if (!currentPlaylist.length) return;
+      const nextIndex = currentTrackIndex >= currentPlaylist.length - 1 ? 0 : currentTrackIndex + 1;
+      playTrack(nextIndex);
+    });
+    playPauseBtn.addEventListener("click", async () => {
+      if (!currentPlaylist.length) return;
+      if (audioPlayer.paused) {
+        try {
+          await audioPlayer.play();
+        } catch (err) {
+          playerStatus.textContent = "The browser blocked autoplay. Click again to start.";
+        }
+      } else {
+        audioPlayer.pause();
+      }
     });
 
-    if (location.protocol === "file:") {
-      playerStatus.textContent = "YouTube embed may fail with error 153 on file://. Use localhost to make it work.";
-    } else {
-      loadPlayer();
-    }
+    audioPlayer.addEventListener("play", () => {
+      playPauseBtn.textContent = "Pause";
+      updatePlayerMeta();
+      renderPlaylist();
+    });
+    audioPlayer.addEventListener("pause", () => {
+      playPauseBtn.textContent = "Play";
+      updatePlayerMeta();
+    });
+    audioPlayer.addEventListener("timeupdate", updatePlayerMeta);
+    audioPlayer.addEventListener("loadedmetadata", updatePlayerMeta);
+    audioPlayer.addEventListener("ended", () => {
+      if (!currentPlaylist.length) return;
+      const nextIndex = currentTrackIndex >= currentPlaylist.length - 1 ? 0 : currentTrackIndex + 1;
+      playTrack(nextIndex);
+    });
+
+    loadPlaylistFromManifest();
 
     const bgPreset = document.getElementById("bgPreset");
     const bgCustom = document.getElementById("bgCustom");
@@ -1916,6 +3547,18 @@
     const windowTop = document.getElementById("windowTop");
     const windowMid = document.getElementById("windowMid");
     const windowBottom = document.getElementById("windowBottom");
+    const cursorPreset = document.getElementById("cursorPreset");
+
+    const CURSOR_PRESETS = {
+      "xp-white": 'url("https://www.clipartmax.com/png/full/179-1798503_free-vector-mouse-pointer-wolfram-es-clip-art-windows-xp-mouse-cursor.png") 2 2, auto',
+      "xp-black": 'url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewBox=\"0 0 32 32\"><path d=\"M3 2 L3 24 L9 18 L13 29 L17 27 L13 17 L20 17 Z\" fill=\"black\" stroke=\"white\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/></svg>") 2 2, auto',
+      "default": "auto"
+    };
+
+    function applyCursorPreset(value) {
+      const cursorValue = CURSOR_PRESETS[value] || CURSOR_PRESETS["xp-white"];
+      document.documentElement.style.setProperty("--cursor-url", cursorValue);
+    }
 
     function applyWallpaper(value, customValue) {
       let wallpaperValue = wallpapers[value] || wallpapers.xp;
@@ -1942,8 +3585,11 @@
         taskbarBottom: taskbarBottom.value,
         windowTop: windowTop.value,
         windowMid: windowMid.value,
-        windowBottom: windowBottom.value
+        windowBottom: windowBottom.value,
+        cursorPreset: cursorPreset.value
       }));
+
+      applyCursorPreset(cursorPreset.value);
     }
 
     function loadSettings() {
@@ -1959,9 +3605,13 @@
         windowTop.value = s.windowTop || "#4f9df8";
         windowMid.value = s.windowMid || "#2a7be4";
         windowBottom.value = s.windowBottom || "#1f59b8";
+        cursorPreset.value = s.cursorPreset || "xp-white";
         applySettings();
       } catch {}
     }
+
+    cursorPreset.value = "xp-white";
+    applyCursorPreset(cursorPreset.value);
 
     document.getElementById("applySettingsBtn").addEventListener("click", applySettings);
     document.getElementById("closeSettingsBtn").addEventListener("click", () => {
@@ -1977,6 +3627,7 @@
       windowTop.value = "#4f9df8";
       windowMid.value = "#2a7be4";
       windowBottom.value = "#1f59b8";
+      cursorPreset.value = "xp-white";
       applySettings();
     });
 
@@ -2001,6 +3652,7 @@
       const occupied = new Map();
       document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
         if (icon.dataset.iconId === excludeId) return;
+        if (icon.style.display === "none") return;
         const left = parseInt(icon.style.left, 10) || 0;
         const top = parseInt(icon.style.top, 10) || 0;
         const { col, row } = gridToCell(left, top);
@@ -2046,12 +3698,14 @@
     function saveIconPositions() {
       const positions = {};
       document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        if (icon.style.display === "none") return;
         positions[icon.dataset.iconId] = {
           left: parseInt(icon.style.left, 10) || 0,
           top: parseInt(icon.style.top, 10) || 0
         };
       });
       localStorage.setItem("xpDesktopIcons", JSON.stringify(positions));
+      syncFoldersFromDOM();
     }
 
     function normalizeAllIconsToGrid() {
@@ -2104,26 +3758,389 @@
 
     document.getElementById("resetIconsBtn").addEventListener("click", resetIconPositions);
 
+    const FOLDERS_STORAGE_KEY = "xpDesktopFolders";
+    const FOLDER_CONTENTS_STORAGE_KEY = "xpDesktopFolderContents";
+    const desktopContextMenu = document.getElementById("desktopContextMenu");
+    const desktopOnlyContextItems = Array.from(desktopContextMenu.querySelectorAll("[data-context-desktop-only='true']"));
+    let contextTargetIcon = null;
+    let contextMenuDesktopPoint = { x: 40, y: 40 };
+
+    function getSavedFolders() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(FOLDERS_STORAGE_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveFolders(folders) {
+      localStorage.setItem(FOLDERS_STORAGE_KEY, JSON.stringify(folders));
+    }
+
+    function getFolderContentsMap() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(FOLDER_CONTENTS_STORAGE_KEY) || "{}");
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (err) {
+        return {};
+      }
+    }
+
+    function saveFolderContentsMap(map) {
+      localStorage.setItem(FOLDER_CONTENTS_STORAGE_KEY, JSON.stringify(map));
+    }
+
+    function syncFoldersFromDOM() {
+      const folders = Array.from(document.querySelectorAll(".desktop-icon.folder[data-folder='true']")).map(icon => ({
+        id: icon.dataset.iconId,
+        name: icon.querySelector(".desktop-icon-label")?.textContent?.trim() || "New Folder",
+        left: parseInt(icon.style.left, 10) || 0,
+        top: parseInt(icon.style.top, 10) || 0
+      }));
+      saveFolders(folders);
+
+      const validFolderIds = new Set(folders.map(folder => folder.id));
+      const contents = getFolderContentsMap();
+      Object.keys(contents).forEach(folderId => {
+        if (!validFolderIds.has(folderId)) delete contents[folderId];
+      });
+      saveFolderContentsMap(contents);
+    }
+
+    function iconDisplayNameById(iconId) {
+      const icon = document.querySelector(`.desktop-icon[data-icon-id="${iconId}"]`);
+      return icon?.querySelector(".desktop-icon-label")?.textContent?.trim() || iconId;
+    }
+
+    function getDesktopTopLimit() {
+      return desktop.clientHeight - 50;
+    }
+
+    function hideIconIntoFolder(icon, folderId) {
+      if (!icon || !folderId) return;
+      if (icon.dataset.folder === "true" || icon.dataset.iconId === folderId) return;
+      const contents = getFolderContentsMap();
+      Object.keys(contents).forEach(id => {
+        contents[id] = (contents[id] || []).filter(savedId => savedId !== icon.dataset.iconId);
+      });
+      const list = new Set(contents[folderId] || []);
+      list.add(icon.dataset.iconId);
+      contents[folderId] = Array.from(list);
+      saveFolderContentsMap(contents);
+      icon.dataset.inFolder = folderId;
+      icon.style.display = "none";
+      icon.classList.remove("selected", "dragging");
+      saveIconPositions();
+      renderOpenFolderWindow();
+    }
+
+    function restoreIconFromFolder(iconId, folderId) {
+      const icon = document.querySelector(`.desktop-icon[data-icon-id="${iconId}"]`);
+      const folderIcon = document.querySelector(`.desktop-icon[data-icon-id="${folderId}"]`);
+      if (!icon) return;
+      const contents = getFolderContentsMap();
+      contents[folderId] = (contents[folderId] || []).filter(savedId => savedId !== iconId);
+      saveFolderContentsMap(contents);
+      delete icon.dataset.inFolder;
+      icon.style.display = "";
+      const left = folderIcon ? (parseInt(folderIcon.style.left, 10) || 22) + GRID_X : 22;
+      const top = folderIcon ? (parseInt(folderIcon.style.top, 10) || 24) : 24;
+      snapIconToFreeSlot(icon, left, Math.min(top, getDesktopTopLimit() - icon.offsetHeight));
+      saveIconPositions();
+      renderOpenFolderWindow();
+    }
+
+    function applyFolderContentsVisibility() {
+      const contents = getFolderContentsMap();
+      const hiddenIds = new Set(Object.values(contents).flat());
+      document.querySelectorAll('.desktop-icon[data-icon-id]').forEach(icon => {
+        if (icon.dataset.folder === 'true') return;
+        const shouldHide = hiddenIds.has(icon.dataset.iconId);
+        icon.style.display = shouldHide ? 'none' : '';
+        if (shouldHide) icon.dataset.inFolder = 'true';
+        else delete icon.dataset.inFolder;
+      });
+    }
+
+    function createFolderIcon(folder) {
+      const icon = document.createElement("div");
+      icon.className = "desktop-icon folder aero";
+      icon.dataset.iconId = folder.id;
+      icon.dataset.folder = "true";
+      icon.style.left = (folder.left ?? 22) + "px";
+      icon.style.top = (folder.top ?? 24) + "px";
+      icon.innerHTML = `
+        <div class="desktop-icon-box"></div>
+        <div class="desktop-icon-label">${escapeHtml(folder.name || "New Folder")}</div>
+      `;
+      desktop.appendChild(icon);
+      bindDesktopIcon(icon);
+      return icon;
+    }
+
+    function loadFolders() {
+      getSavedFolders().forEach(createFolderIcon);
+    }
+
+    function getNextFolderDefaultName() {
+      const names = new Set(Array.from(document.querySelectorAll(".desktop-icon.folder .desktop-icon-label")).map(el => el.textContent.trim()));
+      if (!names.has("New Folder")) return "New Folder";
+      let n = 2;
+      while (names.has(`New Folder (${n})`)) n++;
+      return `New Folder (${n})`;
+    }
+
+    function createNewFolder() {
+      const folder = {
+        id: `folder-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        name: getNextFolderDefaultName(),
+        left: Math.max(0, contextMenuDesktopPoint.x - 32),
+        top: Math.max(0, contextMenuDesktopPoint.y - 20)
+      };
+      const icon = createFolderIcon(folder);
+      snapIconToFreeSlot(icon, folder.left, folder.top);
+      clearSelectedIcons();
+      icon.classList.add("selected");
+      saveIconPositions();
+      syncFoldersFromDOM();
+      setTimeout(() => renameDesktopIcon(icon), 20);
+    }
+
+    function renameDesktopIcon(icon) {
+      if (!icon) return;
+      const label = icon.querySelector(".desktop-icon-label");
+      const currentName = label ? label.textContent.trim() : "New Folder";
+      const nextName = window.prompt("New name:", currentName);
+      if (nextName === null) return;
+      const cleanName = nextName.trim() || currentName;
+      if (label) label.textContent = cleanName;
+      if (icon.dataset.folder === "true") syncFoldersFromDOM();
+      saveIconPositions();
+    }
+
+    function deleteDesktopIcon(icon) {
+      if (!icon || icon.dataset.folder !== "true") return;
+      const name = icon.querySelector(".desktop-icon-label")?.textContent?.trim() || "this folder";
+      if (!window.confirm(`Delete "${name}"?`)) return;
+      icon.remove();
+      syncFoldersFromDOM();
+      saveIconPositions();
+      hideDesktopContextMenu();
+    }
+
+    let currentOpenFolderId = null;
+
+    function renderOpenFolderWindow() {
+      if (!currentOpenFolderId) return;
+      const folderIcon = document.querySelector(`.desktop-icon[data-icon-id="${currentOpenFolderId}"]`);
+      const contentEl = document.getElementById("folderWindowContent");
+      const name = folderIcon?.querySelector(".desktop-icon-label")?.textContent?.trim() || "Folder";
+      document.getElementById("folderWindowTitle").textContent = name;
+      const contents = getFolderContentsMap();
+      const itemIds = (contents[currentOpenFolderId] || []).filter(id => document.querySelector(`.desktop-icon[data-icon-id="${id}"]`));
+      if (!itemIds.length) {
+        contentEl.innerHTML = `Esta pasta está vazia.<br><br><strong>${escapeHtml(name)}</strong> pode guardar ícones arrastados do ambiente de trabalho.`;
+        contentEl.className = 'folder-empty';
+        return;
+      }
+      contentEl.className = 'folder-items';
+      contentEl.innerHTML = itemIds.map(iconId => {
+        const icon = document.querySelector(`.desktop-icon[data-icon-id="${iconId}"]`);
+        const label = escapeHtml(icon?.querySelector('.desktop-icon-label')?.textContent?.trim() || iconId);
+        const img = icon?.querySelector('.desktop-icon-box img')?.getAttribute('src');
+        const box = img ? `<img src="${img}" alt="">` : `<div style="font-size:20px;">📄</div>`;
+        return `<div class="folder-item" data-folder-item-id="${iconId}">
+          <div class="folder-item-box">${box}</div>
+          <div class="folder-item-label">${label}</div>
+          <button class="xp-btn folder-item-restore" data-folder-restore="${iconId}">Desktop</button>
+        </div>`;
+      }).join('');
+    }
+
+    function openFolderWindow(icon) {
+      currentOpenFolderId = icon?.dataset.iconId || null;
+      renderOpenFolderWindow();
+      showWindow("folderWindow");
+    }
+
+    document.getElementById("folderWindowContent").addEventListener("click", (e) => {
+      const restoreBtn = e.target.closest('[data-folder-restore]');
+      if (restoreBtn && currentOpenFolderId) {
+        restoreIconFromFolder(restoreBtn.dataset.folderRestore, currentOpenFolderId);
+        return;
+      }
+      const item = e.target.closest('[data-folder-item-id]');
+      if (!item) return;
+      const icon = document.querySelector(`.desktop-icon[data-icon-id="${item.dataset.folderItemId}"]`);
+      if (icon) openDesktopIcon(icon);
+    });
+
+    function hideDesktopContextMenu() {
+      desktopContextMenu.classList.remove("open");
+      contextTargetIcon = null;
+    }
+
+    function showDesktopContextMenu(clientX, clientY, icon = null) {
+      contextTargetIcon = icon;
+      contextMenuDesktopPoint = {
+        x: clientX - desktop.getBoundingClientRect().left,
+        y: clientY - desktop.getBoundingClientRect().top
+      };
+
+      desktopOnlyContextItems.forEach(item => {
+        item.style.display = icon ? "none" : "";
+      });
+
+      const deleteItem = desktopContextMenu.querySelector('[data-context-action="delete"]');
+      const renameItem = desktopContextMenu.querySelector('[data-context-action="rename"]');
+      const openItem = desktopContextMenu.querySelector('[data-context-action="open"]');
+      const separator = desktopContextMenu.querySelector(".context-separator");
+      const isFolder = !!(icon && icon.dataset.folder === "true");
+
+      openItem.style.display = icon ? "" : "none";
+      renameItem.style.display = icon ? "" : "none";
+      deleteItem.style.display = isFolder ? "" : "none";
+      separator.style.display = icon ? "none" : "";
+
+      desktopContextMenu.classList.add("open");
+      const menuWidth = desktopContextMenu.offsetWidth || 190;
+      const menuHeight = desktopContextMenu.offsetHeight || 170;
+      const maxX = window.innerWidth - menuWidth - 8;
+      const maxY = window.innerHeight - menuHeight - 48;
+      desktopContextMenu.style.left = Math.max(6, Math.min(clientX, maxX)) + "px";
+      desktopContextMenu.style.top = Math.max(6, Math.min(clientY, maxY)) + "px";
+    }
+
+    desktopContextMenu.addEventListener("click", (e) => {
+      const item = e.target.closest("[data-context-action]");
+      if (!item) return;
+      const action = item.dataset.contextAction;
+
+      if (action === "new-folder") createNewFolder();
+      if (action === "open-settings") showWindow("settingsWindow");
+      if (action === "refresh") loadSteamStatus();
+      if (action === "open") openDesktopIcon(contextTargetIcon);
+      if (action === "rename") renameDesktopIcon(contextTargetIcon);
+      if (action === "delete") deleteDesktopIcon(contextTargetIcon);
+
+      hideDesktopContextMenu();
+    });
+
+    function bindDesktopIcon(icon) {
+      icon.addEventListener("dblclick", () => openDesktopIcon(icon));
+
+      icon.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        if (!icon.classList.contains("selected")) {
+          clearSelectedIcons();
+          icon.classList.add("selected");
+        }
+        showDesktopContextMenu(e.clientX, e.clientY, icon);
+      });
+
+      makeDesktopIconDraggable(icon);
+    }
+
+
     function clearSelectedIcons() {
       document.querySelectorAll(".desktop-icon.selected").forEach(el => el.classList.remove("selected"));
     }
 
+    function getSelectedIcons() {
+      return Array.from(document.querySelectorAll(".desktop-icon.selected"));
+    }
+
+    function rectsIntersect(a, b) {
+      return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+    }
+
+    let selectionBox = null;
+    let selectionStartX = 0;
+    let selectionStartY = 0;
+    let isSelectingIcons = false;
+
+    function startDesktopSelection(clientX, clientY) {
+      const desktopRect = desktop.getBoundingClientRect();
+      isSelectingIcons = true;
+      selectionStartX = clientX - desktopRect.left;
+      selectionStartY = clientY - desktopRect.top;
+      selectionBox = document.createElement("div");
+      selectionBox.className = "selection-box";
+      selectionBox.style.left = selectionStartX + "px";
+      selectionBox.style.top = selectionStartY + "px";
+      selectionBox.style.width = "0px";
+      selectionBox.style.height = "0px";
+      desktop.appendChild(selectionBox);
+    }
+
+    function updateDesktopSelection(clientX, clientY) {
+      if (!isSelectingIcons || !selectionBox) return;
+      const desktopRect = desktop.getBoundingClientRect();
+      const currentX = clientX - desktopRect.left;
+      const currentY = clientY - desktopRect.top;
+      const left = Math.min(selectionStartX, currentX);
+      const top = Math.min(selectionStartY, currentY);
+      const width = Math.abs(currentX - selectionStartX);
+      const height = Math.abs(currentY - selectionStartY);
+
+      selectionBox.style.left = left + "px";
+      selectionBox.style.top = top + "px";
+      selectionBox.style.width = width + "px";
+      selectionBox.style.height = height + "px";
+
+      const selectionRect = {
+        left: desktopRect.left + left,
+        top: desktopRect.top + top,
+        right: desktopRect.left + left + width,
+        bottom: desktopRect.top + top + height
+      };
+
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        const iconRect = icon.getBoundingClientRect();
+        icon.classList.toggle("selected", rectsIntersect(selectionRect, iconRect));
+      });
+    }
+
+    function stopDesktopSelection() {
+      isSelectingIcons = false;
+      if (selectionBox) {
+        selectionBox.remove();
+        selectionBox = null;
+      }
+    }
+
     function makeDesktopIconDraggable(icon) {
       let isDragging = false;
-      let startX = 0, startY = 0, originLeft = 0, originTop = 0, moved = false;
+      let startX = 0, startY = 0, moved = false;
+      let dragIcons = [];
+      let origins = [];
 
       icon.addEventListener("mousedown", (e) => {
         if (e.button !== 0 || e.detail > 1) return;
-        clearSelectedIcons();
-        icon.classList.add("selected");
+
+        const alreadySelected = icon.classList.contains("selected");
+        if (!alreadySelected) {
+          clearSelectedIcons();
+          icon.classList.add("selected");
+        }
+
+        dragIcons = getSelectedIcons();
+        if (!dragIcons.length) dragIcons = [icon];
+
+        origins = dragIcons.map(item => ({
+          icon: item,
+          left: parseInt(item.style.left, 10) || 0,
+          top: parseInt(item.style.top, 10) || 0
+        }));
+
         isDragging = true;
         moved = false;
         startX = e.clientX;
         startY = e.clientY;
-        originLeft = parseInt(icon.style.left, 10) || 0;
-        originTop = parseInt(icon.style.top, 10) || 0;
-        icon.classList.add("dragging");
+        dragIcons.forEach(item => item.classList.add("dragging"));
         e.preventDefault();
+        e.stopPropagation();
       });
 
       document.addEventListener("mousemove", (e) => {
@@ -2132,32 +4149,106 @@
         const dy = e.clientY - startY;
         if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
 
-        let newLeft = originLeft + dx;
-        let newTop = originTop + dy;
-        const maxLeft = desktop.clientWidth - icon.offsetWidth;
-        const maxTop = desktop.clientHeight - 50 - icon.offsetHeight;
-        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-        newTop = Math.max(0, Math.min(newTop, maxTop));
-        icon.style.left = newLeft + "px";
-        icon.style.top = newTop + "px";
+        origins.forEach(({ icon: dragIcon, left, top }) => {
+          let newLeft = left + dx;
+          let newTop = top + dy;
+          const maxLeft = desktop.clientWidth - dragIcon.offsetWidth;
+          const maxTop = desktop.clientHeight - 50 - dragIcon.offsetHeight;
+          newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+          newTop = Math.max(0, Math.min(newTop, maxTop));
+          dragIcon.style.left = newLeft + "px";
+          dragIcon.style.top = newTop + "px";
+        });
       });
 
       document.addEventListener("mouseup", () => {
         if (!isDragging) return;
         isDragging = false;
-        icon.classList.remove("dragging");
+        dragIcons.forEach(item => item.classList.remove("dragging"));
 
-        const currentLeft = parseInt(icon.style.left, 10) || 0;
-        const currentTop = parseInt(icon.style.top, 10) || 0;
-        snapIconToFreeSlot(icon, currentLeft, currentTop);
+        let droppedIntoFolder = false;
+        if (moved) {
+          const folderIcons = Array.from(document.querySelectorAll('.desktop-icon.folder[data-folder="true"]')).filter(folderIcon => !dragIcons.includes(folderIcon));
+          const targetFolder = folderIcons.find(folderIcon => {
+            const folderRect = folderIcon.getBoundingClientRect();
+            return dragIcons.some(dragIcon => {
+              const iconRect = dragIcon.getBoundingClientRect();
+              const centerX = iconRect.left + (iconRect.width / 2);
+              const centerY = iconRect.top + (iconRect.height / 2);
+              return centerX >= folderRect.left && centerX <= folderRect.right && centerY >= folderRect.top && centerY <= folderRect.bottom;
+            });
+          });
+          if (targetFolder) {
+            dragIcons.forEach(dragIcon => hideIconIntoFolder(dragIcon, targetFolder.dataset.iconId));
+            droppedIntoFolder = true;
+          }
+        }
+
+        if (!droppedIntoFolder) {
+          origins
+            .slice()
+            .sort((a, b) => (a.top - b.top) || (a.left - b.left))
+            .forEach(({ icon: dragIcon }) => {
+              const currentLeft = parseInt(dragIcon.style.left, 10) || 0;
+              const currentTop = parseInt(dragIcon.style.top, 10) || 0;
+              snapIconToFreeSlot(dragIcon, currentLeft, currentTop);
+            });
+        }
 
         if (moved) saveIconPositions();
       });
     }
 
-    document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(makeDesktopIconDraggable);
+    document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(bindDesktopIcon);
+
     desktop.addEventListener("mousedown", (e) => {
-      if (!e.target.closest(".desktop-icon") && !e.target.closest("#trayClock")) clearSelectedIcons();
+      const clickedWindow = e.target.closest(".window");
+      const clickedIcon = e.target.closest(".desktop-icon");
+      const clickedTray = e.target.closest("#trayClock");
+      const clickedTaskbar = e.target.closest(".taskbar");
+      const clickedStartMenu = e.target.closest("#startMenu");
+      const clickedContextMenu = e.target.closest("#desktopContextMenu");
+
+      if (!clickedContextMenu) hideDesktopContextMenu();
+      if (clickedWindow || clickedTray || clickedTaskbar || clickedStartMenu || clickedContextMenu) return;
+
+      if (!clickedIcon) {
+        clearSelectedIcons();
+        startDesktopSelection(e.clientX, e.clientY);
+      }
+    });
+
+    desktop.addEventListener("contextmenu", (e) => {
+      const clickedWindow = e.target.closest(".window");
+      const clickedTaskbar = e.target.closest(".taskbar");
+      const clickedStartMenu = e.target.closest("#startMenu");
+      const clickedIcon = e.target.closest(".desktop-icon");
+      if (clickedWindow || clickedTaskbar || clickedStartMenu || clickedIcon) return;
+      e.preventDefault();
+      clearSelectedIcons();
+      showDesktopContextMenu(e.clientX, e.clientY, null);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#desktopContextMenu")) hideDesktopContextMenu();
+    });
+
+    document.addEventListener("contextmenu", (e) => {
+      if (e.target.closest('.window') || e.target.closest('.taskbar') || e.target.closest('#startMenu')) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hideDesktopContextMenu();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (isSelectingIcons) updateDesktopSelection(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("mouseup", () => {
+      if (isSelectingIcons) stopDesktopSelection();
     });
 
     function createClockMarks() {
@@ -2603,6 +4694,267 @@
     document.getElementById("openSteamProfileBtn").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Messenger"));
     document.getElementById("openSteamProfileBtn2").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/RafaXIS/", "Messenger"));
 
+    let mineRows = 9;
+    let mineCols = 9;
+    let mineCount = 10;
+    let mineBoardData = [];
+    let mineGameOver = false;
+    let mineFlagsPlaced = 0;
+    let mineRevealedCount = 0;
+    let mineTimerValue = 0;
+    let mineTimerInterval = null;
+    let mineStarted = false;
+    let mineFirstClick = true;
+
+    const mineBoardEl = document.getElementById("mineBoard");
+    const mineCounterEl = document.getElementById("mineCounter");
+    const mineTimerEl = document.getElementById("mineTimer");
+    const mineFaceBtn = document.getElementById("mineFaceBtn");
+    const mineDifficulty = document.getElementById("mineDifficulty");
+
+    function formatMineDisplay(num) {
+      const clamped = Math.max(-99, Math.min(999, num));
+      if (clamped < 0) return "-" + String(Math.abs(clamped)).padStart(2, "0");
+      return String(clamped).padStart(3, "0");
+    }
+
+    function updateMineDisplays() {
+      mineCounterEl.textContent = formatMineDisplay(mineCount - mineFlagsPlaced);
+      mineTimerEl.textContent = formatMineDisplay(mineTimerValue);
+    }
+
+    function getMineConfig(level) {
+      if (level === "medium") return { rows: 12, cols: 12, mines: 22 };
+      if (level === "hard") return { rows: 16, cols: 16, mines: 40 };
+      return { rows: 9, cols: 9, mines: 10 };
+    }
+
+    function startMineTimer() {
+      clearInterval(mineTimerInterval);
+      mineTimerInterval = setInterval(() => {
+        if (mineGameOver || !mineStarted) return;
+        mineTimerValue = Math.min(999, mineTimerValue + 1);
+        updateMineDisplays();
+      }, 1000);
+    }
+
+    function stopMineTimer() {
+      clearInterval(mineTimerInterval);
+      mineTimerInterval = null;
+    }
+
+    function createEmptyMineBoard() {
+      mineBoardData = [];
+      for (let r = 0; r < mineRows; r++) {
+        const row = [];
+        for (let c = 0; c < mineCols; c++) {
+          row.push({
+            mine: false,
+            revealed: false,
+            flagged: false,
+            adjacent: 0
+          });
+        }
+        mineBoardData.push(row);
+      }
+    }
+
+    function placeMinesSafe(firstRow, firstCol) {
+      let placed = 0;
+      while (placed < mineCount) {
+        const r = Math.floor(Math.random() * mineRows);
+        const c = Math.floor(Math.random() * mineCols);
+        if ((r === firstRow && c === firstCol) || mineBoardData[r][c].mine) continue;
+        mineBoardData[r][c].mine = true;
+        placed++;
+      }
+    }
+
+    function calculateMineAdjacents() {
+      for (let r = 0; r < mineRows; r++) {
+        for (let c = 0; c < mineCols; c++) {
+          if (mineBoardData[r][c].mine) {
+            mineBoardData[r][c].adjacent = -1;
+            continue;
+          }
+          let count = 0;
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (!dr && !dc) continue;
+              const nr = r + dr;
+              const nc = c + dc;
+              if (nr >= 0 && nr < mineRows && nc >= 0 && nc < mineCols && mineBoardData[nr][nc].mine) {
+                count++;
+              }
+            }
+          }
+          mineBoardData[r][c].adjacent = count;
+        }
+      }
+    }
+
+    function newMinesweeperGame() {
+      const config = getMineConfig(mineDifficulty.value);
+      mineRows = config.rows;
+      mineCols = config.cols;
+      mineCount = config.mines;
+      mineGameOver = false;
+      mineFlagsPlaced = 0;
+      mineRevealedCount = 0;
+      mineTimerValue = 0;
+      mineStarted = false;
+      mineFirstClick = true;
+      mineFaceBtn.textContent = "🙂";
+      stopMineTimer();
+      createEmptyMineBoard();
+      updateMineDisplays();
+      renderMineBoard();
+    }
+
+    function renderMineBoard() {
+      mineBoardEl.innerHTML = "";
+      mineBoardEl.style.gridTemplateColumns = `repeat(${mineCols}, 24px)`;
+
+      for (let r = 0; r < mineRows; r++) {
+        for (let c = 0; c < mineCols; c++) {
+          const cell = mineBoardData[r][c];
+          const el = document.createElement("div");
+          el.className = "mine-cell";
+          el.dataset.row = r;
+          el.dataset.col = c;
+
+          if (cell.revealed) {
+            el.classList.add("revealed");
+            if (cell.mine) {
+              el.textContent = "💣";
+              if (mineGameOver) el.classList.add("mine-hit");
+            } else if (cell.adjacent > 0) {
+              el.textContent = cell.adjacent;
+              el.classList.add(`n${cell.adjacent}`);
+            }
+          } else if (cell.flagged) {
+            el.textContent = "🚩";
+          }
+
+          el.addEventListener("click", () => revealMineCell(r, c));
+          el.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            toggleMineFlag(r, c);
+          });
+
+          mineBoardEl.appendChild(el);
+        }
+      }
+    }
+
+    function floodReveal(r, c) {
+      const stack = [[r, c]];
+      while (stack.length) {
+        const [cr, cc] = stack.pop();
+        const cell = mineBoardData[cr][cc];
+        if (cell.revealed || cell.flagged) continue;
+
+        cell.revealed = true;
+        mineRevealedCount++;
+
+        if (cell.adjacent === 0) {
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (!dr && !dc) continue;
+              const nr = cr + dr;
+              const nc = cc + dc;
+              if (nr >= 0 && nr < mineRows && nc >= 0 && nc < mineCols) {
+                const neighbor = mineBoardData[nr][nc];
+                if (!neighbor.revealed && !neighbor.flagged && !neighbor.mine) {
+                  stack.push([nr, nc]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    function revealAllMines() {
+      for (let r = 0; r < mineRows; r++) {
+        for (let c = 0; c < mineCols; c++) {
+          if (mineBoardData[r][c].mine) {
+            mineBoardData[r][c].revealed = true;
+          }
+        }
+      }
+    }
+
+    function revealMineCell(r, c) {
+      if (mineGameOver) return;
+
+      const cell = mineBoardData[r][c];
+      if (cell.revealed || cell.flagged) return;
+
+      if (mineFirstClick) {
+        mineFirstClick = false;
+        placeMinesSafe(r, c);
+        calculateMineAdjacents();
+        mineStarted = true;
+        startMineTimer();
+      }
+
+      if (cell.mine) {
+        cell.revealed = true;
+        mineGameOver = true;
+        mineFaceBtn.textContent = "😵";
+        revealAllMines();
+        stopMineTimer();
+        renderMineBoard();
+        return;
+      }
+
+      if (cell.adjacent === 0) {
+        floodReveal(r, c);
+      } else {
+        cell.revealed = true;
+        mineRevealedCount++;
+      }
+
+      renderMineBoard();
+      checkMineWin();
+    }
+
+    function toggleMineFlag(r, c) {
+      if (mineGameOver) return;
+      const cell = mineBoardData[r][c];
+      if (cell.revealed) return;
+
+      cell.flagged = !cell.flagged;
+      mineFlagsPlaced += cell.flagged ? 1 : -1;
+      updateMineDisplays();
+      renderMineBoard();
+    }
+
+    function checkMineWin() {
+      const totalSafeCells = (mineRows * mineCols) - mineCount;
+      if (mineRevealedCount >= totalSafeCells && !mineGameOver) {
+        mineGameOver = true;
+        mineFaceBtn.textContent = "😎";
+        stopMineTimer();
+
+        for (let r = 0; r < mineRows; r++) {
+          for (let c = 0; c < mineCols; c++) {
+            if (mineBoardData[r][c].mine && !mineBoardData[r][c].flagged) {
+              mineBoardData[r][c].flagged = true;
+            }
+          }
+        }
+        mineFlagsPlaced = mineCount;
+        updateMineDisplays();
+        renderMineBoard();
+      }
+    }
+
+    document.getElementById("newMinesweeperBtn").addEventListener("click", newMinesweeperGame);
+    mineFaceBtn.addEventListener("click", newMinesweeperGame);
+    mineDifficulty.addEventListener("change", newMinesweeperGame);
+
     function createClockMarks() {
       const clockMarks = document.getElementById("clockMarks");
       clockMarks.innerHTML = "";
@@ -2614,12 +4966,280 @@
       }
     }
 
+
+    const ieFrame = document.getElementById("ieFrame");
+    const ieAddressInput = document.getElementById("ieAddressInput");
+    const ieStatusText = document.getElementById("ieStatusText");
+    const ieModeText = document.getElementById("ieModeText");
+    const ieLoading = document.getElementById("ieLoading");
+    const ieBackBtn = document.getElementById("ieBackBtn");
+    const ieForwardBtn = document.getElementById("ieForwardBtn");
+    const ieRefreshBtn = document.getElementById("ieRefreshBtn");
+    const ieHomeBtn = document.getElementById("ieHomeBtn");
+    const ieGoBtn = document.getElementById("ieGoBtn");
+    const ieProxyBtn = document.getElementById("ieProxyBtn");
+    const IE_HOME = "about:xp-home";
+    const IE_PROXY_SOURCES = [
+      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      url => `https://api.cors.syrins.tech/?url=${encodeURIComponent(url)}`
+    ];
+    let ieHistory = [];
+    let ieHistoryIndex = -1;
+    let ieCurrentUrl = IE_HOME;
+    let ieBooted = false;
+
+    function initBrowserWindow() {
+      if (ieBooted) return;
+      ieBooted = true;
+      renderIEHome();
+      syncIEButtons();
+    }
+
+    function syncIEButtons() {
+      ieBackBtn.disabled = ieHistoryIndex <= 0;
+      ieForwardBtn.disabled = ieHistoryIndex >= ieHistory.length - 1;
+    }
+
+    function setIELoading(active, message = "Loading...") {
+      ieLoading.classList.toggle("active", !!active);
+      ieLoading.textContent = message;
+      if (active) ieStatusText.textContent = message;
+    }
+
+    function normaliseBrowserInput(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return IE_HOME;
+      if (raw === IE_HOME) return raw;
+      if (/^about:/i.test(raw)) return raw;
+      if (/^https?:\/\//i.test(raw)) return raw;
+      if (raw.includes(" ")) {
+        return `https://www.google.com/search?q=${encodeURIComponent(raw)}`;
+      }
+      if (!raw.includes(".")) {
+        return `https://www.google.com/search?q=${encodeURIComponent(raw)}`;
+      }
+      return `https://${raw}`;
+    }
+
+    function pushIEHistory(url) {
+      if (ieHistory[ieHistoryIndex] === url) return;
+      ieHistory = ieHistory.slice(0, ieHistoryIndex + 1);
+      ieHistory.push(url);
+      ieHistoryIndex = ieHistory.length - 1;
+      syncIEButtons();
+    }
+
+    function renderIEHome() {
+      ieCurrentUrl = IE_HOME;
+      ieAddressInput.value = "google.com";
+      ieModeText.textContent = "Proxy mode";
+      ieStatusText.textContent = "Ready";
+      const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+        html,body{height:100%}
+        body{margin:0;font-family:Tahoma,Verdana,Arial,sans-serif;background:linear-gradient(to bottom,#ffffff,#edf4ff 65%,#dfeeff 100%);color:#173869;overflow:auto}
+        .wrap{padding:18px;min-height:100%;box-sizing:border-box} h2{margin:0;color:#1b4e94;font-size:24px} p{margin:0 0 12px;font-size:13px;line-height:1.5}
+        .hero{display:flex;align-items:center;gap:12px;margin-bottom:12px}.hero img{width:42px;height:42px;object-fit:contain;flex:0 0 auto}
+        .links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.link{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;border:1px solid #a5bee1;background:linear-gradient(to bottom,#ffffff,#e4efff);color:#11417e;text-decoration:none;font-weight:bold;font-size:13px}
+      </style></head><body><div class="wrap"><div class="hero"><img src="https://pngimg.com/d/ie_logo_PNG4.png" alt="Internet Explorer"><h2>Internet Explorer</h2></div><p>Esta versão usa proxy público para tentar abrir páginas dentro da janela. Alguns sites, especialmente os mais modernos, podem aparecer partidos ou recusar carregar.</p><p>Podes escrever um endereço ou uma pesquisa. Para começar rápido:</p><div class="links"><a class="link" href="https://www.google.com/">Google</a><a class="link" href="https://pt.wikipedia.org/">Wikipedia</a><a class="link" href="https://example.com/">Example</a><a class="link" href="https://xsousa.com/">xSousa.com</a></div></div><script>window.addEventListener('click',function(e){const a=e.target.closest('a[href]');if(!a)return;e.preventDefault();parent.postMessage({type:'ie-nav',href:a.href},'*');});<\/script></body></html>`;
+      ieFrame.srcdoc = html;
+    }
+
+    async function fetchIEProxyHtml(url) {
+      let lastError = new Error("Unknown proxy error");
+      for (const build of IE_PROXY_SOURCES) {
+        try {
+          const response = await fetch(build(url));
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const html = await response.text();
+          if (!html || html.trim().length < 10) throw new Error("Empty response");
+          return html;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError;
+    }
+
+    function prepareProxyDocument(html, originalUrl) {
+      let doc;
+      try {
+        doc = new DOMParser().parseFromString(html, "text/html");
+      } catch (error) {
+        return `<!DOCTYPE html><html><body><pre>${escapeHtml(html)}</pre></body></html>`;
+      }
+
+      doc.querySelectorAll('script, meta[http-equiv="Content-Security-Policy"], meta[http-equiv="refresh"]').forEach(el => el.remove());
+      let base = doc.querySelector('base');
+      if (!base) {
+        base = doc.createElement('base');
+        if (doc.head) doc.head.prepend(base);
+      }
+      base.setAttribute('href', originalUrl);
+
+      const helper = doc.createElement('script');
+      helper.textContent = `
+        window.addEventListener('click', function(e) {
+          const a = e.target.closest('a[href]');
+          if (!a) return;
+          const href = a.href;
+          if (!href || href.startsWith('javascript:')) return;
+          e.preventDefault();
+          parent.postMessage({ type: 'ie-nav', href }, '*');
+        }, true);
+        window.addEventListener('submit', function(e) {
+          const form = e.target;
+          if (!(form instanceof HTMLFormElement)) return;
+          e.preventDefault();
+          const method = (form.method || 'GET').toUpperCase();
+          const action = form.action || location.href;
+          if (method !== 'GET') {
+            parent.postMessage({ type: 'ie-status', message: 'This old browser only handles GET forms in proxy mode.' }, '*');
+            return;
+          }
+          const params = new URLSearchParams(new FormData(form)).toString();
+          parent.postMessage({ type: 'ie-nav', href: action + (action.includes('?') ? '&' : '?') + params }, '*');
+        }, true);
+      `;
+      if (doc.body) doc.body.appendChild(helper);
+      return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+    }
+
+    async function ieNavigate(input, pushHistory = true) {
+      const url = normaliseBrowserInput(input);
+      if (url === IE_HOME) {
+        if (pushHistory) pushIEHistory(url);
+        renderIEHome();
+        syncIEButtons();
+        return;
+      }
+
+      ieCurrentUrl = url;
+      ieAddressInput.value = url;
+      ieModeText.textContent = "Proxy mode";
+      setIELoading(true, "Loading page...");
+
+      try {
+        const rawHtml = await fetchIEProxyHtml(url);
+        const page = prepareProxyDocument(rawHtml, url);
+        ieFrame.srcdoc = page;
+        if (pushHistory) pushIEHistory(url);
+        ieStatusText.textContent = `Done: ${url}`;
+      } catch (error) {
+        ieFrame.srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{font-family:Tahoma,Verdana,Arial,sans-serif;background:#fff;color:#173869;padding:18px}h3{margin-top:0;color:#b12424}pre{white-space:pre-wrap;background:#f6f8fc;border:1px solid #cad8f0;padding:10px}</style></head><body><h3>Page could not be loaded in the proxy browser.</h3><p>Try another site or open it externally.</p><p><strong>URL:</strong> ${escapeHtml(url)}</p><pre>${escapeHtml(error.message || String(error))}</pre></body></html>`;
+        ieStatusText.textContent = "Load failed";
+      } finally {
+        setIELoading(false);
+        syncIEButtons();
+      }
+    }
+
+    ieGoBtn.addEventListener("click", () => ieNavigate(ieAddressInput.value, true));
+    ieAddressInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") ieNavigate(ieAddressInput.value, true);
+    });
+    ieHomeBtn.addEventListener("click", () => {
+      pushIEHistory(IE_HOME);
+      renderIEHome();
+      syncIEButtons();
+    });
+    ieRefreshBtn.addEventListener("click", () => ieNavigate(ieCurrentUrl, false));
+    ieProxyBtn.addEventListener("click", () => ieNavigate(ieAddressInput.value || ieCurrentUrl, true));
+    ieBackBtn.addEventListener("click", () => {
+      if (ieHistoryIndex <= 0) return;
+      ieHistoryIndex -= 1;
+      syncIEButtons();
+      const previous = ieHistory[ieHistoryIndex];
+      if (previous === IE_HOME) renderIEHome(); else ieNavigate(previous, false);
+    });
+    ieForwardBtn.addEventListener("click", () => {
+      if (ieHistoryIndex >= ieHistory.length - 1) return;
+      ieHistoryIndex += 1;
+      syncIEButtons();
+      const next = ieHistory[ieHistoryIndex];
+      if (next === IE_HOME) renderIEHome(); else ieNavigate(next, false);
+    });
+    window.addEventListener("message", event => {
+      const data = event.data || {};
+      if (data.type === "ie-nav" && data.href) {
+        ieNavigate(data.href, true);
+      } else if (data.type === "ie-status" && data.message) {
+        ieStatusText.textContent = data.message;
+      }
+    });
+
+
+    /* LOGIN LOGIC */
+    const loginScreen = document.getElementById("loginScreen");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginLoading = document.getElementById("loginLoading");
+    const loginShutdownBtn = document.getElementById("loginShutdownBtn");
+
+    function unlockDesktop() {
+      loginScreen.classList.add("hidden");
+      desktop.classList.remove("locked");
+
+      requestAnimationFrame(() => {
+        loadIconPositions();
+        showWindow("mainWindow");
+        updateBrowserTitle("mainWindow");
+      });
+    }
+
+    function lockDesktop() {
+      loginScreen.classList.remove("hidden");
+      desktop.classList.add("locked");
+      closeStartMenu();
+
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Log On";
+      loginLoading.classList.remove("active");
+
+      Object.keys(windowsMap).forEach(id => hideWindow(id));
+      updateBrowserTitle();
+    }
+
+    function handleLogin() {
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Please wait";
+      loginLoading.classList.add("active");
+
+      setTimeout(() => {
+        unlockDesktop();
+      }, 1800);
+    }
+
+    loginBtn.addEventListener("click", handleLogin);
+
+    loginShutdownBtn.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <div style="
+          width:100vw;
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:linear-gradient(to bottom, #0b4fa9, #083b85);
+          color:#fff;
+          font-family:Tahoma, Verdana, Arial, sans-serif;
+          font-size:28px;
+          text-shadow:0 2px 4px rgba(0,0,0,0.35);
+        ">
+          It is now safe to turn off your computer.
+        </div>
+      `;
+    });
+
     loadSteamStatus();
     loadSettings();
+    loadFolders();
+    applyFolderContentsVisibility();
     loadIconPositions();
+    applyFolderContentsVisibility();
     createClockMarks();
     updateClock();
     setInterval(updateClock, 1000);
+    newMinesweeperGame();
+    initBrowserWindow();
 
     showWindow("mainWindow");
     hideWindow("playerWindow");
@@ -2627,7 +5247,10 @@
     hideWindow("solitaireWindow");
     hideWindow("leaderboardWindow");
     hideWindow("msnWindow");
+    hideWindow("minesweeperWindow");
+    hideWindow("browserWindow");
     hideWindow("clockWindow");
+    hideWindow("folderWindow");
     hideWindow("winPopup");
     hideWindow("externalLinkWindow");
     updateBrowserTitle("mainWindow");

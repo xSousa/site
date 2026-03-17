@@ -1,0 +1,214 @@
+.start-menu {
+      position: absolute;
+      left: 0;
+      bottom: 40px;
+      width: 360px;
+      height: 460px;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+      border: 1px solid #1d4e96;
+      display: none;
+      z-index: 60;
+    }
+
+    .start-menu.open { display: block; }
+
+    .start-top {
+      height: 62px;
+      background: linear-gradient(to bottom, #3d8df4, #2469cf);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      font-weight: bold;
+      font-size: 20px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    }
+
+    .start-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.85);
+      background: #fff;
+      flex: 0 0 auto;
+    }
+
+    .start-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .start-body {
+      display: flex;
+      height: calc(100% - 62px - 42px);
+      background: #fff;
+    }
+
+    .start-left, .start-right {
+      padding: 12px 10px;
+      position: relative;
+    }
+
+    .start-left {
+      width: 58%;
+      background: #fff;
+    }
+
+    .start-right {
+      width: 42%;
+      background: linear-gradient(to bottom, #dcecff, #c1dbff);
+      border-left: 1px solid #9ebeed;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 16px;
+    }
+
+    .start-side-block {
+      height: 32px;
+      border-radius: 6px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(218,233,255,0.85));
+      border: 1px solid rgba(125,161,216,0.8);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-side-block::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #ffffff, #95c2ff);
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #10233f;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .menu-item:hover {
+      background: linear-gradient(to bottom, #2c7ae7, #1f65cc);
+      color: #fff;
+    }
+
+    .menu-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #fff, #a8caff);
+      border: 1px solid rgba(0,0,0,0.15);
+      flex: 0 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-icon.main::before,
+    .menu-icon.folder::before,
+    .menu-icon.mail::before,
+    .menu-icon.steam::before,
+    .menu-icon.youtube::before,
+    .menu-icon.settings::before,
+    .menu-icon.messenger::before,
+    .menu-icon.cards::before,
+    .menu-icon.rank::before,
+    .menu-icon.mine::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+    }
+
+    .menu-icon.main::before { background: linear-gradient(to bottom, #56a9ff, #236bcc); border-radius: 3px; }
+    .menu-icon.folder::before { background: linear-gradient(to bottom, #ffd25a, #e7a724); border-radius: 3px; }
+    .menu-icon.mail::before { background: linear-gradient(to bottom, #ffffff, #d5e7ff); border: 1px solid #7da1d3; border-radius: 2px; }
+    .menu-icon.steam::before { background: radial-gradient(circle at 35% 35%, #fff, #dce7ff 25%, #5f86d9 65%, #2d4b89 100%); border-radius: 50%; }
+    .menu-icon.youtube::before { background: #ff2b2b; border-radius: 4px; }
+    .menu-icon.settings::before { content: "⚙"; inset: 0; display: grid; place-items: center; color: #2d6bba; font-size: 14px; }
+    .menu-icon.messenger::before { background: radial-gradient(circle at 35% 35%, #fff, #dff7ff 25%, #89df92 55%, #2ea34d 100%); border-radius: 50%; }
+    .menu-icon.cards::before { background: linear-gradient(to bottom, #fff, #f0f0f0); border: 1px solid #b8b8b8; border-radius: 3px; }
+    .menu-icon.rank::before { background: linear-gradient(to bottom, #fff2a8, #ebb63c); border-radius: 3px; }
+    .menu-icon.mine::before { background: radial-gradient(circle at 35% 35%, #fff, #ddd 20%, #666 45%, #111 80%); border-radius: 50%; }
+
+    .menu-icon.youtube::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 5px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid #fff;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+
+    .menu-arrow {
+      margin-left: auto;
+      font-weight: bold;
+    }
+
+    .games-submenu {
+      position: absolute;
+      left: 100%;
+      top: 210px;
+      width: 180px;
+      background: #fff;
+      border: 1px solid #7ea6d9;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      z-index: 80;
+      padding: 6px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+      pointer-events: none;
+    }
+
+    .games-submenu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .games-submenu.closing {
+      opacity: 0;
+      visibility: visible;
+      transform: translateX(6px);
+      pointer-events: none;
+    }
+
+    .start-bottom {
+      height: 42px;
+      background: linear-gradient(to bottom, #2b72d2, #1d58ad);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 10px;
+      gap: 8px;
+    }
+
+    .power-btn {
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 4px;
+      background: linear-gradient(to bottom, #ffb35a, #e8871e);
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset;
+    }
