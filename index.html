@@ -2525,7 +2525,7 @@
   </div>
 
   <div class="desktop locked" id="desktop">
-        <div class="window whats-new-window hidden" id="whatsNewPopup" role="dialog" aria-labelledby="whatsNewTitle" aria-live="polite">
+    <div class="window whats-new-window hidden" id="whatsNewPopup" role="dialog" aria-labelledby="whatsNewTitle" aria-live="polite">
       <div class="titlebar" id="titlebarWhatsNew">
         <div class="title-left">
           <div class="title-icon"></div>
@@ -2536,19 +2536,7 @@
         </div>
       </div>
       <div class="whats-new-body">
-        <p>New in this version of the site:</p>
-        <ul class="whats-new-list">
-          <li>Desktop <strong>Properties</strong> was added to the right-click menu.</li>
-          <li><strong>Mouse cursor options</strong> were added in Settings.</li>
-          <li>New sound files expected in <strong>/sounds/</strong>:
-            <ul class="whats-new-sublist">
-              <li>spider_Sample 1 (Deal Card).wav</li>
-              <li>spider_Sample 2 (Move Card).wav</li>
-              <li>spider_Sample 6 (tada.wav).wav</li>
-            </ul>
-          </li>
-          <li>New CMD commands: <strong>sounds</strong>, <strong>sounds on</strong>, and <strong>sounds off</strong>.</li>
-        </ul>
+        <div id="whatsNewContent">Loading latest changes...</div>
         <div class="whats-new-footer">
           <button class="xp-btn" id="dismissWhatsNewBtn" type="button">OK</button>
         </div>
@@ -3348,7 +3336,7 @@
     });
 
     function makeDraggable(windowEl, handleEl) {
-          if (!windowEl || !handleEl) return;
+      if (!windowEl || !handleEl) return;
 
       let isDragging = false;
       let offsetX = 0;
@@ -3448,7 +3436,7 @@
     makeDraggable(windowsMap.folderWindow, document.getElementById("titlebarFolder"));
     makeDraggable(windowsMap.winPopup, document.getElementById("titlebarPopup"));
     makeDraggable(windowsMap.externalLinkWindow, document.getElementById("titlebarExternal"));
-        makeDraggable(document.getElementById("whatsNewPopup"), document.getElementById("titlebarWhatsNew"));
+    makeDraggable(document.getElementById("whatsNewPopup"), document.getElementById("titlebarWhatsNew"));
 
     Object.values(windowsMap).forEach(win => {
       win.addEventListener("mousedown", () => bringToFront(win));
@@ -6035,10 +6023,90 @@
     const loginBtn = document.getElementById("loginBtn");
     const loginLoading = document.getElementById("loginLoading");
     const loginShutdownBtn = document.getElementById("loginShutdownBtn");
-        const whatsNewPopup = document.getElementById("whatsNewPopup");
+    const whatsNewPopup = document.getElementById("whatsNewPopup");
     const closeWhatsNewBtn = document.getElementById("closeWhatsNewBtn");
     const dismissWhatsNewBtn = document.getElementById("dismissWhatsNewBtn");
+    const whatsNewContent = document.getElementById("whatsNewContent");
+    const whatsNewFallbackHtml = `
+      <p>New in this version of the site:</p>
+      <ul class="whats-new-list">
+        <li>Desktop <strong>Properties</strong> was added to the right-click menu.</li>
+        <li><strong>Mouse cursor options</strong> were added in Settings.</li>
+        <li>New sound files expected in <strong>/sounds/</strong>:
+          <ul class="whats-new-sublist">
+            <li>spider_Sample 1 (Deal Card).wav</li>
+            <li>spider_Sample 2 (Move Card).wav</li>
+            <li>spider_Sample 6 (tada.wav).wav</li>
+          </ul>
+        </li>
+        <li>New CMD commands: <strong>sounds</strong>, <strong>sounds on</strong>, and <strong>sounds off</strong>.</li>
+      </ul>`;
     let whatsNewTimer = null;
+    let whatsNewContentPromise = null;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function renderWhatsNewFromReadme(readmeText) {
+      const lines = readmeText.split(/\r?\n/);
+      const sections = [];
+      let current = null;
+
+      const pushCurrent = () => {
+        if (!current) return;
+        if ((current.title && current.title.trim()) || current.items.length) sections.push(current);
+        current = null;
+      };
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
+          pushCurrent();
+          continue;
+        }
+        if (line.startsWith('- ')) {
+          if (!current) current = { title: '', items: [] };
+          current.items.push(line.slice(2).trim());
+        } else {
+          pushCurrent();
+          current = { title: line, items: [] };
+        }
+      }
+      pushCurrent();
+
+      if (!sections.length) return whatsNewFallbackHtml;
+
+      return sections.map(section => {
+        const title = section.title ? `<p>${escapeHtml(section.title)}</p>` : '';
+        if (!section.items.length) return title;
+        const items = section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+        return `${title}<ul class="whats-new-list">${items}</ul>`;
+      }).join('');
+    }
+
+    async function loadWhatsNewContent() {
+      if (!whatsNewContent) return;
+      if (!whatsNewContentPromise) {
+        whatsNewContentPromise = fetch(`README.txt?ts=${Date.now()}`, { cache: "no-store" })
+          .then(response => {
+            if (!response.ok) throw new Error(`README request failed: ${response.status}`);
+            return response.text();
+          })
+          .then(readmeText => {
+            whatsNewContent.innerHTML = renderWhatsNewFromReadme(readmeText);
+          })
+          .catch(() => {
+            whatsNewContent.innerHTML = whatsNewFallbackHtml;
+          });
+      }
+      return whatsNewContentPromise;
+    }
 
     function positionWhatsNewPopup() {
       if (!whatsNewPopup) return;
@@ -6064,10 +6132,12 @@
 
     function scheduleWhatsNewPopup() {
       clearTimeout(whatsNewTimer);
+      loadWhatsNewContent();
       whatsNewTimer = setTimeout(() => {
         if (!desktop.classList.contains("locked")) showWhatsNewPopup();
       }, 700);
     }
+
 
     function unlockDesktop() {
       loginScreen.classList.add("hidden");
@@ -6078,7 +6148,7 @@
         showWindow("mainWindow", null);
         updateBrowserTitle("mainWindow");
         safePlaySound("login");
-                scheduleWhatsNewPopup();
+        scheduleWhatsNewPopup();
       });
     }
 
@@ -6086,7 +6156,7 @@
       loginScreen.classList.remove("hidden");
       desktop.classList.add("locked");
       closeStartMenu();
-            clearTimeout(whatsNewTimer);
+      clearTimeout(whatsNewTimer);
       hideWhatsNewPopup();
 
       loginBtn.disabled = false;
@@ -6109,7 +6179,7 @@
 
     loginBtn.addEventListener("click", handleLogin);
 
-        if (closeWhatsNewBtn) closeWhatsNewBtn.addEventListener("click", hideWhatsNewPopup);
+    if (closeWhatsNewBtn) closeWhatsNewBtn.addEventListener("click", hideWhatsNewPopup);
     if (dismissWhatsNewBtn) dismissWhatsNewBtn.addEventListener("click", hideWhatsNewPopup);
     if (whatsNewPopup) {
       whatsNewPopup.addEventListener("mousedown", () => {
@@ -6119,7 +6189,6 @@
         if (!whatsNewPopup.classList.contains("hidden")) positionWhatsNewPopup();
       });
     }
-
 
     loginShutdownBtn.addEventListener("click", () => {
       document.body.innerHTML = `
