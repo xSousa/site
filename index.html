@@ -249,6 +249,73 @@
       box-shadow: 0 1px 0 rgba(255,255,255,0.22) inset;
     }
 
+    .whats-new-popup {
+      position: absolute;
+      right: 18px;
+      bottom: 52px;
+      width: min(360px, calc(100vw - 36px));
+      padding: 0;
+      z-index: 1400;
+      border: 1px solid #0b4aa0;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(to bottom, #f7fbff 0%, #edf5ff 100%);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.78) inset,
+        0 16px 34px rgba(0,0,0,0.34);
+      overflow: hidden;
+      animation: whatsNewSlideIn 260ms ease-out;
+    }
+
+    .whats-new-popup.hidden {
+      display: none;
+    }
+
+    .whats-new-popup .titlebar {
+      cursor: default;
+    }
+
+    .whats-new-body {
+      padding: 14px 16px 16px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #123;
+    }
+
+    .whats-new-body p {
+      margin: 0 0 10px;
+    }
+
+    .whats-new-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .whats-new-list > li + li {
+      margin-top: 8px;
+    }
+
+    .whats-new-sublist {
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+
+    .whats-new-footer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    @keyframes whatsNewSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .window {
       position: absolute;
       background: #f4f7fb;
@@ -2462,6 +2529,35 @@
   </div>
 
   <div class="desktop locked" id="desktop">
+    <div class="whats-new-popup hidden" id="whatsNewPopup" role="dialog" aria-labelledby="whatsNewTitle" aria-live="polite">
+      <div class="titlebar">
+        <div class="title-left">
+          <div class="title-icon"></div>
+          <div class="title-text" id="whatsNewTitle">What's New</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn" id="closeWhatsNewBtn" aria-label="Close">×</div>
+        </div>
+      </div>
+      <div class="whats-new-body">
+        <p>New in this version of the site:</p>
+        <ul class="whats-new-list">
+          <li>Desktop <strong>Properties</strong> was added to the right-click menu.</li>
+          <li><strong>Mouse cursor options</strong> were added in Settings.</li>
+          <li>New sound files expected in <strong>/sounds/</strong>:
+            <ul class="whats-new-sublist">
+              <li>spider_Sample 1 (Deal Card).wav</li>
+              <li>spider_Sample 2 (Move Card).wav</li>
+              <li>spider_Sample 6 (tada.wav).wav</li>
+            </ul>
+          </li>
+          <li>New CMD commands: <strong>sounds</strong>, <strong>sounds on</strong>, and <strong>sounds off</strong>.</li>
+        </ul>
+        <div class="whats-new-footer">
+          <button class="xp-btn" id="dismissWhatsNewBtn" type="button">OK</button>
+        </div>
+      </div>
+    </div>
     <div class="desktop-icon mainapp aero custom-image" id="desktopShortcut" data-icon-id="mainapp" style="top:24px; left:22px;">
       <div class="desktop-icon-box"><img src="https://static.wikia.nocookie.net/the-microsoft-windows-xp/images/f/f9/XPIcon.png/revision/latest?cb=20191129153941" alt="xSousa"></div>
       <div class="desktop-icon-label">xSousa</div>
@@ -5940,6 +6036,26 @@
     const loginBtn = document.getElementById("loginBtn");
     const loginLoading = document.getElementById("loginLoading");
     const loginShutdownBtn = document.getElementById("loginShutdownBtn");
+    const whatsNewPopup = document.getElementById("whatsNewPopup");
+    const closeWhatsNewBtn = document.getElementById("closeWhatsNewBtn");
+    const dismissWhatsNewBtn = document.getElementById("dismissWhatsNewBtn");
+    let whatsNewTimer = null;
+
+    function hideWhatsNewPopup() {
+      whatsNewPopup.classList.add("hidden");
+    }
+
+    function showWhatsNewPopup() {
+      whatsNewPopup.classList.remove("hidden");
+      whatsNewPopup.style.zIndex = String(++topZ);
+    }
+
+    function scheduleWhatsNewPopup() {
+      clearTimeout(whatsNewTimer);
+      whatsNewTimer = setTimeout(() => {
+        if (!desktop.classList.contains("locked")) showWhatsNewPopup();
+      }, 700);
+    }
 
     function unlockDesktop() {
       loginScreen.classList.add("hidden");
@@ -5950,6 +6066,7 @@
         showWindow("mainWindow", null);
         updateBrowserTitle("mainWindow");
         safePlaySound("login");
+        scheduleWhatsNewPopup();
       });
     }
 
@@ -5957,6 +6074,8 @@
       loginScreen.classList.remove("hidden");
       desktop.classList.add("locked");
       closeStartMenu();
+      clearTimeout(whatsNewTimer);
+      hideWhatsNewPopup();
 
       loginBtn.disabled = false;
       loginBtn.textContent = "Log On";
@@ -5977,6 +6096,8 @@
     }
 
     loginBtn.addEventListener("click", handleLogin);
+    closeWhatsNewBtn.addEventListener("click", hideWhatsNewPopup);
+    dismissWhatsNewBtn.addEventListener("click", hideWhatsNewPopup);
 
     loginShutdownBtn.addEventListener("click", () => {
       document.body.innerHTML = `
