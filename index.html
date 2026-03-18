@@ -270,7 +270,7 @@
     .solitaire-window { top: 90px; left: 330px; width: 860px; max-width: calc(100vw - 40px); z-index: 45; }
     .leaderboard-window { top: 120px; left: 420px; width: 360px; max-width: calc(100vw - 40px); z-index: 46; }
     .msn-window { top: 130px; left: 620px; width: 390px; max-width: calc(100vw - 40px); z-index: 47; }
-    .minesweeper-window { top: 100px; left: 520px; width: 430px; max-width: calc(100vw - 40px); z-index: 48; }
+    .minesweeper-window { top: 100px; left: 520px; width: 386px; max-width: calc(100vw - 40px); z-index: 48; }
     .clock-window { top: 210px; left: calc(100vw - 340px); width: 300px; z-index: 120; }
     .win-popup { top: 220px; left: 420px; width: 360px; z-index: 200; }
     .external-link-window { top: 240px; left: 400px; width: 390px; z-index: 250; }
@@ -1333,6 +1333,49 @@
       transform: translateX(6px);
       pointer-events: none;
     }
+    .window-resize-handle {
+      position: absolute;
+      bottom: 0;
+      width: 16px;
+      height: 16px;
+      z-index: 5;
+    }
+    .window-resize-handle.br { right: 0; cursor: nwse-resize; }
+    .window-resize-handle.bl { left: 0; cursor: nesw-resize; }
+
+    .more-apps-submenu {
+      position: absolute;
+      left: 100%;
+      bottom: 18px;
+      width: 200px;
+      background: #fff;
+      border: 1px solid #7ea6d9;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      z-index: 80;
+      padding: 6px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+      pointer-events: none;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    .more-apps-submenu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .more-apps-submenu.closing {
+      opacity: 0;
+      visibility: visible;
+      transform: translateX(6px);
+      pointer-events: none;
+    }
+
 
     .start-bottom {
       height: 42px;
@@ -1972,7 +2015,7 @@
       text-shadow: 0 0 6px rgba(80,255,120,0.45);
     }
 
-    .cmd-window { top: 110px; left: 180px; width: 620px; max-width: calc(100vw - 40px); z-index: 90; background: #0c0c0c; }
+    .cmd-window { top: 110px; left: 180px; width: 620px; height: 460px; min-height: 280px; max-width: calc(100vw - 40px); max-height: calc(100vh - 70px); z-index: 90; background: #0c0c0c; display: flex; flex-direction: column; }
     .cmd-titlebar { background: linear-gradient(to bottom, #4d8fe6 0%, #2f71cc 45%, #245fb5 46%, #1c4e97 100%); }
     .cmd-icon {
       border-radius: 2px;
@@ -1988,7 +2031,8 @@
     .cmd-body {
       background: #000;
       color: #d6ffd6;
-      min-height: 360px;
+      min-height: 0;
+      height: calc(100% - 30px);
       padding: 10px;
       font-family: "Lucida Console", "Courier New", monospace;
       font-size: 14px;
@@ -2193,6 +2237,154 @@
     .ie-home-logo { width: 42px; height: 42px; object-fit: contain; flex: 0 0 auto; }
     .desktop-icon.browser .desktop-icon-box img { width: 42px; height: 42px; object-fit: contain; display: block; position: relative; z-index: 4; }
 
+    .desktop-icon.doom .desktop-icon-box img,
+    .doom-app-icon,
+    .menu-icon.doom::before,
+    .title-icon.doom-app,
+    .doom-toolbar-logo,
+    .task-button .title-icon.doom-app {
+      background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/efd55d2f-11a4-4df1-9bf7-1eccd3ebb813/d3hsp3f-094f83e1-40a9-4d57-a31d-31a74c7cac89.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .desktop-icon.doom .desktop-icon-box {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.98), rgba(173,212,255,0.88));
+      border-color: rgba(255,255,255,0.72);
+    }
+
+    .menu-icon.doom::before {
+      content: "";
+      inset: 1px;
+      border-radius: 3px;
+      background-color: transparent;
+    }
+
+    .title-icon.doom-app {
+      border-radius: 3px;
+      background-color: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.18) inset;
+    }
+
+    .doom-toolbar-logo {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+    }
+
+
+
+    .doom-window { top: 60px; left: 180px; width: 980px; max-width: calc(100vw - 40px); z-index: 44; }
+    .doom-titlebar { background: linear-gradient(to bottom, #6f7072 0%, #3b3d40 45%, #2c2d2f 46%, #191a1b 100%); }
+    .doom-body { background: #111; padding: 0; height: 700px; display: flex; flex-direction: column; }
+    .doom-toolbar {
+      height: 30px;
+      background: linear-gradient(to bottom, #2f2f2f, #1a1a1a);
+      border-bottom: 1px solid #3f3f3f;
+      color: #ddd;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+    .doom-indicator {
+      width: 8px; height: 8px; border-radius: 50%; background: #67cc00; box-shadow: 0 0 6px rgba(103,204,0,0.85);
+    }
+    .doom-frame-wrap { flex: 1; background: #000; }
+    .doom-frame { width: 100%; height: 100%; border: 0; display: block; background: #000; }
+
+    .xp-balloon {
+      position: fixed;
+      right: 14px;
+      bottom: 48px;
+      width: 250px;
+      min-height: 96px;
+      background: linear-gradient(to bottom, #fffde6, #f6efb2);
+      border: 1px solid #c1aa52;
+      border-radius: 10px 10px 2px 10px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.88);
+      display: none;
+      z-index: 1000;
+      color: #2a2a2a;
+      overflow: hidden;
+    }
+    .xp-balloon.show { display: block; animation: balloonIn 0.22s ease-out; }
+    .xp-balloon::after {
+      content: "";
+      position: absolute;
+      right: 18px;
+      bottom: -14px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(to bottom, #f6efb2, #ece39a);
+      border-right: 1px solid #c1aa52;
+      border-bottom: 1px solid #c1aa52;
+      transform: rotate(45deg);
+    }
+    .xp-balloon-header {
+      background: linear-gradient(to bottom, #4e99ff, #2b70d5);
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .xp-balloon-body {
+      display: flex;
+      gap: 10px;
+      padding: 10px 10px 14px;
+      position: relative;
+      z-index: 2;
+    }
+    .xp-balloon-icon {
+      width: 32px; height: 32px; border-radius: 6px; flex: 0 0 auto;
+      background: linear-gradient(to bottom, #86c7ff, #2d77d8);
+      border: 1px solid rgba(0,0,0,0.18);
+      position: relative;
+    }
+    .xp-balloon-icon::before {
+      content: "i"; position: absolute; inset: 0; display: grid; place-items: center; font-weight: bold; color: #fff; font-size: 22px;
+    }
+    .xp-balloon-text { font-size: 12px; line-height: 1.35; color: #3b3b3b; user-select: text; }
+    .xp-balloon-close { cursor: pointer; font-weight: bold; padding: 0 4px; }
+    @keyframes balloonIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    .recycle-icon {
+      border-radius: 3px;
+      background: linear-gradient(to bottom, #ffffff, #dfeeff);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.18) inset;
+      position: relative;
+    }
+    .recycle-icon::before {
+      content: "🗑️";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+    }
+    .desktop-icon.recycle .desktop-icon-box img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
+      position: relative;
+      z-index: 4;
+    }
+    .recycle-window { top: 120px; left: 420px; width: 430px; max-width: calc(100vw - 40px); z-index: 46; }
+    .recycle-body { min-height: 320px; }
+    .recycle-list { display:flex; flex-direction:column; gap:10px; }
+    .recycle-row { display:grid; grid-template-columns: 1fr auto auto; gap:8px; align-items:center; padding:8px 10px; border:1px solid #c8d9f2; background:#fff; border-radius:6px; }
+    .recycle-name { color:#214c84; font-size:13px; }
+    .start-item-context-menu { position: absolute; z-index: 220; display:none; min-width: 180px; }
+    .start-item-context-menu.open { display:block; }
+
     @media (max-width: 900px) {
       .main-window, .player-window, .settings-window, .solitaire-window, .leaderboard-window, .msn-window, .minesweeper-window, .win-popup, .clock-window, .external-link-window, .browser-window {
         width: calc(100vw - 30px);
@@ -2325,6 +2517,16 @@
     <div class="desktop-icon browser aero custom-image" id="browserShortcut" data-icon-id="browser" style="top:24px; left:118px;">
       <div class="desktop-icon-box"><img src="https://pngimg.com/d/ie_logo_PNG4.png" alt="Internet Explorer"></div>
       <div class="desktop-icon-label">Internet Explorer</div>
+    </div>
+
+    <div class="desktop-icon recycle aero custom-image" id="recycleShortcut" data-icon-id="recycle" style="top:110px; left:118px;">
+      <div class="desktop-icon-box"><img src="https://cdn.pixabay.com/photo/2015/03/21/06/27/recycle-bin-683244_1280.png" alt="Recycle Bin"></div>
+      <div class="desktop-icon-label">Recycle Bin</div>
+    </div>
+
+    <div class="desktop-icon doom aero custom-image" id="doomShortcut" data-icon-id="doom" style="top:196px; left:118px;">
+      <div class="desktop-icon-box"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/efd55d2f-11a4-4df1-9bf7-1eccd3ebb813/d3hsp3f-094f83e1-40a9-4d57-a31d-31a74c7cac89.png" alt="DOOM"></div>
+      <div class="desktop-icon-label">DOOM</div>
     </div>
 
     <div class="window main-window" id="mainWindow">
@@ -2470,6 +2672,7 @@
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="solitaire-btn" id="newGameBtn">New Game</button>
             <button class="solitaire-btn" id="showLeaderboardBtn">Leaderboard</button>
+            <button class="solitaire-btn" id="instantWinBtn">Instant Win</button>
           </div>
           <div class="scoreboard" id="scoreboard">Best time: none</div>
         </div>
@@ -2564,6 +2767,29 @@
     </div>
 
 
+
+    <div class="window doom-window hidden" id="doomWindow">
+      <div class="titlebar doom-titlebar" id="titlebarDoom">
+        <div class="title-left">
+          <div class="title-icon">D</div>
+          <div class="title-text">DOOM.exe</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="doomWindow">—</div>
+          <div class="win-btn" data-close="doomWindow">×</div>
+        </div>
+      </div>
+      <div class="doom-body">
+        <div class="doom-toolbar">
+          <div class="doom-toolbar-logo"></div>
+          <div>DOOM shareware ready</div>
+        </div>
+        <div class="doom-frame-wrap">
+          <iframe class="doom-frame" id="doomFrame" src="doom.html" title="DOOM"></iframe>
+        </div>
+      </div>
+    </div>
+
     <div class="window cmd-window hidden" id="cmdWindow">
       <div class="titlebar cmd-titlebar" id="titlebarCmd">
         <div class="title-left">
@@ -2619,6 +2845,8 @@
           <div class="ie-status-right" id="ieModeText">Proxy mode</div>
         </div>
       </div>
+      <div class="window-resize-handle bl" id="browserResizeBl"></div>
+      <div class="window-resize-handle br" id="browserResizeBr"></div>
     </div>
 
     <div class="window clock-window hidden" id="clockWindow">
@@ -2699,6 +2927,23 @@
     </div>
 
 
+    <div class="window recycle-window hidden" id="recycleWindow">
+      <div class="titlebar" id="titlebarRecycle">
+        <div class="title-left">
+          <div class="title-icon recycle-icon"></div>
+          <div class="title-text">Recycle Bin</div>
+        </div>
+        <div class="window-controls">
+          <div class="win-btn minimize" data-minimize="recycleWindow">—</div>
+          <div class="win-btn" data-close="recycleWindow">×</div>
+        </div>
+      </div>
+      <div class="folder-body recycle-body">
+        <div class="folder-toolbar">🗑️ Recycle Bin <button class="xp-btn" id="emptyRecycleBinBtn" style="margin-left:auto;">Empty Recycle Bin</button></div>
+        <div class="folder-empty" id="recycleWindowContent">Recycle Bin is empty.</div>
+      </div>
+    </div>
+
     <div class="window folder-window hidden" id="folderWindow">
       <div class="titlebar folder-titlebar" id="titlebarFolder">
         <div class="title-left">
@@ -2744,13 +2989,24 @@
           </div>
         </div>
       </div>
+      <div class="context-item" data-context-desktop-only="true" data-context-action="refresh">
+        <div class="context-icon refresh"></div>
+        Refresh
+      </div>
       <div class="context-item" data-context-desktop-only="true" data-context-action="open-settings">
         <div class="context-icon settings-mini"></div>
         Properties
       </div>
-      <div class="context-item" data-context-desktop-only="true" data-context-action="refresh">
-        <div class="context-icon refresh"></div>
-        Refresh
+    </div>
+
+    <div class="desktop-context-menu start-item-context-menu" id="startItemContextMenu">
+      <div class="context-item" data-start-context-action="send-desktop">
+        <div class="context-icon folder"></div>
+        Send to Desktop
+      </div>
+      <div class="context-item" data-start-context-action="delete">
+        <div class="context-icon delete"></div>
+        Delete
       </div>
     </div>
 
@@ -2775,12 +3031,16 @@
           <div class="menu-item" id="openBrowserItem"><div class="menu-icon ie"></div>Internet Explorer</div>
           <div class="menu-item" id="gamesMenuItem"><div class="menu-icon folder"></div>Games <span class="menu-arrow">▶</span></div>
           <div class="menu-item" id="openSettingsItem"><div class="menu-icon settings"></div>Settings</div>
+          <div class="menu-item" id="moreAppsItem" style="display:none;"><div class="menu-icon folder"></div>More Applications <span class="menu-arrow">▶</span></div>
 
           <div class="games-submenu" id="gamesSubmenu">
+
             <div class="menu-item" id="openSolitaireItem"><div class="menu-icon cards"></div>Solitaire</div>
             <div class="menu-item" id="openLeaderboardItem"><div class="menu-icon rank"></div>Leaderboard</div>
             <div class="menu-item" id="openMinesweeperItem"><div class="menu-icon mine"></div>Minesweeper</div>
+            <div class="menu-item" id="openDoomItem"><div class="menu-icon doom"></div>DOOM</div>
           </div>
+          <div class="more-apps-submenu" id="moreAppsSubmenu"></div>
         </div>
 
         <div class="start-right">
@@ -2798,6 +3058,18 @@
       </div>
     </div>
 
+
+
+    <div class="xp-balloon" id="xpBalloon">
+      <div class="xp-balloon-header">
+        <span id="xpBalloonTitle">Windows XP</span>
+        <span class="xp-balloon-close" id="xpBalloonClose">×</span>
+      </div>
+      <div class="xp-balloon-body">
+        <div class="xp-balloon-icon"></div>
+        <div class="xp-balloon-text" id="xpBalloonText">Teste</div>
+      </div>
+    </div>
     <div class="taskbar">
       <div class="start-button" id="startButton">
         <div class="start-logo"></div>
@@ -2811,8 +3083,10 @@
         <div class="task-button hidden" data-task="solitaireWindow"><div class="title-icon cards-icon"></div>Solitaire</div>
         <div class="task-button hidden" data-task="msnWindow"><div class="title-icon msn-icon"></div>Messenger</div>
         <div class="task-button hidden" data-task="cmdWindow"><div class="title-icon cmd-icon"></div>Command Prompt</div>
+        <div class="task-button hidden" data-task="doomWindow"><div class="title-icon doom-app"></div>DOOM</div>
         <div class="task-button hidden" data-task="browserWindow"><div class="title-icon ie-icon"></div>Internet Explorer</div>
         <div class="task-button hidden" data-task="minesweeperWindow"><div class="title-icon mine-icon"></div>Minesweeper</div>
+        <div class="task-button hidden" data-task="recycleWindow"><div class="title-icon recycle-icon"></div>Recycle Bin</div>
       </div>
 
       <div class="tray" id="trayClock">
@@ -2824,8 +3098,10 @@
 
   <div class="crt-overlay" id="crtOverlay"></div>
 
+  <script src="scripts/sounds.js"></script>
   <script>
     const DEFAULT_PLAYLIST_URL = "music/playlist.json";
+    const LEADERBOARD_API = "https://xsousa-solitaire-api.onrender.com/api";
 
     const STEAM_PROFILES = [
       { id: "xSousa", url: "https://steamcommunity.com/id/xSousa/" },
@@ -2882,6 +3158,7 @@
       msnWindow: document.getElementById("msnWindow"),
       minesweeperWindow: document.getElementById("minesweeperWindow"),
       cmdWindow: document.getElementById("cmdWindow"),
+      doomWindow: document.getElementById("doomWindow"),
       browserWindow: document.getElementById("browserWindow"),
       clockWindow: document.getElementById("clockWindow"),
       folderWindow: document.getElementById("folderWindow"),
@@ -2898,6 +3175,7 @@
       msnWindow: "Messenger.exe",
       minesweeperWindow: "Minesweeper.exe",
       cmdWindow: "Command Prompt",
+      doomWindow: "DOOM.exe",
       browserWindow: "Microsoft Internet Explorer",
       clockWindow: "Date and Time",
       winPopup: "Solitaire.exe",
@@ -2911,6 +3189,10 @@
 
     function updateBrowserTitle(activeWindowId = null) {
       document.title = APP_TITLES[activeWindowId] || "xSousa.exe";
+    }
+
+    function safePlaySound(name) {
+      if (typeof playSound === "function") playSound(name);
     }
 
     function bringToFront(win) {
@@ -2927,19 +3209,23 @@
       btn.style.display = active ? "flex" : "none";
     }
 
-    function showWindow(windowId) {
+    function showWindow(windowId, soundName = "open") {
       const win = windowsMap[windowId];
       if (!win) return;
+      const wasHidden = win.classList.contains("hidden");
       win.classList.remove("hidden");
       if (taskButtons[windowId]) setTaskState(windowId, true);
       bringToFront(win);
+      if (wasHidden && soundName) safePlaySound(soundName);
     }
 
-    function hideWindow(windowId) {
+    function hideWindow(windowId, soundName = "minimize") {
       const win = windowsMap[windowId];
       if (!win) return;
+      const wasVisible = !win.classList.contains("hidden");
       win.classList.add("hidden");
       if (taskButtons[windowId]) setTaskState(windowId, false);
+      if (wasVisible && soundName) safePlaySound(soundName);
 
       const visibleWindows = Object.values(windowsMap).filter(w => !w.classList.contains("hidden"));
       if (visibleWindows.length > 0) {
@@ -2953,8 +3239,8 @@
     function toggleWindow(windowId) {
       const win = windowsMap[windowId];
       if (!win) return;
-      if (win.classList.contains("hidden")) showWindow(windowId);
-      else hideWindow(windowId);
+      if (win.classList.contains("hidden")) showWindow(windowId, "restore");
+      else hideWindow(windowId, "minimize");
     }
 
     document.querySelectorAll("[data-task]").forEach(btn => {
@@ -3010,7 +3296,60 @@
     makeDraggable(windowsMap.msnWindow, document.getElementById("titlebarMsn"));
     makeDraggable(windowsMap.minesweeperWindow, document.getElementById("titlebarMinesweeper"));
     makeDraggable(windowsMap.cmdWindow, document.getElementById("titlebarCmd"));
+    makeDraggable(windowsMap.doomWindow, document.getElementById("titlebarDoom"));
     makeDraggable(windowsMap.browserWindow, document.getElementById("titlebarBrowser"));
+
+    function makeResizable(windowEl, handles) {
+      let activeHandle = null;
+      let startX = 0, startY = 0, startWidth = 0, startHeight = 0, startLeft = 0;
+      const minWidth = 420;
+      const minHeight = 320;
+
+      handles.forEach(handle => {
+        if (!handle) return;
+        handle.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activeHandle = handle.classList.contains("bl") ? "bl" : "br";
+          const rect = windowEl.getBoundingClientRect();
+          startX = e.clientX;
+          startY = e.clientY;
+          startWidth = rect.width;
+          startHeight = rect.height;
+          startLeft = rect.left;
+          bringToFront(windowEl);
+        });
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        if (!activeHandle) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+        let newLeft = startLeft;
+
+        if (activeHandle === "br") {
+          newWidth = Math.max(minWidth, Math.min(startWidth + dx, window.innerWidth - startLeft));
+        } else if (activeHandle === "bl") {
+          const maxLeft = startLeft + startWidth - minWidth;
+          newLeft = Math.max(0, Math.min(startLeft + dx, maxLeft));
+          newWidth = Math.max(minWidth, startWidth - (newLeft - startLeft));
+        }
+
+        newHeight = Math.max(minHeight, Math.min(startHeight + dy, window.innerHeight - 45 - windowEl.offsetTop));
+
+        windowEl.style.width = newWidth + "px";
+        windowEl.style.height = newHeight + "px";
+        if (activeHandle === "bl") windowEl.style.left = newLeft + "px";
+      });
+
+      document.addEventListener("mouseup", () => {
+        activeHandle = null;
+      });
+    }
+
+    makeResizable(windowsMap.browserWindow, [document.getElementById("browserResizeBl"), document.getElementById("browserResizeBr")]);
     makeDraggable(windowsMap.clockWindow, document.getElementById("titlebarClock"));
     makeDraggable(windowsMap.folderWindow, document.getElementById("titlebarFolder"));
     makeDraggable(windowsMap.winPopup, document.getElementById("titlebarPopup"));
@@ -3025,6 +3364,9 @@
     const closeStartBtn = document.getElementById("closeStartBtn");
     const gamesMenuItem = document.getElementById("gamesMenuItem");
     const gamesSubmenu = document.getElementById("gamesSubmenu");
+    const moreAppsItem = document.getElementById("moreAppsItem");
+    const moreAppsSubmenu = document.getElementById("moreAppsSubmenu");
+    let moreAppsCloseTimer = null;
 
     function openStartMenu() {
       startMenu.classList.add("open");
@@ -3035,6 +3377,7 @@
       startMenu.classList.remove("open");
       startButton.classList.remove("active");
       closeGamesSubmenuImmediate();
+      closeMoreAppsSubmenuImmediate();
     }
 
     startButton.addEventListener("click", () => {
@@ -3043,12 +3386,33 @@
     });
 
     closeStartBtn.addEventListener("click", () => {
+      safePlaySound("logoff");
       closeStartMenu();
       lockDesktop();
     });
 
+    function positionStartSubmenu(triggerEl, submenuEl) {
+      if (!triggerEl || !submenuEl) return;
+      const container = triggerEl.parentElement || startMenu.querySelector('.start-left') || startMenu;
+      const containerRect = container.getBoundingClientRect();
+      const triggerRect = triggerEl.getBoundingClientRect();
+      const submenuWidth = submenuEl.offsetWidth || 190;
+      const submenuHeight = submenuEl.offsetHeight || 180;
+      let top = triggerRect.top - containerRect.top - 1;
+      const maxTop = Math.max(6, containerRect.height - submenuHeight - 6);
+      if (top > maxTop) top = maxTop;
+      if (top < 6) top = 6;
+      let left = triggerRect.right - containerRect.left + 2;
+      if (left + submenuWidth > containerRect.width + 170) {
+        left = Math.max(6, triggerRect.left - containerRect.left - submenuWidth - 2);
+      }
+      submenuEl.style.top = `${top}px`;
+      submenuEl.style.left = `${left}px`;
+    }
+
     function openGamesSubmenu() {
       clearTimeout(gamesCloseTimer);
+      positionStartSubmenu(gamesMenuItem, gamesSubmenu);
       gamesSubmenu.classList.remove("closing");
       gamesSubmenu.classList.add("open");
     }
@@ -3072,16 +3436,196 @@
       gamesSubmenu.classList.remove("open", "closing");
     }
 
+    function openMoreAppsSubmenu() {
+      clearTimeout(moreAppsCloseTimer);
+      positionStartSubmenu(moreAppsItem, moreAppsSubmenu);
+      moreAppsSubmenu.classList.remove("closing");
+      moreAppsSubmenu.classList.add("open");
+    }
+
+    function closeMoreAppsSubmenuDelayed() {
+      clearTimeout(moreAppsCloseTimer);
+      moreAppsCloseTimer = setTimeout(() => {
+        if (moreAppsSubmenu.matches(":hover") || moreAppsItem.matches(":hover")) return;
+        moreAppsSubmenu.classList.remove("open");
+        moreAppsSubmenu.classList.add("closing");
+        setTimeout(() => {
+          if (!moreAppsSubmenu.matches(":hover") && !moreAppsItem.matches(":hover")) {
+            moreAppsSubmenu.classList.remove("closing");
+          }
+        }, 260);
+      }, 700);
+    }
+
+    function closeMoreAppsSubmenuImmediate() {
+      clearTimeout(moreAppsCloseTimer);
+      moreAppsSubmenu.classList.remove("open", "closing");
+    }
+
+    function organizeStartMenuOverflow() {
+      if (!moreAppsItem || !moreAppsSubmenu) return;
+      const primaryOrder = [
+        "menuInstagram",
+        "menuEmail",
+        "menuSteam",
+        "menuYoutube",
+        "openWindowItem",
+        "openPlayerItem",
+        "openMsnItem",
+        "openCmdItem",
+        "openBrowserItem",
+        "openSettingsItem"
+      ].map(id => document.getElementById(id)).filter(el => el && el.style.display !== 'none');
+
+      primaryOrder.forEach(item => startLeft.insertBefore(item, moreAppsItem));
+      moreAppsSubmenu.innerHTML = "";
+
+      const visibleCount = 7;
+      primaryOrder.slice(visibleCount).forEach(item => moreAppsSubmenu.appendChild(item));
+      moreAppsItem.style.display = primaryOrder.length > visibleCount ? "flex" : "none";
+    }
+
     gamesMenuItem.addEventListener("mouseenter", openGamesSubmenu);
     gamesMenuItem.addEventListener("mouseleave", closeGamesSubmenuDelayed);
     gamesSubmenu.addEventListener("mouseenter", openGamesSubmenu);
     gamesSubmenu.addEventListener("mouseleave", closeGamesSubmenuDelayed);
+
+    if (moreAppsItem) {
+      moreAppsItem.addEventListener("mouseenter", openMoreAppsSubmenu);
+      moreAppsItem.addEventListener("mouseleave", closeMoreAppsSubmenuDelayed);
+      moreAppsSubmenu.addEventListener("mouseenter", openMoreAppsSubmenu);
+      moreAppsSubmenu.addEventListener("mouseleave", closeMoreAppsSubmenuDelayed);
+    }
+
+    const START_HIDDEN_STORAGE_KEY = "xpHiddenStartItems";
+    const START_DESKTOP_SHORTCUTS_KEY = "xpStartDesktopShortcuts";
+    const RECYCLE_BIN_STORAGE_KEY = "xpRecycleBinItems";
+    const startItemContextMenu = document.getElementById("startItemContextMenu");
+    let contextStartItem = null;
+
+    const START_ITEM_SHORTCUTS = {
+      menuInstagram: { label: "Instagram", action: "external:https://instagram.com/enzoxsousa", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/240px-Instagram_icon.png" },
+      menuEmail: { label: "Email", action: "external:mailto:enzo@xsousa.com", className: "mainapp" },
+      menuSteam: { label: "Steam", action: "external:https://steamcommunity.com/id/xSousa/", imageUrl: "https://static.wikia.nocookie.net/logopedia/images/4/46/SteamIcon2010.png/revision/latest?cb=20250831000122" },
+      menuYoutube: { label: "YouTube Channel", action: "external:https://www.youtube.com/@xSousa", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/YouTube_icon_%282011-2013%29.svg/500px-YouTube_icon_%282011-2013%29.svg.png" },
+      openWindowItem: { label: "xSousa", action: "window:mainWindow", imageUrl: "https://static.wikia.nocookie.net/the-microsoft-windows-xp/images/f/f9/XPIcon.png/revision/latest?cb=20191129153941" },
+      openPlayerItem: { label: "Music Player", action: "window:playerWindow", imageUrl: "https://i.redd.it/dwsd58yvs5pe1.png" },
+      openMsnItem: { label: "Messenger", action: "window:msnWindow", imageUrl: "https://www.freeiconspng.com/thumbs/msn-icon/msn-icon-30.png" },
+      openCmdItem: { label: "Command Prompt", action: "special:cmd", imageUrl: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2cc61f89-aa16-4ec1-86ad-8b18cacef76a/dgv3tvb-ee8b9f50-dbd6-4450-b231-839fdc740453.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8yY2M2MWY4OS1hYTE2LTRlYzEtODZhZC04YjE4Y2FjZWY3NmEvZGd2M3R2Yi1lZThiOWY1MC1kYmQ2LTQ0NTAtYjIzMS04MzlmZGM3NDA0NTMucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ROFBP3O1cSQoZZ0N35lC-2Vm740_DJAdufTiLPxLnng" },
+      openBrowserItem: { label: "Internet Explorer", action: "special:browser", imageUrl: "https://pngimg.com/d/ie_logo_PNG4.png" },
+      openSettingsItem: { label: "Settings", action: "window:settingsWindow", imageUrl: "https://p1.hiclipart.com/preview/513/705/77/windows-live-for-xp-gray-setting-icon-png-clipart.jpg" },
+      openSolitaireItem: { label: "Solitaire", action: "window:solitaireWindow", imageUrl: "https://www.rw-designer.com/icon-image/18916-256x256x32.png" },
+      openLeaderboardItem: { label: "Leaderboard", action: "special:leaderboard", className: "folder" },
+      openMinesweeperItem: { label: "Minesweeper", action: "window:minesweeperWindow", imageUrl: "https://www.rw-designer.com/icon-image/18913-256x256x32.png" },
+      openDoomItem: { label: "DOOM", action: "window:doomWindow", imageUrl: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/efd55d2f-11a4-4df1-9bf7-1eccd3ebb813/d3hsp3f-094f83e1-40a9-4d57-a31d-31a74c7cac89.png" }
+    };
+
+    function getHiddenStartItems() { try { return JSON.parse(localStorage.getItem(START_HIDDEN_STORAGE_KEY) || '[]'); } catch { return []; } }
+    function setHiddenStartItems(items) { localStorage.setItem(START_HIDDEN_STORAGE_KEY, JSON.stringify(items)); }
+    function getRecycleBinItems() { try { return JSON.parse(localStorage.getItem(RECYCLE_BIN_STORAGE_KEY) || '[]'); } catch { return []; } }
+    function saveRecycleBinItems(items) { localStorage.setItem(RECYCLE_BIN_STORAGE_KEY, JSON.stringify(items)); updateRecycleBinIcon(); }
+    function updateRecycleBinIcon() {
+      const recycleImg = document.querySelector('#recycleShortcut .desktop-icon-box img');
+      if (!recycleImg) return;
+      const hasItems = getRecycleBinItems().length > 0;
+      recycleImg.src = hasItems
+        ? 'https://www.clipartmax.com/png/small/92-925325_modernxp-76-trash-full-icon-windows-xp-recycle-bin-icon-png.png'
+        : 'https://cdn.pixabay.com/photo/2015/03/21/06/27/recycle-bin-683244_1280.png';
+    }
+    function addRecycleBinItem(item) { const items = getRecycleBinItems(); items.unshift({ id:`recycle-${Date.now()}-${Math.random().toString(36).slice(2,6)}`, ...item }); saveRecycleBinItems(items); renderRecycleBin(); }
+    function getSavedStartDesktopShortcuts() { try { return JSON.parse(localStorage.getItem(START_DESKTOP_SHORTCUTS_KEY) || '[]'); } catch { return []; } }
+    function saveStartDesktopShortcuts(items) { localStorage.setItem(START_DESKTOP_SHORTCUTS_KEY, JSON.stringify(items)); }
+    function persistCurrentStartDesktopShortcuts() {
+      const items = Array.from(document.querySelectorAll('.desktop-icon[data-custom-shortcut="true"]')).map(icon => ({
+        id: icon.dataset.iconId,
+        label: icon.querySelector('.desktop-icon-label')?.textContent?.trim() || 'Shortcut',
+        action: icon.dataset.shortcutAction,
+        imageUrl: icon.dataset.shortcutImage || '',
+        className: icon.dataset.shortcutClass || '',
+        left: parseInt(icon.style.left,10)||0,
+        top: parseInt(icon.style.top,10)||0
+      }));
+      saveStartDesktopShortcuts(items);
+    }
+    function getNextDesktopShortcutPosition() {
+      for (let row=0; row<20; row++) for (let col=0; col<6; col++) { const free=findNearestFreeCell(col,row,{offsetWidth:96,offsetHeight:80}); if (free) return cellToGrid(free.col, free.row, {offsetWidth:96,offsetHeight:80}); }
+      return {left:118, top:196};
+    }
+    function createDesktopShortcut(cfg) {
+      const icon = document.createElement('div');
+      icon.className = `desktop-icon aero custom-image ${cfg.className || ''}`.trim();
+      icon.dataset.iconId = cfg.id;
+      icon.dataset.customShortcut = 'true';
+      icon.dataset.deletable = 'true';
+      icon.dataset.shortcutAction = cfg.action;
+      if (cfg.imageUrl) icon.dataset.shortcutImage = cfg.imageUrl;
+      if (cfg.className) icon.dataset.shortcutClass = cfg.className;
+      const pos = {left: cfg.left ?? 118, top: cfg.top ?? 196};
+      icon.style.left = `${pos.left}px`; icon.style.top = `${pos.top}px`;
+      const boxInner = cfg.imageUrl ? `<img src="${escapeHtml(cfg.imageUrl)}" alt="${escapeHtml(cfg.label)}">` : '';
+      icon.innerHTML = `<div class="desktop-icon-box">${boxInner}</div><div class="desktop-icon-label">${escapeHtml(cfg.label)}</div>`;
+      desktop.appendChild(icon); bindDesktopIcon(icon); return icon;
+    }
+    function loadSavedDesktopShortcuts() {
+      const builtInLabels = new Set(Array.from(document.querySelectorAll('.desktop-icon:not([data-custom-shortcut="true"]) .desktop-icon-label')).map(el => el.textContent.trim()));
+      const seen = new Set();
+      const kept = [];
+      getSavedStartDesktopShortcuts().forEach(cfg => {
+        const key = (cfg.label || '').trim().toLowerCase();
+        if (!key || builtInLabels.has(cfg.label) || seen.has(key)) return;
+        seen.add(key);
+        kept.push(cfg);
+        createDesktopShortcut(cfg);
+      });
+      saveStartDesktopShortcuts(kept);
+    }
+    function applyHiddenStartItems() {
+      const hidden = new Set(getHiddenStartItems());
+      Object.keys(START_ITEM_SHORTCUTS).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = hidden.has(id) ? 'none' : '';
+      });
+      organizeStartMenuOverflow();
+    }
+    function executeShortcutAction(action) {
+      if (!action) return;
+      if (action.startsWith('external:')) return askExternalLink(action.slice(9), 'Shortcut');
+      if (action.startsWith('window:')) {
+        const win = action.slice(7);
+        if (win === 'playerWindow') return loadPlayer();
+        if (win === 'msnWindow') { showWindow('msnWindow'); loadSteamStatus(); return; }
+        return showWindow(win);
+      }
+      if (action === 'special:cmd') return openCmdWindow();
+      if (action === 'special:browser') { showWindow('browserWindow'); initBrowserWindow(); return; }
+      if (action === 'special:leaderboard') { renderLeaderboard(); showWindow('leaderboardWindow'); return; }
+    }
+    function hideStartItemContextMenu() { startItemContextMenu.classList.remove('open'); contextStartItem = null; }
+    function showStartItemContextMenu(clientX, clientY, item) {
+      contextStartItem = item; startItemContextMenu.classList.add('open');
+      const w = startItemContextMenu.offsetWidth || 180; const h = startItemContextMenu.offsetHeight || 80;
+      startItemContextMenu.style.left = `${Math.max(6, Math.min(clientX, window.innerWidth - w - 8))}px`;
+      startItemContextMenu.style.top = `${Math.max(6, Math.min(clientY, window.innerHeight - h - 8))}px`;
+    }
+    function bindStartItemContextMenus() {
+      document.querySelectorAll('#startMenu .menu-item').forEach(item => {
+        if (!item.id || item.id === 'gamesMenuItem' || item.id === 'moreAppsItem') return;
+        item.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); showStartItemContextMenu(e.clientX, e.clientY, item); });
+      });
+    }
+
+    organizeStartMenuOverflow();
+    loadSavedDesktopShortcuts();
+    applyHiddenStartItems();
+    bindStartItemContextMenus();
+    window.addEventListener("resize", organizeStartMenuOverflow);
 
     document.addEventListener("click", (e) => {
       if (!startMenu.contains(e.target) && !startButton.contains(e.target)) closeStartMenu();
     });
 
     function askExternalLink(url, appName = "Application") {
+      safePlaySound("warn");
       pendingExternalUrl = url;
       document.getElementById("externalAppLabel").textContent = appName;
       document.getElementById("externalUrlLabel").textContent = url;
@@ -3121,10 +3665,11 @@
     document.getElementById("openSettingsItem").addEventListener("click", () => { showWindow("settingsWindow"); closeStartMenu(); });
     document.getElementById("openBrowserItem").addEventListener("click", () => { showWindow("browserWindow"); initBrowserWindow(); closeStartMenu(); });
     document.getElementById("openSolitaireItem").addEventListener("click", () => { showWindow("solitaireWindow"); closeStartMenu(); });
-    document.getElementById("openLeaderboardItem").addEventListener("click", () => { renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
+    document.getElementById("openLeaderboardItem").addEventListener("click", async () => { await renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
     document.getElementById("openMsnItem").addEventListener("click", () => { showWindow("msnWindow"); loadSteamStatus(); closeStartMenu(); });
     document.getElementById("openMinesweeperItem").addEventListener("click", () => { showWindow("minesweeperWindow"); closeStartMenu(); });
     document.getElementById("openCmdItem").addEventListener("click", () => { openCmdWindow(); closeStartMenu(); });
+    document.getElementById("openDoomItem").addEventListener("click", () => { const doomFrame = document.getElementById('doomFrame'); if (doomFrame) doomFrame.src = 'doom.html?t=' + Date.now(); showWindow("doomWindow"); closeStartMenu(); });
 
 
     function openDesktopIcon(icon) {
@@ -3141,6 +3686,9 @@
       if (iconId === "cmd") return openCmdWindow();
       if (iconId === "browser") { showWindow("browserWindow"); initBrowserWindow(); return; }
       if (iconId === "minesweeper") return showWindow("minesweeperWindow");
+      if (iconId === "doom") { const doomFrame = document.getElementById("doomFrame"); if (doomFrame) doomFrame.src = "doom.html?t=" + Date.now(); return showWindow("doomWindow"); }
+      if (iconId === "recycle") { renderRecycleBin(); return showWindow("recycleWindow"); }
+      if (icon.dataset.customShortcut === "true") return executeShortcutAction(icon.dataset.shortcutAction || "");
       if (iconId.startsWith("folder-")) return openFolderWindow(icon);
     }
 
@@ -3204,10 +3752,14 @@
         appendCmdLine("ver       Show Windows version");
         appendCmdLine("date      Show current date");
         appendCmdLine("time      Show current time");
-        appendCmdLine("start     Open an app (music, messenger, settings, solitaire, minesweeper, cmd)");
+        appendCmdLine("start     Open an app (music, messenger, settings, solitaire, minesweeper, cmd, doom)");
+        appendCmdLine("noti      Show a balloon notification");
         appendCmdLine("echo      Print text");
         appendCmdLine("exit      Minimize Command Prompt");
         appendCmdLine("shader    Toggle CRT shader (secret)");
+        appendCmdLine("sounds    Toggle all sounds");
+        appendCmdLine("sounds on Enable all sounds");
+        appendCmdLine("sounds off Disable all sounds");
         appendCmdLine("");
         return;
       }
@@ -3263,6 +3815,7 @@
           solitaire: () => showWindow("solitaireWindow"),
           minesweeper: () => showWindow("minesweeperWindow"),
           cmd: () => openCmdWindow(),
+          doom: () => showWindow("doomWindow"),
           xsousa: () => showWindow("mainWindow")
         };
         if (commandMap[target]) {
@@ -3271,6 +3824,38 @@
         } else {
           appendCmdLine(`Cannot start "${target}".`, "error");
         }
+        return;
+      }
+
+      if (lower === "noti" || lower.startsWith("noti ")) {
+        const message = rawInput.slice(4).trim().replace(/^"|"$/g, "") || "Teste";
+        safePlaySound("balloon");
+        safePlaySound("balloon");
+        showBalloonNotification(message, "Windows XP");
+        appendCmdLine(`Notification sent: ${message}`);
+        return;
+      }
+
+      if (lower === "sounds" || lower === "sound") {
+        if (typeof toggleSoundsEnabled === "function") {
+          const enabled = toggleSoundsEnabled();
+          appendCmdLine(`All sounds ${enabled ? "enabled" : "disabled"}.`, enabled ? "secret" : "dim");
+        } else {
+          appendCmdLine("Sound system not available.", "error");
+        }
+        return;
+      }
+
+      if (lower === "sounds on" || lower === "sound on") {
+        if (typeof setSoundsEnabled === "function") setSoundsEnabled(true);
+        appendCmdLine("All sounds enabled.", "secret");
+        safePlaySound("notify");
+        return;
+      }
+
+      if (lower === "sounds off" || lower === "sound off") {
+        if (typeof setSoundsEnabled === "function") setSoundsEnabled(false);
+        appendCmdLine("All sounds disabled.", "dim");
         return;
       }
 
@@ -3920,13 +4505,67 @@
     }
 
     function deleteDesktopIcon(icon) {
-      if (!icon || icon.dataset.folder !== "true") return;
-      const name = icon.querySelector(".desktop-icon-label")?.textContent?.trim() || "this folder";
+      if (!icon) return;
+      const name = icon.querySelector(".desktop-icon-label")?.textContent?.trim() || "this item";
       if (!window.confirm(`Delete "${name}"?`)) return;
-      icon.remove();
-      syncFoldersFromDOM();
+      if (icon.dataset.folder === "true") {
+        const contents = getFolderContentsMap();
+        const folderContents = contents[icon.dataset.iconId] || [];
+        addRecycleBinItem({ type:'folder', folder:{ id: icon.dataset.iconId, name, left: parseInt(icon.style.left,10)||0, top: parseInt(icon.style.top,10)||0 }, contents: folderContents });
+        delete contents[icon.dataset.iconId];
+        saveFolderContentsMap(contents);
+        icon.remove();
+        syncFoldersFromDOM();
+      } else if (icon.dataset.customShortcut === 'true') {
+        addRecycleBinItem({ type:'desktop-shortcut', shortcut:{ id: icon.dataset.iconId, label:name, action: icon.dataset.shortcutAction || '', imageUrl: icon.dataset.shortcutImage || '', className: icon.dataset.shortcutClass || '', left: parseInt(icon.style.left,10)||0, top: parseInt(icon.style.top,10)||0 } });
+        icon.remove();
+        persistCurrentStartDesktopShortcuts();
+      } else {
+        return;
+      }
       saveIconPositions();
+      renderRecycleBin();
       hideDesktopContextMenu();
+      safePlaySound('recycle');
+    }
+
+    function restoreRecycleBinItem(recycleId) {
+      const items = getRecycleBinItems();
+      const index = items.findIndex(item => item.id === recycleId);
+      if (index === -1) return;
+      const [item] = items.splice(index,1);
+      saveRecycleBinItems(items);
+      if (item.type === 'start-item') {
+        const hidden = new Set(getHiddenStartItems()); hidden.delete(item.startItemId); setHiddenStartItems(Array.from(hidden)); applyHiddenStartItems();
+      } else if (item.type === 'desktop-shortcut' && item.shortcut) {
+        createDesktopShortcut(item.shortcut); persistCurrentStartDesktopShortcuts(); saveIconPositions();
+      } else if (item.type === 'folder' && item.folder) {
+        createFolderIcon(item.folder); const contents=getFolderContentsMap(); contents[item.folder.id]=item.contents||[]; saveFolderContentsMap(contents); applyFolderContentsVisibility(); syncFoldersFromDOM(); saveIconPositions();
+      }
+      renderRecycleBin();
+    }
+
+    function deleteRecycleBinItemForever(recycleId) {
+      saveRecycleBinItems(getRecycleBinItems().filter(item => item.id !== recycleId));
+      renderRecycleBin();
+    }
+
+    function emptyRecycleBin() {
+      saveRecycleBinItems([]);
+      renderRecycleBin();
+      safePlaySound('recycle');
+    }
+
+    function renderRecycleBin() {
+      const content = document.getElementById('recycleWindowContent');
+      const emptyBtn = document.getElementById('emptyRecycleBinBtn');
+      if (!content) return;
+      const items = getRecycleBinItems();
+      if (emptyBtn) emptyBtn.disabled = !items.length;
+      updateRecycleBinIcon();
+      if (!items.length) { content.className='folder-empty'; content.innerHTML='Recycle Bin is empty.'; return; }
+      content.className='recycle-list';
+      content.innerHTML = items.map(item => `<div class="recycle-row"><div class="recycle-name">${escapeHtml(item.folder?.name || item.shortcut?.label || START_ITEM_SHORTCUTS[item.startItemId]?.label || 'Item')}</div><button class="xp-btn" data-recycle-restore="${item.id}">Restore</button><button class="xp-btn" data-recycle-delete="${item.id}">Delete</button></div>`).join('');
     }
 
     let currentOpenFolderId = null;
@@ -3937,6 +4576,7 @@
       const contentEl = document.getElementById("folderWindowContent");
       const name = folderIcon?.querySelector(".desktop-icon-label")?.textContent?.trim() || "Folder";
       document.getElementById("folderWindowTitle").textContent = name;
+      if (folderIcon) requestAnimationFrame(() => positionFolderWindowNearIcon(folderIcon));
       const contents = getFolderContentsMap();
       const itemIds = (contents[currentOpenFolderId] || []).filter(id => document.querySelector(`.desktop-icon[data-icon-id="${id}"]`));
       if (!itemIds.length) {
@@ -3958,10 +4598,29 @@
       }).join('');
     }
 
+    function positionFolderWindowNearIcon(icon) {
+      const folderWin = windowsMap.folderWindow;
+      if (!folderWin || !icon) return;
+      const iconLeft = parseInt(icon.style.left, 10) || 22;
+      const iconTop = parseInt(icon.style.top, 10) || 24;
+      const taskbarHeight = 44;
+      const gap = 12;
+      const winWidth = folderWin.offsetWidth || 420;
+      const winHeight = folderWin.offsetHeight || 320;
+      let left = iconLeft + (icon.offsetWidth || 96) + gap;
+      if (left + winWidth > window.innerWidth - 12) left = Math.max(12, iconLeft - winWidth - gap);
+      let top = Math.max(12, iconTop - 10);
+      const maxTop = Math.max(12, window.innerHeight - taskbarHeight - winHeight - 8);
+      if (top > maxTop) top = maxTop;
+      folderWin.style.left = `${left}px`;
+      folderWin.style.top = `${top}px`;
+    }
+
     function openFolderWindow(icon) {
       currentOpenFolderId = icon?.dataset.iconId || null;
       renderOpenFolderWindow();
       showWindow("folderWindow");
+      requestAnimationFrame(() => positionFolderWindowNearIcon(icon));
     }
 
     document.getElementById("folderWindowContent").addEventListener("click", (e) => {
@@ -3997,10 +4656,11 @@
       const openItem = desktopContextMenu.querySelector('[data-context-action="open"]');
       const separator = desktopContextMenu.querySelector(".context-separator");
       const isFolder = !!(icon && icon.dataset.folder === "true");
+      const isDeletable = !!(icon && (isFolder || icon.dataset.customShortcut === 'true'));
 
       openItem.style.display = icon ? "" : "none";
       renameItem.style.display = icon ? "" : "none";
-      deleteItem.style.display = isFolder ? "" : "none";
+      deleteItem.style.display = isDeletable ? "" : "none";
       separator.style.display = icon ? "none" : "";
 
       desktopContextMenu.classList.add("open");
@@ -4026,6 +4686,39 @@
 
       hideDesktopContextMenu();
     });
+
+    startItemContextMenu.addEventListener('click', (e) => {
+      const item = e.target.closest('[data-start-context-action]');
+      if (!item || !contextStartItem) return;
+      const cfg = START_ITEM_SHORTCUTS[contextStartItem.id];
+      if (item.dataset.startContextAction === 'send-desktop' && cfg) {
+        const existing = Array.from(document.querySelectorAll('.desktop-icon')).find(icon => icon.querySelector('.desktop-icon-label')?.textContent?.trim() === cfg.label);
+        if (!existing) {
+          const pos = getNextDesktopShortcutPosition();
+          createDesktopShortcut({ id:`shortcut-${Date.now()}-${Math.random().toString(36).slice(2,6)}`, ...cfg, ...pos });
+          persistCurrentStartDesktopShortcuts();
+          saveIconPositions();
+        }
+      }
+      if (item.dataset.startContextAction === 'delete' && cfg) {
+        const hidden = new Set(getHiddenStartItems());
+        hidden.add(contextStartItem.id);
+        setHiddenStartItems(Array.from(hidden));
+        addRecycleBinItem({ type:'start-item', startItemId: contextStartItem.id });
+        applyHiddenStartItems();
+        safePlaySound('recycle');
+      }
+      hideStartItemContextMenu();
+    });
+
+    document.getElementById('recycleWindowContent').addEventListener('click', (e) => {
+      const restore = e.target.closest('[data-recycle-restore]');
+      const del = e.target.closest('[data-recycle-delete]');
+      if (restore) restoreRecycleBinItem(restore.dataset.recycleRestore);
+      if (del) deleteRecycleBinItemForever(del.dataset.recycleDelete);
+    });
+
+    document.getElementById('emptyRecycleBinBtn')?.addEventListener('click', emptyRecycleBin);
 
     function bindDesktopIcon(icon) {
       icon.addEventListener("dblclick", () => openDesktopIcon(icon));
@@ -4231,6 +4924,7 @@
 
     document.addEventListener("click", (e) => {
       if (!e.target.closest("#desktopContextMenu")) hideDesktopContextMenu();
+      if (!e.target.closest('#startItemContextMenu')) hideStartItemContextMenu();
     });
 
     document.addEventListener("contextmenu", (e) => {
@@ -4434,6 +5128,7 @@
           stock = waste.reverse().map(c => ({ ...c, faceUp: false }));
           waste = [];
         }
+        safePlaySound("solitaireDeal");
         renderSolitaire();
       };
 
@@ -4542,16 +5237,24 @@
       }
 
       draggedCardInfo = null;
+      safePlaySound("solitaireMove");
       renderSolitaire();
       checkWin();
     }
 
-    function getLeaderboard() {
+    async function getLeaderboard() {
       try {
-        const saved = JSON.parse(localStorage.getItem("xpSolitaireLeaderboard"));
-        return Array.isArray(saved) ? saved : [];
-      } catch {
-        return [];
+        const res = await fetch(`${LEADERBOARD_API}/solitaire-leaderboard`, { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load leaderboard");
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch (err) {
+        try {
+          const saved = JSON.parse(localStorage.getItem("xpSolitaireLeaderboard"));
+          return Array.isArray(saved) ? saved : [];
+        } catch {
+          return [];
+        }
       }
     }
 
@@ -4559,17 +5262,26 @@
       localStorage.setItem("xpSolitaireLeaderboard", JSON.stringify(entries));
     }
 
-    function addLeaderboardScore(name, seconds) {
-      const entries = getLeaderboard();
-      entries.push({ name, seconds, date: new Date().toISOString() });
-      entries.sort((a, b) => a.seconds - b.seconds);
-      saveLeaderboard(entries.slice(0, 10));
-      updateScoreboard();
-      renderLeaderboard();
+    async function addLeaderboardScore(name, seconds) {
+      try {
+        const res = await fetch(`${LEADERBOARD_API}/solitaire-score`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, seconds })
+        });
+        if (!res.ok) throw new Error("Failed to save leaderboard score");
+      } catch (err) {
+        const entries = await getLeaderboard();
+        entries.push({ name, seconds, date: new Date().toISOString() });
+        entries.sort((a, b) => a.seconds - b.seconds);
+        saveLeaderboard(entries.slice(0, 10));
+      }
+      await updateScoreboard();
+      await renderLeaderboard();
     }
 
-    function updateScoreboard() {
-      const entries = getLeaderboard();
+    async function updateScoreboard() {
+      const entries = await getLeaderboard();
       const el = document.getElementById("scoreboard");
       if (!entries.length) {
         el.textContent = "Best time: none";
@@ -4578,9 +5290,9 @@
       el.innerHTML = `Best time: <strong>${entries[0].name}</strong><br>Time: ${entries[0].seconds}s`;
     }
 
-    function renderLeaderboard() {
+    async function renderLeaderboard() {
       const list = document.getElementById("leaderboardList");
-      const entries = getLeaderboard();
+      const entries = await getLeaderboard();
       list.innerHTML = "";
 
       if (!entries.length) {
@@ -4600,8 +5312,25 @@
       });
     }
 
+    function instantWinSolitaire() {
+      foundations = suits.map(suit => values.map((value, index) => ({
+        suit,
+        value,
+        rank: index + 1,
+        color: cardColor(suit),
+        faceUp: true,
+        id: `instant-${suit}-${value}-${index}`
+      })));
+      stock = [];
+      waste = [];
+      tableau = [[], [], [], [], [], [], []];
+      renderSolitaire();
+      checkWin();
+    }
+
     function showWinPopup() {
       showWindow("winPopup");
+      safePlaySound("solitaireWin");
       const input = document.getElementById("winnerNameInput");
       input.value = "";
       setTimeout(() => input.focus(), 50);
@@ -4616,23 +5345,24 @@
     }
 
     document.getElementById("newGameBtn").addEventListener("click", newSolitaireGame);
-    document.getElementById("showLeaderboardBtn").addEventListener("click", () => {
-      renderLeaderboard();
+    document.getElementById("showLeaderboardBtn").addEventListener("click", async () => {
+      await renderLeaderboard();
       showWindow("leaderboardWindow");
     });
+    document.getElementById("instantWinBtn").addEventListener("click", instantWinSolitaire);
     document.getElementById("closePopupBtn").addEventListener("click", () => hideWindow("winPopup"));
-    document.getElementById("saveWinnerBtn").addEventListener("click", () => {
+    document.getElementById("saveWinnerBtn").addEventListener("click", async () => {
       const input = document.getElementById("winnerNameInput");
       const name = input.value.trim() || "Anonymous";
       const seconds = Math.max(1, Math.floor((Date.now() - gameStartTime) / 1000));
-      addLeaderboardScore(name, seconds);
+      await addLeaderboardScore(name, seconds);
       hideWindow("winPopup");
       showWindow("leaderboardWindow");
     });
-    document.getElementById("clearLeaderboardBtn").addEventListener("click", () => {
+    document.getElementById("clearLeaderboardBtn").addEventListener("click", async () => {
       localStorage.removeItem("xpSolitaireLeaderboard");
-      updateScoreboard();
-      renderLeaderboard();
+      await updateScoreboard();
+      await renderLeaderboard();
     });
 
     newSolitaireGame();
@@ -5168,6 +5898,43 @@
     });
 
 
+
+    const xpBalloon = document.getElementById("xpBalloon");
+    const xpBalloonTitle = document.getElementById("xpBalloonTitle");
+    const xpBalloonText = document.getElementById("xpBalloonText");
+    const xpBalloonClose = document.getElementById("xpBalloonClose");
+    let balloonTimer = null;
+    let balloonInterval = null;
+
+    function hideBalloonNotification() {
+      xpBalloon.classList.remove("show");
+      if (balloonTimer) { clearTimeout(balloonTimer); balloonTimer = null; }
+    }
+
+    function showBalloonNotification(message = "Teste", title = "Windows XP") {
+      xpBalloonTitle.textContent = title;
+      xpBalloonText.textContent = message;
+      xpBalloon.classList.add("show");
+      safePlaySound("notify");
+      if (balloonTimer) clearTimeout(balloonTimer);
+      balloonTimer = setTimeout(hideBalloonNotification, 7000);
+    }
+
+    xpBalloonClose.addEventListener("click", hideBalloonNotification);
+    xpBalloon.addEventListener("click", hideBalloonNotification);
+
+    const XP_BALLOON_MESSAGES = ["Olá isto é um teste", "ganda seca isto fds"];
+
+    function startBalloonNotifications() {
+      if (balloonInterval) clearInterval(balloonInterval);
+      balloonInterval = setInterval(() => {
+        if (desktop.classList.contains("locked")) return;
+        const message = XP_BALLOON_MESSAGES[Math.floor(Math.random() * XP_BALLOON_MESSAGES.length)];
+        safePlaySound("balloon");
+        showBalloonNotification(message, "Windows XP");
+      }, 120000);
+    }
+
     /* LOGIN LOGIC */
     const loginScreen = document.getElementById("loginScreen");
     const loginBtn = document.getElementById("loginBtn");
@@ -5180,8 +5947,9 @@
 
       requestAnimationFrame(() => {
         loadIconPositions();
-        showWindow("mainWindow");
+        showWindow("mainWindow", null);
         updateBrowserTitle("mainWindow");
+        safePlaySound("login");
       });
     }
 
@@ -5234,14 +6002,16 @@
     loadFolders();
     applyFolderContentsVisibility();
     loadIconPositions();
+    renderRecycleBin();
     applyFolderContentsVisibility();
     createClockMarks();
     updateClock();
     setInterval(updateClock, 1000);
+    startBalloonNotifications();
     newMinesweeperGame();
     initBrowserWindow();
 
-    showWindow("mainWindow");
+    showWindow("mainWindow", null);
     hideWindow("playerWindow");
     hideWindow("settingsWindow");
     hideWindow("solitaireWindow");
@@ -5249,6 +6019,8 @@
     hideWindow("msnWindow");
     hideWindow("minesweeperWindow");
     hideWindow("browserWindow");
+    hideWindow("doomWindow");
+    hideWindow("recycleWindow");
     hideWindow("clockWindow");
     hideWindow("folderWindow");
     hideWindow("winPopup");

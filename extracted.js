@@ -1,5 +1,7 @@
-const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
+
+    const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?rel=0&controls=1&modestbranding=1";
+    const LEADERBOARD_API = "https://xsousa-solitaire-api.onrender.com/api";
 
     const STEAM_PROFILES = [
       { id: "xSousa", url: "https://steamcommunity.com/id/xSousa/" },
@@ -20,8 +22,7 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       settings: { left: 22, top: 282 },
       steam: { left: 22, top: 368 },
       solitaire: { left: 22, top: 454 },
-      msn: { left: 22, top: 540 },
-      minesweeper: { left: 22, top: 626 }
+      msn: { left: 22, top: 540 }
     };
 
     const desktop = document.getElementById("desktop");
@@ -42,7 +43,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       solitaireWindow: document.getElementById("solitaireWindow"),
       leaderboardWindow: document.getElementById("leaderboardWindow"),
       msnWindow: document.getElementById("msnWindow"),
-      minesweeperWindow: document.getElementById("minesweeperWindow"),
       clockWindow: document.getElementById("clockWindow"),
       winPopup: document.getElementById("winPopup"),
       externalLinkWindow: document.getElementById("externalLinkWindow")
@@ -55,7 +55,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       solitaireWindow: "Solitaire.exe",
       leaderboardWindow: "Solitaire Leaderboard",
       msnWindow: "Messenger.exe",
-      minesweeperWindow: "Minesweeper.exe",
       clockWindow: "Date and Time",
       winPopup: "Solitaire.exe",
       externalLinkWindow: "Open External Link"
@@ -68,10 +67,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
 
     function updateBrowserTitle(activeWindowId = null) {
       document.title = APP_TITLES[activeWindowId] || "xSousa.exe";
-    }
-
-    function safePlaySound(name) {
-      if (typeof playSound === "function") playSound(name);
     }
 
     function bringToFront(win) {
@@ -88,23 +83,19 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       btn.style.display = active ? "flex" : "none";
     }
 
-    function showWindow(windowId, soundName = "open") {
+    function showWindow(windowId) {
       const win = windowsMap[windowId];
       if (!win) return;
-      const wasHidden = win.classList.contains("hidden");
       win.classList.remove("hidden");
       if (taskButtons[windowId]) setTaskState(windowId, true);
       bringToFront(win);
-      if (wasHidden && soundName) safePlaySound(soundName);
     }
 
-    function hideWindow(windowId, soundName = "minimize") {
+    function hideWindow(windowId) {
       const win = windowsMap[windowId];
       if (!win) return;
-      const wasVisible = !win.classList.contains("hidden");
       win.classList.add("hidden");
       if (taskButtons[windowId]) setTaskState(windowId, false);
-      if (wasVisible && soundName) safePlaySound(soundName);
 
       const visibleWindows = Object.values(windowsMap).filter(w => !w.classList.contains("hidden"));
       if (visibleWindows.length > 0) {
@@ -118,8 +109,8 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     function toggleWindow(windowId) {
       const win = windowsMap[windowId];
       if (!win) return;
-      if (win.classList.contains("hidden")) showWindow(windowId, "restore");
-      else hideWindow(windowId, "minimize");
+      if (win.classList.contains("hidden")) showWindow(windowId);
+      else hideWindow(windowId);
     }
 
     document.querySelectorAll("[data-task]").forEach(btn => {
@@ -173,7 +164,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     makeDraggable(windowsMap.solitaireWindow, document.getElementById("titlebarSolitaire"));
     makeDraggable(windowsMap.leaderboardWindow, document.getElementById("titlebarLeaderboard"));
     makeDraggable(windowsMap.msnWindow, document.getElementById("titlebarMsn"));
-    makeDraggable(windowsMap.minesweeperWindow, document.getElementById("titlebarMinesweeper"));
     makeDraggable(windowsMap.clockWindow, document.getElementById("titlebarClock"));
     makeDraggable(windowsMap.winPopup, document.getElementById("titlebarPopup"));
     makeDraggable(windowsMap.externalLinkWindow, document.getElementById("titlebarExternal"));
@@ -205,8 +195,8 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     });
 
     closeStartBtn.addEventListener("click", () => {
-      safePlaySound("logoff");
       closeStartMenu();
+      lockDesktop();
     });
 
     function openGamesSubmenu() {
@@ -244,7 +234,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     });
 
     function askExternalLink(url, appName = "Application") {
-      safePlaySound("warn");
       pendingExternalUrl = url;
       document.getElementById("externalAppLabel").textContent = appName;
       document.getElementById("externalUrlLabel").textContent = url;
@@ -271,7 +260,8 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     });
 
     function hookExternalButton(id, url, name) {
-      document.getElementById(id).addEventListener("click", () => askExternalLink(url, name));
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", () => askExternalLink(url, name));
     }
 
     hookExternalButton("menuInstagram", "https://instagram.com/enzoxsousa", "Instagram");
@@ -283,9 +273,8 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     document.getElementById("openPlayerItem").addEventListener("click", () => { showWindow("playerWindow"); loadPlayer(); closeStartMenu(); });
     document.getElementById("openSettingsItem").addEventListener("click", () => { showWindow("settingsWindow"); closeStartMenu(); });
     document.getElementById("openSolitaireItem").addEventListener("click", () => { showWindow("solitaireWindow"); closeStartMenu(); });
-    document.getElementById("openLeaderboardItem").addEventListener("click", () => { renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
+    document.getElementById("openLeaderboardItem").addEventListener("click", async () => { await renderLeaderboard(); showWindow("leaderboardWindow"); closeStartMenu(); });
     document.getElementById("openMsnItem").addEventListener("click", () => { showWindow("msnWindow"); loadSteamStatus(); closeStartMenu(); });
-    document.getElementById("openMinesweeperItem").addEventListener("click", () => { showWindow("minesweeperWindow"); closeStartMenu(); });
 
     document.getElementById("desktopShortcut").addEventListener("dblclick", () => showWindow("mainWindow"));
     document.getElementById("youtubeShortcut").addEventListener("dblclick", () => askExternalLink("https://www.youtube.com/@xSousa", "YouTube"));
@@ -294,7 +283,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     document.getElementById("steamShortcut").addEventListener("dblclick", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Steam"));
     document.getElementById("solitaireShortcut").addEventListener("dblclick", () => showWindow("solitaireWindow"));
     document.getElementById("msnShortcut").addEventListener("dblclick", () => { showWindow("msnWindow"); loadSteamStatus(); });
-    document.getElementById("minesweeperShortcut").addEventListener("dblclick", () => showWindow("minesweeperWindow"));
 
     const ytPlayer = document.getElementById("ytPlayer");
     const playerStatus = document.getElementById("playerStatus");
@@ -420,7 +408,7 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       return occupied;
     }
 
-    function findNearestFreeCell(targetCol, targetRow, icon, excludeId = null) {
+    function findNearestFreeCell(targetCol, targetRow, excludeId = null) {
       const occupied = getOccupiedMap(excludeId);
       const maxCols = Math.max(1, Math.floor((desktop.clientWidth - GRID_LEFT) / GRID_X) + 1);
       const maxRows = Math.max(1, Math.floor((desktop.clientHeight - 50 - GRID_TOP) / GRID_Y) + 1);
@@ -448,7 +436,7 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
 
     function snapIconToFreeSlot(icon, preferredLeft, preferredTop) {
       const { col, row } = gridToCell(preferredLeft, preferredTop);
-      const free = findNearestFreeCell(col, row, icon, icon.dataset.iconId);
+      const free = findNearestFreeCell(col, row, icon.dataset.iconId);
       const snapped = cellToGrid(free.col, free.row, icon);
       icon.style.left = snapped.left + "px";
       icon.style.top = snapped.top + "px";
@@ -466,13 +454,15 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     }
 
     function normalizeAllIconsToGrid() {
-      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach((icon, index) => {
-        const left = parseInt(icon.style.left, 10) || 0;
-        const top = parseInt(icon.style.top, 10) || 0;
-        if (!left && !top) {
+      document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
+        const left = parseInt(icon.style.left, 10);
+        const top = parseInt(icon.style.top, 10);
+        if (Number.isNaN(left) || Number.isNaN(top)) {
           const def = DEFAULT_ICON_POSITIONS[icon.dataset.iconId];
-          icon.style.left = def.left + "px";
-          icon.style.top = def.top + "px";
+          if (def) {
+            icon.style.left = def.left + "px";
+            icon.style.top = def.top + "px";
+          }
         }
       });
 
@@ -484,8 +474,15 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     }
 
     function loadIconPositions() {
+      let positions = DEFAULT_ICON_POSITIONS;
       const saved = localStorage.getItem("xpDesktopIcons");
-      const positions = saved ? JSON.parse(saved) : DEFAULT_ICON_POSITIONS;
+
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === "object") positions = parsed;
+        } catch {}
+      }
 
       document.querySelectorAll(".desktop-icon[data-icon-id]").forEach(icon => {
         const id = icon.dataset.iconId;
@@ -496,8 +493,10 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
         }
       });
 
-      normalizeAllIconsToGrid();
-      saveIconPositions();
+      requestAnimationFrame(() => {
+        normalizeAllIconsToGrid();
+        saveIconPositions();
+      });
     }
 
     function resetIconPositions() {
@@ -509,8 +508,10 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
           icon.style.top = pos.top + "px";
         }
       });
-      normalizeAllIconsToGrid();
-      saveIconPositions();
+      requestAnimationFrame(() => {
+        normalizeAllIconsToGrid();
+        saveIconPositions();
+      });
     }
 
     document.getElementById("resetIconsBtn").addEventListener("click", resetIconPositions);
@@ -680,11 +681,14 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
 
     function createDeck() {
       const deck = [];
+      const makeId = () => (crypto?.randomUUID ? crypto.randomUUID() : `card-${Date.now()}-${Math.random()}`);
+
       for (const suit of suits) {
         for (let i = 0; i < values.length; i++) {
-          deck.push({ suit, value: values[i], rank: i + 1, color: cardColor(suit), faceUp: false, id: crypto.randomUUID() });
+          deck.push({ suit, value: values[i], rank: i + 1, color: cardColor(suit), faceUp: false, id: makeId() });
         }
       }
+
       for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -744,7 +748,6 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       foundationEls.forEach(el => el.innerHTML = "");
       tableauRow.innerHTML = "";
 
-      stockPile.classList.add("cards-deck");
       stockPile.onclick = () => {
         if (stock.length > 0) {
           const card = stock.pop();
@@ -756,6 +759,10 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
         }
         renderSolitaire();
       };
+
+      if (stock.length) {
+        stockPile.appendChild(Object.assign(document.createElement("div"), { className: "card back" }));
+      }
 
       if (waste.length) {
         wastePile.appendChild(makeCardEl(waste[waste.length - 1], "waste", 0, waste.length - 1));
@@ -866,41 +873,58 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
       checkWin();
     }
 
-    function getLeaderboard() {
+    async function getLeaderboard() {
       try {
-        const saved = JSON.parse(localStorage.getItem("xpSolitaireLeaderboard"));
-        return Array.isArray(saved) ? saved : [];
-      } catch {
+        const res = await fetch(`${LEADERBOARD_API}/solitaire-leaderboard`);
+        if (!res.ok) throw new Error("Failed to load leaderboard");
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      } catch (err) {
+        console.error("Leaderboard load error:", err);
         return [];
       }
     }
 
-    function saveLeaderboard(entries) {
-      localStorage.setItem("xpSolitaireLeaderboard", JSON.stringify(entries));
+    async function addLeaderboardScore(name, seconds) {
+      try {
+        const res = await fetch(`${LEADERBOARD_API}/solitaire-score`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ name, seconds })
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API error:", text);
+          throw new Error("Failed to save score");
+        }
+
+        await updateScoreboard();
+        await renderLeaderboard();
+      } catch (err) {
+        console.error("Leaderboard save error:", err);
+        alert("Could not save score to the online leaderboard.");
+      }
     }
 
-    function addLeaderboardScore(name, seconds) {
-      const entries = getLeaderboard();
-      entries.push({ name, seconds, date: new Date().toISOString() });
-      entries.sort((a, b) => a.seconds - b.seconds);
-      saveLeaderboard(entries.slice(0, 10));
-      updateScoreboard();
-      renderLeaderboard();
-    }
-
-    function updateScoreboard() {
-      const entries = getLeaderboard();
+    async function updateScoreboard() {
+      const entries = await getLeaderboard();
       const el = document.getElementById("scoreboard");
+
       if (!entries.length) {
         el.textContent = "Best time: none";
         return;
       }
+
       el.innerHTML = `Best time: <strong>${entries[0].name}</strong><br>Time: ${entries[0].seconds}s`;
     }
 
-    function renderLeaderboard() {
+    async function renderLeaderboard() {
       const list = document.getElementById("leaderboardList");
-      const entries = getLeaderboard();
+      const entries = await getLeaderboard();
+
       list.innerHTML = "";
 
       if (!entries.length) {
@@ -936,28 +960,37 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     }
 
     document.getElementById("newGameBtn").addEventListener("click", newSolitaireGame);
-    document.getElementById("showLeaderboardBtn").addEventListener("click", () => {
-      renderLeaderboard();
+    document.getElementById("showLeaderboardBtn").addEventListener("click", async () => {
+      await renderLeaderboard();
       showWindow("leaderboardWindow");
     });
     document.getElementById("closePopupBtn").addEventListener("click", () => hideWindow("winPopup"));
-    document.getElementById("saveWinnerBtn").addEventListener("click", () => {
+    document.getElementById("saveWinnerBtn").addEventListener("click", async () => {
       const input = document.getElementById("winnerNameInput");
       const name = input.value.trim() || "Anonymous";
       const seconds = Math.max(1, Math.floor((Date.now() - gameStartTime) / 1000));
-      addLeaderboardScore(name, seconds);
+
+      await addLeaderboardScore(name, seconds);
       hideWindow("winPopup");
       showWindow("leaderboardWindow");
     });
-    document.getElementById("clearLeaderboardBtn").addEventListener("click", () => {
-      localStorage.removeItem("xpSolitaireLeaderboard");
-      updateScoreboard();
-      renderLeaderboard();
+    document.getElementById("clearLeaderboardBtn").addEventListener("click", async () => {
+      try {
+        const res = await fetch(`${LEADERBOARD_API}/solitaire-leaderboard`, {
+          method: "DELETE"
+        });
+
+        if (!res.ok) throw new Error("Failed to clear leaderboard");
+
+        await updateScoreboard();
+        await renderLeaderboard();
+      } catch (err) {
+        console.error("Leaderboard clear error:", err);
+        alert("Could not clear the online leaderboard.");
+      }
     });
 
     newSolitaireGame();
-    updateScoreboard();
-    renderLeaderboard();
 
     async function loadSteamStatus() {
       const msnList = document.getElementById("msnList");
@@ -1014,294 +1047,82 @@ const YOUTUBE_WATCH_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk";
     document.getElementById("openSteamProfileBtn").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/xSousa/", "Messenger"));
     document.getElementById("openSteamProfileBtn2").addEventListener("click", () => askExternalLink("https://steamcommunity.com/id/RafaXIS/", "Messenger"));
 
-    let mineRows = 9;
-    let mineCols = 9;
-    let mineCount = 10;
-    let mineBoardData = [];
-    let mineGameOver = false;
-    let mineFlagsPlaced = 0;
-    let mineRevealedCount = 0;
-    let mineTimerValue = 0;
-    let mineTimerInterval = null;
-    let mineStarted = false;
-    let mineFirstClick = true;
+    /* LOGIN LOGIC */
+    const loginScreen = document.getElementById("loginScreen");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginLoading = document.getElementById("loginLoading");
+    const loginShutdownBtn = document.getElementById("loginShutdownBtn");
 
-    const mineBoardEl = document.getElementById("mineBoard");
-    const mineCounterEl = document.getElementById("mineCounter");
-    const mineTimerEl = document.getElementById("mineTimer");
-    const mineFaceBtn = document.getElementById("mineFaceBtn");
-    const mineDifficulty = document.getElementById("mineDifficulty");
+    function unlockDesktop() {
+      loginScreen.classList.add("hidden");
+      desktop.classList.remove("locked");
 
-    function formatMineDisplay(num) {
-      const clamped = Math.max(-99, Math.min(999, num));
-      if (clamped < 0) return "-" + String(Math.abs(clamped)).padStart(2, "0");
-      return String(clamped).padStart(3, "0");
+      requestAnimationFrame(() => {
+        loadIconPositions();
+        showWindow("mainWindow");
+        updateBrowserTitle("mainWindow");
+      });
     }
 
-    function updateMineDisplays() {
-      mineCounterEl.textContent = formatMineDisplay(mineCount - mineFlagsPlaced);
-      mineTimerEl.textContent = formatMineDisplay(mineTimerValue);
+    function lockDesktop() {
+      loginScreen.classList.remove("hidden");
+      desktop.classList.add("locked");
+      closeStartMenu();
+
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Log On";
+      loginLoading.classList.remove("active");
+
+      Object.keys(windowsMap).forEach(id => hideWindow(id));
+      updateBrowserTitle();
     }
 
-    function getMineConfig(level) {
-      if (level === "medium") return { rows: 12, cols: 12, mines: 22 };
-      if (level === "hard") return { rows: 16, cols: 16, mines: 40 };
-      return { rows: 9, cols: 9, mines: 10 };
+    function handleLogin() {
+      loginBtn.disabled = true;
+      loginBtn.textContent = "Please wait";
+      loginLoading.classList.add("active");
+
+      setTimeout(() => {
+        unlockDesktop();
+      }, 2000);
     }
 
-    function startMineTimer() {
-      clearInterval(mineTimerInterval);
-      mineTimerInterval = setInterval(() => {
-        if (mineGameOver || !mineStarted) return;
-        mineTimerValue = Math.min(999, mineTimerValue + 1);
-        updateMineDisplays();
-      }, 1000);
-    }
+    loginBtn.addEventListener("click", handleLogin);
 
-    function stopMineTimer() {
-      clearInterval(mineTimerInterval);
-      mineTimerInterval = null;
-    }
-
-    function createEmptyMineBoard() {
-      mineBoardData = [];
-      for (let r = 0; r < mineRows; r++) {
-        const row = [];
-        for (let c = 0; c < mineCols; c++) {
-          row.push({
-            mine: false,
-            revealed: false,
-            flagged: false,
-            adjacent: 0
-          });
-        }
-        mineBoardData.push(row);
-      }
-    }
-
-    function placeMinesSafe(firstRow, firstCol) {
-      let placed = 0;
-      while (placed < mineCount) {
-        const r = Math.floor(Math.random() * mineRows);
-        const c = Math.floor(Math.random() * mineCols);
-        if ((r === firstRow && c === firstCol) || mineBoardData[r][c].mine) continue;
-        mineBoardData[r][c].mine = true;
-        placed++;
-      }
-    }
-
-    function calculateMineAdjacents() {
-      for (let r = 0; r < mineRows; r++) {
-        for (let c = 0; c < mineCols; c++) {
-          if (mineBoardData[r][c].mine) {
-            mineBoardData[r][c].adjacent = -1;
-            continue;
-          }
-          let count = 0;
-          for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-              if (!dr && !dc) continue;
-              const nr = r + dr;
-              const nc = c + dc;
-              if (nr >= 0 && nr < mineRows && nc >= 0 && nc < mineCols && mineBoardData[nr][nc].mine) {
-                count++;
-              }
-            }
-          }
-          mineBoardData[r][c].adjacent = count;
-        }
-      }
-    }
-
-    function newMinesweeperGame() {
-      const config = getMineConfig(mineDifficulty.value);
-      mineRows = config.rows;
-      mineCols = config.cols;
-      mineCount = config.mines;
-      mineGameOver = false;
-      mineFlagsPlaced = 0;
-      mineRevealedCount = 0;
-      mineTimerValue = 0;
-      mineStarted = false;
-      mineFirstClick = true;
-      mineFaceBtn.textContent = "🙂";
-      stopMineTimer();
-      createEmptyMineBoard();
-      updateMineDisplays();
-      renderMineBoard();
-    }
-
-    function renderMineBoard() {
-      mineBoardEl.innerHTML = "";
-      mineBoardEl.style.gridTemplateColumns = `repeat(${mineCols}, 24px)`;
-
-      for (let r = 0; r < mineRows; r++) {
-        for (let c = 0; c < mineCols; c++) {
-          const cell = mineBoardData[r][c];
-          const el = document.createElement("div");
-          el.className = "mine-cell";
-          el.dataset.row = r;
-          el.dataset.col = c;
-
-          if (cell.revealed) {
-            el.classList.add("revealed");
-            if (cell.mine) {
-              el.textContent = "💣";
-              if (mineGameOver) el.classList.add("mine-hit");
-            } else if (cell.adjacent > 0) {
-              el.textContent = cell.adjacent;
-              el.classList.add(`n${cell.adjacent}`);
-            }
-          } else if (cell.flagged) {
-            el.textContent = "🚩";
-          }
-
-          el.addEventListener("click", () => revealMineCell(r, c));
-          el.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            toggleMineFlag(r, c);
-          });
-
-          mineBoardEl.appendChild(el);
-        }
-      }
-    }
-
-    function floodReveal(r, c) {
-      const stack = [[r, c]];
-      while (stack.length) {
-        const [cr, cc] = stack.pop();
-        const cell = mineBoardData[cr][cc];
-        if (cell.revealed || cell.flagged) continue;
-
-        cell.revealed = true;
-        mineRevealedCount++;
-
-        if (cell.adjacent === 0) {
-          for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-              if (!dr && !dc) continue;
-              const nr = cr + dr;
-              const nc = cc + dc;
-              if (nr >= 0 && nr < mineRows && nc >= 0 && nc < mineCols) {
-                const neighbor = mineBoardData[nr][nc];
-                if (!neighbor.revealed && !neighbor.flagged && !neighbor.mine) {
-                  stack.push([nr, nc]);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    function revealAllMines() {
-      for (let r = 0; r < mineRows; r++) {
-        for (let c = 0; c < mineCols; c++) {
-          if (mineBoardData[r][c].mine) {
-            mineBoardData[r][c].revealed = true;
-          }
-        }
-      }
-    }
-
-    function revealMineCell(r, c) {
-      if (mineGameOver) return;
-
-      const cell = mineBoardData[r][c];
-      if (cell.revealed || cell.flagged) return;
-
-      if (mineFirstClick) {
-        mineFirstClick = false;
-        placeMinesSafe(r, c);
-        calculateMineAdjacents();
-        mineStarted = true;
-        startMineTimer();
-      }
-
-      if (cell.mine) {
-        cell.revealed = true;
-        mineGameOver = true;
-        mineFaceBtn.textContent = "😵";
-        revealAllMines();
-        stopMineTimer();
-        renderMineBoard();
-        return;
-      }
-
-      if (cell.adjacent === 0) {
-        floodReveal(r, c);
-      } else {
-        cell.revealed = true;
-        mineRevealedCount++;
-      }
-
-      renderMineBoard();
-      checkMineWin();
-    }
-
-    function toggleMineFlag(r, c) {
-      if (mineGameOver) return;
-      const cell = mineBoardData[r][c];
-      if (cell.revealed) return;
-
-      cell.flagged = !cell.flagged;
-      mineFlagsPlaced += cell.flagged ? 1 : -1;
-      updateMineDisplays();
-      renderMineBoard();
-    }
-
-    function checkMineWin() {
-      const totalSafeCells = (mineRows * mineCols) - mineCount;
-      if (mineRevealedCount >= totalSafeCells && !mineGameOver) {
-        mineGameOver = true;
-        mineFaceBtn.textContent = "😎";
-        stopMineTimer();
-
-        for (let r = 0; r < mineRows; r++) {
-          for (let c = 0; c < mineCols; c++) {
-            if (mineBoardData[r][c].mine && !mineBoardData[r][c].flagged) {
-              mineBoardData[r][c].flagged = true;
-            }
-          }
-        }
-        mineFlagsPlaced = mineCount;
-        updateMineDisplays();
-        renderMineBoard();
-      }
-    }
-
-    document.getElementById("newMinesweeperBtn").addEventListener("click", newMinesweeperGame);
-    mineFaceBtn.addEventListener("click", newMinesweeperGame);
-    mineDifficulty.addEventListener("change", newMinesweeperGame);
-
-    function createClockMarks() {
-      const clockMarks = document.getElementById("clockMarks");
-      clockMarks.innerHTML = "";
-      for (let i = 0; i < 60; i++) {
-        const mark = document.createElement("div");
-        mark.className = `clock-mark ${i % 5 === 0 ? "major" : ""}`;
-        mark.style.transform = `translate(-50%, -100%) rotate(${i * 6}deg)`;
-        clockMarks.appendChild(mark);
-      }
-    }
+    loginShutdownBtn.addEventListener("click", () => {
+      document.body.innerHTML = `
+        <div style="
+          width:100vw;
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:linear-gradient(to bottom, #0b4fa9, #083b85);
+          color:#fff;
+          font-family:Tahoma, Verdana, Arial, sans-serif;
+          font-size:28px;
+          text-shadow:0 2px 4px rgba(0,0,0,0.35);
+        ">
+          It is now safe to turn off your computer.
+        </div>
+      `;
+    });
 
     loadSteamStatus();
     loadSettings();
-    loadIconPositions();
     createClockMarks();
     updateClock();
+    updateScoreboard();
+    renderLeaderboard();
     setInterval(updateClock, 1000);
-    newMinesweeperGame();
 
-    showWindow("mainWindow");
     hideWindow("playerWindow");
     hideWindow("settingsWindow");
     hideWindow("solitaireWindow");
     hideWindow("leaderboardWindow");
     hideWindow("msnWindow");
-    hideWindow("minesweeperWindow");
     hideWindow("clockWindow");
     hideWindow("winPopup");
     hideWindow("externalLinkWindow");
-    updateBrowserTitle("mainWindow");
+    updateBrowserTitle();
+  

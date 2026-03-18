@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOOM</title>
+<style>
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000;color:#ddd;font-family:Tahoma,Verdana,Arial,sans-serif;}
+.doom-shell{width:100%;height:100%;display:flex;flex-direction:column;background:linear-gradient(to bottom,#121212,#000);}
+.doom-top,.doom-bottom{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:8px 10px;background:linear-gradient(to bottom,#242424,#111);border-bottom:1px solid #363636;font-size:12px;}
+.doom-bottom{justify-content:space-between;border-top:1px solid #262626;border-bottom:0;}
+.doom-top img{width:18px;height:18px;object-fit:contain;}
+.doom-status{color:#f3c25b;font-weight:bold;}
+#dosbox{flex:1;width:100%;height:100%;}
+.dosbox-container{width:100%!important;height:100%!important;}
+.dosbox-container>.dosbox-overlay{background:#000 url(https://js-dos.com/cdn/DOOM.png) center center / contain no-repeat;}
+button{height:26px;border-radius:4px;border:1px solid #7f6e43;background:linear-gradient(to bottom,#6b5327,#3e2d10);color:#f8df8c;font-weight:bold;cursor:pointer;padding:0 10px;font-family:inherit;}
+.doom-hint{color:#c7c7c7;}
+</style>
+</head>
+<body>
+<div class="doom-shell">
+<div class="doom-top"><img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/i/efd55d2f-11a4-4df1-9bf7-1eccd3ebb813/d3hsp3f-094f83e1-40a9-4d57-a31d-31a74c7cac89.png" alt="DOOM icon"><div class="doom-status" id="doomStatus">Loading DOOM…</div></div>
+<div id="dosbox"></div>
+<div class="doom-bottom"><div class="doom-hint">Arrow keys move • S fire • W use • Space run • Alt strafe</div><button type="button" id="doomFullscreenBtn">Fullscreen</button></div>
+</div>
+<script src="https://js-dos.com/cdn/js-dos-api.js"></script>
+<script>
+const statusEl=document.getElementById('doomStatus');
+let dosbox=null;
+try{
+  dosbox=new Dosbox({
+    id:'dosbox',
+    onload:function(instance){statusEl.textContent='Starting DOOM…';instance.run('upload/DOOM-@evilution.zip','./doom');},
+    onrun:function(){statusEl.textContent='DOOM is running';}
+  });
+}catch(err){console.error(err);statusEl.textContent='DOOM failed to load';}
+document.getElementById('doomFullscreenBtn').addEventListener('click',function(){try{if(dosbox&&typeof dosbox.requestFullScreen==='function')dosbox.requestFullScreen();}catch(err){console.error(err);}});
+window.addEventListener('error',function(){statusEl.textContent='DOOM failed to load';});
+</script>
+</body>
+</html>
