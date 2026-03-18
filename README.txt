@@ -10,3 +10,5 @@ CMD commands added:
 - sounds
 - sounds on
 - sounds off
+
+Added a "What's new" pop-up window when you logon.
