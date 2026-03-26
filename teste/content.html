@@ -2,12 +2,11 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Downloads</title>
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -23,29 +22,26 @@
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: 32px;
+      margin-bottom: 8px;
     }
 
     .subtitle {
-      color: #a8a8a8;
+      color: #aaa;
       margin-bottom: 20px;
     }
 
     .topbar {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 10px;
       margin-bottom: 20px;
     }
 
     button {
-      border: 0;
+      padding: 10px 14px;
       border-radius: 10px;
-      padding: 12px 16px;
+      border: none;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s ease;
     }
 
     .add-btn {
@@ -53,284 +49,228 @@
       color: #000;
     }
 
-    .add-btn:hover {
-      opacity: 0.9;
-    }
-
     .clear-btn {
       background: #222;
       color: #fff;
-      border: 1px solid #353535;
-    }
-
-    .clear-btn:hover {
-      background: #2b2b2b;
+      border: 1px solid #333;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
     }
 
+    /* CARD */
     .card {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  aspect-ratio: 1 / 1;
-  cursor: pointer;
-  border: 1px solid #2d2d2d;
-}
-
-.thumb-wrap {
-  width: 100%;
-  height: 100%;
-}
-
-.thumb-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* OVERLAY ESCONDIDO */
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.2));
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 14px;
-  opacity: 0;
-  transition: 0.25s ease;
-}
-
-/* MOSTRAR AO PASSAR RATO */
-.card:hover .overlay {
-  opacity: 1;
-}
-
-.overlay .title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.overlay .download-btn {
-  background: #fff;
-  color: #000;
-  text-align: center;
-  padding: 8px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-    @media (max-width: 560px) {
-      .actions,
-      .modal-actions {
-        flex-direction: column;
-      }
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      border: 1px solid #2d2d2d;
     }
+
+    .thumb-wrap {
+      width: 100%;
+      height: 100%;
+    }
+
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* OVERLAY */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.2));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 12px;
+      opacity: 0;
+      transition: 0.25s;
+    }
+
+    .card:hover .overlay {
+      opacity: 1;
+    }
+
+    .overlay .title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .overlay .download-btn {
+      background: #fff;
+      color: #000;
+      text-align: center;
+      padding: 8px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* MODAL */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #111;
+      padding: 20px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+    }
+
+    .preview {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Os meus downloads</h1>
-    <div class="subtitle">Adiciona links manualmente com imagem, tudo em quadrados iguais.</div>
 
-    <div class="topbar">
-      <button class="add-btn" id="openModalBtn">+ Adicionar</button>
-      <button class="clear-btn" id="clearAllBtn">Limpar tudo</button>
-    </div>
+<div class="container">
+  <h1>Os meus downloads</h1>
+  <div class="subtitle">Hover para ver opções</div>
 
-    <div id="cardsContainer"></div>
+  <div class="topbar">
+    <button class="add-btn" onclick="openModal()">+ Adicionar</button>
+    <button class="clear-btn" onclick="clearAll()">Limpar</button>
   </div>
 
-  <div class="modal" id="modal">
-    <div class="modal-box">
-      <h2>Adicionar item</h2>
+  <div id="grid" class="grid"></div>
+</div>
 
-      <div class="field">
-        <label for="titleInput">Título</label>
-        <input type="text" id="titleInput" placeholder="Ex: Call of Duty 2" />
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Adicionar</h3>
+
+    <input id="title" placeholder="Título">
+    <input id="link" placeholder="Link">
+
+    <input type="file" id="image">
+    <div class="preview" id="preview">Imagem</div>
+
+    <button onclick="save()">Guardar</button>
+    <button onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+const KEY = "items";
+
+let imageData = "";
+
+function getItems() {
+  return JSON.parse(localStorage.getItem(KEY) || "[]");
+}
+
+function saveItems(items) {
+  localStorage.setItem(KEY, JSON.stringify(items));
+}
+
+function render() {
+  const items = getItems();
+  const grid = document.getElementById("grid");
+
+  grid.innerHTML = items.map(item => `
+    <div class="card">
+      <div class="thumb-wrap">
+        <img src="${item.image}">
       </div>
 
-      <div class="field">
-        <label for="linkInput">Link de download</label>
-        <input type="url" id="linkInput" placeholder="https://..." />
-      </div>
-
-      <div class="field">
-        <label for="imageInput">Selecionar imagem</label>
-        <input type="file" id="imageInput" accept="image/*" />
-        <div class="preview" id="preview">Pré-visualização da imagem</div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="save-btn" id="saveBtn">Guardar</button>
-        <button class="cancel-btn" id="closeModalBtn">Cancelar</button>
+      <div class="overlay">
+        <div class="title">${item.title}</div>
+        <a class="download-btn" href="${item.link}" target="_blank">Abrir</a>
       </div>
     </div>
-  </div>
+  `).join("");
+}
 
-  <script>
-    const STORAGE_KEY = "downloads_items_v1";
+function openModal() {
+  document.getElementById("modal").classList.add("active");
+}
 
-    const modal = document.getElementById("modal");
-    const openModalBtn = document.getElementById("openModalBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const clearAllBtn = document.getElementById("clearAllBtn");
+function closeModal() {
+  document.getElementById("modal").classList.remove("active");
+}
 
-    const titleInput = document.getElementById("titleInput");
-    const linkInput = document.getElementById("linkInput");
-    const imageInput = document.getElementById("imageInput");
-    const preview = document.getElementById("preview");
-    const cardsContainer = document.getElementById("cardsContainer");
+document.getElementById("image").addEventListener("change", e => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
 
-    let imageData = "";
+  reader.onload = function(ev) {
+    imageData = ev.target.result;
+    document.getElementById("preview").innerHTML = `<img src="${imageData}">`;
+  };
 
-    function getItems() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      } catch {
-        return [];
-      }
-    }
+  reader.readAsDataURL(file);
+});
 
-    function saveItems(items) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
+function save() {
+  const title = document.getElementById("title").value;
+  const link = document.getElementById("link").value;
 
-    function openModal() {
-      modal.classList.add("active");
-    }
+  if (!title || !link) return alert("Preenche tudo");
 
-    function closeModal() {
-      modal.classList.remove("active");
-      titleInput.value = "";
-      linkInput.value = "";
-      imageInput.value = "";
-      imageData = "";
-      preview.innerHTML = "Pré-visualização da imagem";
-    }
+  const items = getItems();
 
-    function renderItems() {
-      const items = getItems();
+  items.unshift({
+    title,
+    link,
+    image: imageData
+  });
 
-      if (!items.length) {
-        cardsContainer.innerHTML = `
-          <div class="empty">
-            Ainda não tens itens. Carrega em <strong>+ Adicionar</strong>.
-          </div>
-        `;
-        return;
-      }
+  saveItems(items);
+  render();
+  closeModal();
+}
 
-      cardsContainer.innerHTML = `
-        <div class="grid">
-          ${items.map((item, index) => `
-            <div class="card">
-              <div class="thumb-wrap">
-                ${
-                  item.image
-                    ? `<img src="${item.image}" alt="${escapeHtml(item.title)}">`
-                    : `<div class="placeholder">Sem imagem</div>`
-                }
-              </div>
+function clearAll() {
+  localStorage.removeItem(KEY);
+  render();
+}
 
-              <div class="card-body">
-                <div class="title">${escapeHtml(item.title)}</div>
-                <div class="url">${escapeHtml(item.link)}</div>
+render();
+</script>
 
-                <div class="actions">
-                  <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
-                  <a class="delete-btn" href="#" data-index="${index}">Apagar</a>
-                </div>
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `;
-
-      document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", function (e) {
-          e.preventDefault();
-          const index = Number(this.dataset.index);
-          deleteItem(index);
-        });
-      });
-    }
-
-    function deleteItem(index) {
-      const items = getItems();
-      items.splice(index, 1);
-      saveItems(items);
-      renderItems();
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    imageInput.addEventListener("change", function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imageData = e.target.result;
-        preview.innerHTML = `<img src="${imageData}" alt="Preview">`;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    saveBtn.addEventListener("click", function () {
-      const title = titleInput.value.trim();
-      const link = linkInput.value.trim();
-
-      if (!title || !link) {
-        alert("Preenche o título e o link.");
-        return;
-      }
-
-      const items = getItems();
-      items.unshift({
-        title,
-        link,
-        image: imageData
-      });
-
-      saveItems(items);
-      renderItems();
-      closeModal();
-    });
-
-    openModalBtn.addEventListener("click", openModal);
-    closeModalBtn.addEventListener("click", closeModal);
-
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    clearAllBtn.addEventListener("click", function () {
-      if (confirm("Queres apagar todos os itens?")) {
-        localStorage.removeItem(STORAGE_KEY);
-        renderItems();
-      }
-    });
-
-    renderItems();
-  </script>
 </body>
 </html>
