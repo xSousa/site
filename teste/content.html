@@ -6,9 +6,7 @@
   <title>Downloads</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,8 +16,12 @@
     }
 
     .layout {
-      display: flex;
+      display: none;
       min-height: 100vh;
+    }
+
+    .layout.active {
+      display: flex;
     }
 
     .sidebar {
@@ -53,7 +55,6 @@
       color: white;
       cursor: pointer;
       font-weight: bold;
-      transition: 0.2s ease;
     }
 
     .menu button:hover,
@@ -97,7 +98,6 @@
       border: none;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s ease;
     }
 
     .add-btn {
@@ -105,18 +105,11 @@
       color: #000;
     }
 
-    .add-btn:hover {
-      opacity: 0.92;
-    }
-
-    .clear-btn {
+    .logout-btn,
+    .cancel-btn {
       background: #1f1f1f;
       color: #fff;
       border: 1px solid #333;
-    }
-
-    .clear-btn:hover {
-      background: #2a2a2a;
     }
 
     .grid {
@@ -182,7 +175,7 @@
       opacity: 1;
     }
 
-    .overlay .category-tag {
+    .category-tag {
       display: inline-block;
       align-self: flex-start;
       background: rgba(255,255,255,0.12);
@@ -194,20 +187,20 @@
       margin-bottom: 10px;
     }
 
-    .overlay .title {
+    .title {
       font-size: 17px;
       font-weight: bold;
       margin-bottom: 12px;
       word-break: break-word;
     }
 
-    .overlay .actions {
+    .actions {
       display: flex;
       gap: 8px;
     }
 
-    .overlay .download-btn,
-    .overlay .delete-btn {
+    .download-btn,
+    .delete-btn {
       flex: 1;
       text-align: center;
       text-decoration: none;
@@ -217,12 +210,12 @@
       font-size: 14px;
     }
 
-    .overlay .download-btn {
+    .download-btn {
       background: #fff;
       color: #000;
     }
 
-    .overlay .delete-btn {
+    .delete-btn {
       background: #272727;
       color: #fff;
       border: 1px solid #3a3a3a;
@@ -238,10 +231,11 @@
       max-width: 520px;
     }
 
-    .modal {
+    .modal,
+    .login-screen {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.72);
+      background: rgba(0,0,0,0.78);
       display: none;
       align-items: center;
       justify-content: center;
@@ -249,11 +243,13 @@
       z-index: 1000;
     }
 
-    .modal.active {
+    .modal.active,
+    .login-screen.active {
       display: flex;
     }
 
-    .modal-box {
+    .modal-box,
+    .login-box {
       width: 100%;
       max-width: 500px;
       background: #111;
@@ -262,7 +258,12 @@
       padding: 20px;
     }
 
-    .modal-box h3 {
+    .login-box {
+      max-width: 420px;
+    }
+
+    .modal-box h3,
+    .login-box h2 {
       margin-top: 0;
       margin-bottom: 16px;
       font-size: 24px;
@@ -290,11 +291,6 @@
       outline: none;
     }
 
-    .field input:focus,
-    .field select:focus {
-      border-color: #666;
-    }
-
     .preview {
       width: 220px;
       height: 320px;
@@ -314,23 +310,25 @@
       background: #111;
     }
 
-    .modal-actions {
+    .modal-actions,
+    .login-actions {
       display: flex;
       gap: 10px;
       margin-top: 18px;
     }
 
-    .save-btn {
+    .save-btn,
+    .login-btn {
       background: #fff;
       color: #000;
       flex: 1;
     }
 
-    .cancel-btn {
-      background: #222;
-      color: #fff;
-      border: 1px solid #333;
-      flex: 1;
+    .error-box {
+      color: #ff8f8f;
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 14px;
     }
 
     @media (max-width: 900px) {
@@ -376,7 +374,8 @@
       }
 
       .modal-actions,
-      .overlay .actions {
+      .actions,
+      .login-actions {
         flex-direction: column;
       }
     }
@@ -384,7 +383,29 @@
 </head>
 <body>
 
-  <div class="layout">
+  <div id="loginScreen" class="login-screen active">
+    <div class="login-box">
+      <h2>Entrar</h2>
+
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" placeholder="o-teu-email@email.com">
+      </div>
+
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" placeholder="********">
+      </div>
+
+      <div class="login-actions">
+        <button class="login-btn" id="loginBtn">Entrar</button>
+      </div>
+
+      <div id="loginError" class="error-box"></div>
+    </div>
+  </div>
+
+  <div id="appLayout" class="layout">
     <aside class="sidebar">
       <h2>Menu</h2>
 
@@ -405,6 +426,7 @@
 
         <div class="topbar-right">
           <button class="add-btn" onclick="openModal()">+ Adicionar</button>
+          <button class="logout-btn" id="logoutBtn">Sair</button>
         </div>
       </div>
 
@@ -469,6 +491,13 @@
       query
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
       authDomain: "content-729f5.firebaseapp.com",
@@ -480,10 +509,17 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     let imageData = "";
     let currentFilter = "all";
     let allItems = [];
+
+    const loginScreen = document.getElementById("loginScreen");
+    const appLayout = document.getElementById("appLayout");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginError = document.getElementById("loginError");
 
     function escapeHtml(text) {
       return String(text)
@@ -515,9 +551,7 @@
       } catch (error) {
         console.error(error);
         document.getElementById("grid").innerHTML = `
-          <div class="empty">
-            Erro ao carregar os itens do Firebase.
-          </div>
+          <div class="empty">Erro ao carregar os itens.</div>
         `;
       }
     }
@@ -531,11 +565,7 @@
       }
 
       if (!items.length) {
-        grid.innerHTML = `
-          <div class="empty">
-            Não existem itens nesta categoria.
-          </div>
-        `;
+        grid.innerHTML = `<div class="empty">Não existem itens nesta categoria.</div>`;
         return;
       }
 
@@ -565,10 +595,8 @@
         btn.addEventListener("click", async function(e) {
           e.preventDefault();
 
-          const itemId = this.dataset.id;
-
           try {
-            await deleteDoc(doc(db, "items", itemId));
+            await deleteDoc(doc(db, "items", this.dataset.id));
             await loadItems();
           } catch (error) {
             console.error(error);
@@ -618,7 +646,7 @@
         closeModal();
       } catch (error) {
         console.error(error);
-        alert("Erro ao guardar item no Firebase.");
+        alert("Erro ao guardar item.");
       }
     };
 
@@ -627,23 +655,19 @@
       if (!file) return;
 
       const reader = new FileReader();
-
       reader.onload = function(ev) {
         imageData = ev.target.result;
         const fitMode = document.getElementById("fitMode").value;
         document.getElementById("preview").innerHTML =
           `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
       };
-
       reader.readAsDataURL(file);
     });
 
     document.getElementById("fitMode").addEventListener("change", function() {
       if (!imageData) return;
-
-      const fitMode = this.value;
       document.getElementById("preview").innerHTML =
-        `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
+        `<img src="${imageData}" alt="Preview" style="object-fit:${this.value};">`;
     });
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
@@ -659,8 +683,39 @@
       if (e.target === this) closeModal();
     });
 
-    loadItems();
-  </script>
+    loginBtn.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
 
+      loginError.textContent = "";
+
+      if (!email || !password) {
+        loginError.textContent = "Preenche o email e a password.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        console.error(error);
+        loginError.textContent = "Login inválido.";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        loginScreen.classList.remove("active");
+        appLayout.classList.add("active");
+        await loadItems();
+      } else {
+        appLayout.classList.remove("active");
+        loginScreen.classList.add("active");
+      }
+    });
+  </script>
 </body>
 </html>
