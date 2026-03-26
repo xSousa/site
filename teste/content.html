@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conteúdo disponível</title>
+  <title>Downloads</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,9 +12,9 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0d0d0d;
+      background: #0b0b0b;
       color: #fff;
-      padding: 30px;
+      padding: 24px;
     }
 
     .container {
@@ -23,26 +23,38 @@
     }
 
     h1 {
-      margin-bottom: 10px;
+      margin: 0 0 8px;
       font-size: 32px;
     }
 
-    p {
-      color: #bdbdbd;
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 20px;
     }
 
     .card {
-      background: #161616;
-      border: 1px solid #2b2b2b;
-      border-radius: 14px;
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
       padding: 20px;
-      margin-top: 20px;
+    }
+
+    .status {
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+
+    .ok {
+      color: #7CFC98;
+    }
+
+    .error {
+      color: #ff7d7d;
     }
 
     .empty {
       color: #999;
-      padding: 20px;
-      text-align: center;
+      padding: 14px 0;
     }
 
     ul.tree {
@@ -58,11 +70,11 @@
     }
 
     li.item {
-      margin: 10px 0;
+      background: #1c1c1c;
+      border: 1px solid #2f2f2f;
+      border-radius: 12px;
       padding: 12px;
-      background: #1d1d1d;
-      border: 1px solid #2e2e2e;
-      border-radius: 10px;
+      margin: 10px 0;
     }
 
     .row {
@@ -79,8 +91,8 @@
     }
 
     .meta {
+      color: #aaa;
       font-size: 13px;
-      color: #a3a3a3;
       margin-top: 4px;
     }
 
@@ -93,71 +105,147 @@
     }
 
     a.download {
-      background: #ffffff;
-      color: #000;
+      display: inline-block;
       text-decoration: none;
+      background: #fff;
+      color: #000;
       padding: 10px 14px;
       border-radius: 8px;
       font-weight: bold;
-      transition: 0.2s ease;
     }
 
     a.download:hover {
-      opacity: 0.85;
+      opacity: 0.88;
     }
 
-    .status {
-      margin-top: 10px;
-      font-weight: bold;
+    .top-actions {
+      margin-bottom: 16px;
     }
 
-    .ok {
-      color: #7CFC98;
+    .refresh-btn {
+      background: #272727;
+      color: white;
+      border: 1px solid #3b3b3b;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
-    .no {
-      color: #ff7b7b;
+    .refresh-btn:hover {
+      background: #333;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Conteúdo disponível</h1>
-    <p>Esta página mostra tudo o que existe dentro da pasta <strong>content</strong>.</p>
+    <div class="subtitle">Lista automática da pasta <strong>content</strong> do GitHub</div>
 
     <div class="card">
+      <div class="top-actions">
+        <button class="refresh-btn" onclick="loadContent()">Atualizar</button>
+      </div>
+
       <div id="status" class="status">A carregar...</div>
       <div id="content"></div>
     </div>
   </div>
 
   <script>
+    // ============================================
+    // ALTERA APENAS ISTO
+    // ============================================
+    const GITHUB_USER = "TEU_USER";
+    const GITHUB_REPO = "TEU_REPO";
+    const GITHUB_BRANCH = "main"; // ou master
+    const CONTENT_PATH = "content";
+    // ============================================
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
     function formatSize(bytes) {
-      if (bytes === 0) return '0 B';
-      const k = 1024;
-      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      if (!bytes && bytes !== 0) return "";
+      if (bytes === 0) return "0 B";
+      const units = ["B", "KB", "MB", "GB", "TB"];
+      let i = 0;
+      let size = bytes;
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+      }
+      return `${size.toFixed(size >= 10 || i === 0 ? 0 : 2)} ${units[i]}`;
+    }
+
+    async function fetchFolder(path) {
+      const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+      const res = await fetch(apiUrl);
+
+      if (!res.ok) {
+        throw new Error(`Erro GitHub API: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        return [];
+      }
+
+      const folders = data.filter(item => item.type === "dir").sort((a, b) => a.name.localeCompare(b.name));
+      const files = data.filter(item => item.type === "file").sort((a, b) => a.name.localeCompare(b.name));
+      const ordered = [...folders, ...files];
+
+      const result = [];
+
+      for (const item of ordered) {
+        if (item.type === "dir") {
+          const children = await fetchFolder(item.path);
+          result.push({
+            type: "folder",
+            name: item.name,
+            path: item.path,
+            children
+          });
+        } else if (item.type === "file") {
+          result.push({
+            type: "file",
+            name: item.name,
+            path: item.path,
+            size: item.size || 0,
+            download_url: item.download_url
+          });
+        }
+      }
+
+      return result;
     }
 
     function renderItems(items) {
       if (!items || items.length === 0) {
-        return '<div class="empty">A pasta content está vazia.</div>';
+        return `<div class="empty">A pasta content está vazia.</div>`;
       }
 
-      let html = '<ul class="tree">';
+      let html = `<ul class="tree">`;
 
       for (const item of items) {
-        if (item.type === 'folder') {
+        if (item.type === "folder") {
           html += `
             <li class="item">
               <div class="row">
                 <div>
-                  <div class="name folder">📁 ${item.name}</div>
+                  <div class="name folder">📁 ${escapeHtml(item.name)}</div>
                   <div class="meta">Pasta</div>
                 </div>
               </div>
-              ${item.children && item.children.length ? renderItems(item.children) : '<div class="meta" style="margin-top:10px;">Vazia</div>'}
+              ${item.children && item.children.length
+                ? renderItems(item.children)
+                : `<div class="meta" style="margin-top:10px;">Vazia</div>`}
             </li>
           `;
         } else {
@@ -165,48 +253,61 @@
             <li class="item">
               <div class="row">
                 <div>
-                  <div class="name file">📄 ${item.name}</div>
+                  <div class="name file">📄 ${escapeHtml(item.name)}</div>
                   <div class="meta">${formatSize(item.size)}</div>
                 </div>
-                <a class="download" href="/download/${encodeURI(item.path)}" download>Download</a>
+                <a class="download" href="${item.download_url}" download target="_blank" rel="noopener noreferrer">
+                  Download
+                </a>
               </div>
             </li>
           `;
         }
       }
 
-      html += '</ul>';
+      html += `</ul>`;
       return html;
     }
 
     async function loadContent() {
-      const status = document.getElementById('status');
-      const content = document.getElementById('content');
+      const status = document.getElementById("status");
+      const content = document.getElementById("content");
+
+      status.className = "status";
+      status.textContent = "A carregar...";
+      content.innerHTML = "";
 
       try {
-        const res = await fetch('/api/content');
-        const data = await res.json();
+        const items = await fetchFolder(CONTENT_PATH);
 
-        if (!data.success) {
-          status.className = 'status no';
-          status.textContent = 'Erro ao carregar conteúdo.';
-          content.innerHTML = '';
-          return;
-        }
-
-        if (data.hasContent) {
-          status.className = 'status ok';
-          status.textContent = 'A pasta content tem conteúdo disponível.';
+        if (items.length > 0) {
+          status.className = "status ok";
+          status.textContent = "A pasta content tem conteúdo disponível.";
         } else {
-          status.className = 'status no';
-          status.textContent = 'A pasta content está vazia.';
+          status.className = "status";
+          status.textContent = "A pasta content está vazia.";
         }
 
-        content.innerHTML = renderItems(data.items);
-      } catch (error) {
-        status.className = 'status no';
-        status.textContent = 'Erro de ligação ao servidor.';
-        content.innerHTML = '';
+        content.innerHTML = renderItems(items);
+      } catch (err) {
+        status.className = "status error";
+        status.textContent = "Erro ao ler a pasta content do GitHub.";
+        content.innerHTML = `
+          <div class="empty">
+            Confirma se:
+            <br><br>
+            - o repositório existe
+            <br>
+            - o nome do utilizador está correto
+            <br>
+            - o branch está certo
+            <br>
+            - a pasta <strong>content</strong> existe
+            <br>
+            - o repositório é público
+          </div>
+        `;
+        console.error(err);
       }
     }
 
