@@ -414,6 +414,7 @@
         <button class="filter-btn" data-filter="tools">Tools</button>
         <button class="filter-btn" data-filter="jogos">Jogos</button>
         <button class="filter-btn" data-filter="filmes">Filmes</button>
+        <button class="filter-btn" data-filter="vsts">VSTs</button>
       </div>
     </aside>
 
@@ -454,6 +455,7 @@
           <option value="tools">Tools</option>
           <option value="jogos">Jogos</option>
           <option value="filmes">Filmes</option>
+          <option value="filmes">VSTs</option>
         </select>
       </div>
 
@@ -534,6 +536,7 @@
       if (category === "tools") return "Tools";
       if (category === "jogos") return "Jogos";
       if (category === "filmes") return "Filmes";
+      if (category === "vsts") return "VSTs";
       return category;
     }
 
