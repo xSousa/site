@@ -18,7 +18,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -28,138 +28,377 @@
     }
 
     .subtitle {
-      color: #aaa;
+      color: #a8a8a8;
       margin-bottom: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .add-btn {
+      background: #fff;
+      color: #000;
+    }
+
+    .add-btn:hover {
+      opacity: 0.9;
+    }
+
+    .clear-btn {
+      background: #222;
+      color: #fff;
+      border: 1px solid #353535;
+    }
+
+    .clear-btn:hover {
+      background: #2b2b2b;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
     }
 
     .card {
       background: #151515;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
+      border: 1px solid #2d2d2d;
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+
+    .thumb-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #1d1d1d;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .placeholder {
+      color: #888;
+      font-size: 14px;
+      text-align: center;
       padding: 20px;
     }
 
-    .status {
-      margin-bottom: 16px;
-      font-weight: bold;
-    }
-
-    .ok {
-      color: #7CFC98;
-    }
-
-    .error {
-      color: #ff7d7d;
-    }
-
-    .empty {
-      color: #999;
-      padding: 14px 0;
-    }
-
-    ul.tree {
-      list-style: none;
-      padding-left: 0;
-      margin: 0;
-    }
-
-    ul.tree ul {
-      list-style: none;
-      padding-left: 22px;
-      margin-top: 10px;
-    }
-
-    li.item {
-      background: #1c1c1c;
-      border: 1px solid #2f2f2f;
-      border-radius: 12px;
-      padding: 12px;
-      margin: 10px 0;
-    }
-
-    .row {
+    .card-body {
+      padding: 14px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       gap: 12px;
-      flex-wrap: wrap;
+      flex: 1;
     }
 
-    .name {
+    .title {
+      font-size: 18px;
       font-weight: bold;
       word-break: break-word;
     }
 
-    .meta {
-      color: #aaa;
-      font-size: 13px;
-      margin-top: 4px;
+    .url {
+      font-size: 12px;
+      color: #9c9c9c;
+      word-break: break-all;
     }
 
-    .folder {
-      color: #ffd166;
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
     }
 
-    .file {
-      color: #7bdff2;
-    }
-
-    a.download {
-      display: inline-block;
+    .download-btn,
+    .delete-btn {
+      flex: 1;
+      text-align: center;
       text-decoration: none;
-      background: #fff;
-      color: #000;
-      padding: 10px 14px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
       font-weight: bold;
     }
 
-    a.download:hover {
-      opacity: 0.88;
+    .download-btn {
+      background: #fff;
+      color: #000;
     }
 
-    .top-actions {
+    .delete-btn {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #3b3b3b;
+    }
+
+    .empty {
+      background: #151515;
+      border: 1px solid #2d2d2d;
+      border-radius: 18px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #888;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 520px;
+      background: #111;
+      border: 1px solid #2c2c2c;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .modal-box h2 {
+      margin-top: 0;
       margin-bottom: 16px;
     }
 
-    .refresh-btn {
-      background: #272727;
-      color: white;
-      border: 1px solid #3b3b3b;
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
+    .field {
+      margin-bottom: 14px;
     }
 
-    .refresh-btn:hover {
-      background: #333;
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: #d5d5d5;
+      font-size: 14px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #303030;
+      background: #1a1a1a;
+      color: #fff;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #666;
+    }
+
+    .preview {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #1a1a1a;
+      border: 1px dashed #3a3a3a;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      margin-top: 8px;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .save-btn {
+      background: #fff;
+      color: #000;
+      flex: 1;
+    }
+
+    .cancel-btn {
+      background: #222;
+      color: #fff;
+      border: 1px solid #353535;
+      flex: 1;
+    }
+
+    @media (max-width: 560px) {
+      .actions,
+      .modal-actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Conteúdo disponível</h1>
-    <div class="subtitle">Lista automática da pasta <strong>content</strong> do GitHub</div>
+    <h1>Os meus downloads</h1>
+    <div class="subtitle">Adiciona links manualmente com imagem, tudo em quadrados iguais.</div>
 
-    <div class="card">
-      <div class="top-actions">
-        <button class="refresh-btn" onclick="loadContent()">Atualizar</button>
+    <div class="topbar">
+      <button class="add-btn" id="openModalBtn">+ Adicionar</button>
+      <button class="clear-btn" id="clearAllBtn">Limpar tudo</button>
+    </div>
+
+    <div id="cardsContainer"></div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <h2>Adicionar item</h2>
+
+      <div class="field">
+        <label for="titleInput">Título</label>
+        <input type="text" id="titleInput" placeholder="Ex: Call of Duty 2" />
       </div>
 
-      <div id="status" class="status">A carregar...</div>
-      <div id="content"></div>
+      <div class="field">
+        <label for="linkInput">Link de download</label>
+        <input type="url" id="linkInput" placeholder="https://..." />
+      </div>
+
+      <div class="field">
+        <label for="imageInput">Selecionar imagem</label>
+        <input type="file" id="imageInput" accept="image/*" />
+        <div class="preview" id="preview">Pré-visualização da imagem</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="save-btn" id="saveBtn">Guardar</button>
+        <button class="cancel-btn" id="closeModalBtn">Cancelar</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // ============================================
-    // ALTERA APENAS ISTO
-    // ============================================
-    const GITHUB_USER = "TEU_USER";
-    const GITHUB_REPO = "TEU_REPO";
-    const GITHUB_BRANCH = "main"; // ou master
-    const CONTENT_PATH = "Content";
-    // ============================================
+    const STORAGE_KEY = "downloads_items_v1";
+
+    const modal = document.getElementById("modal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+
+    const titleInput = document.getElementById("titleInput");
+    const linkInput = document.getElementById("linkInput");
+    const imageInput = document.getElementById("imageInput");
+    const preview = document.getElementById("preview");
+    const cardsContainer = document.getElementById("cardsContainer");
+
+    let imageData = "";
+
+    function getItems() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function openModal() {
+      modal.classList.add("active");
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      titleInput.value = "";
+      linkInput.value = "";
+      imageInput.value = "";
+      imageData = "";
+      preview.innerHTML = "Pré-visualização da imagem";
+    }
+
+    function renderItems() {
+      const items = getItems();
+
+      if (!items.length) {
+        cardsContainer.innerHTML = `
+          <div class="empty">
+            Ainda não tens itens. Carrega em <strong>+ Adicionar</strong>.
+          </div>
+        `;
+        return;
+      }
+
+      cardsContainer.innerHTML = `
+        <div class="grid">
+          ${items.map((item, index) => `
+            <div class="card">
+              <div class="thumb-wrap">
+                ${
+                  item.image
+                    ? `<img src="${item.image}" alt="${escapeHtml(item.title)}">`
+                    : `<div class="placeholder">Sem imagem</div>`
+                }
+              </div>
+
+              <div class="card-body">
+                <div class="title">${escapeHtml(item.title)}</div>
+                <div class="url">${escapeHtml(item.link)}</div>
+
+                <div class="actions">
+                  <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+                  <a class="delete-btn" href="#" data-index="${index}">Apagar</a>
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          const index = Number(this.dataset.index);
+          deleteItem(index);
+        });
+      });
+    }
+
+    function deleteItem(index) {
+      const items = getItems();
+      items.splice(index, 1);
+      saveItems(items);
+      renderItems();
+    }
 
     function escapeHtml(str) {
       return String(str)
@@ -170,148 +409,56 @@
         .replaceAll("'", "&#039;");
     }
 
-    function formatSize(bytes) {
-      if (!bytes && bytes !== 0) return "";
-      if (bytes === 0) return "0 B";
-      const units = ["B", "KB", "MB", "GB", "TB"];
-      let i = 0;
-      let size = bytes;
-      while (size >= 1024 && i < units.length - 1) {
-        size /= 1024;
-        i++;
-      }
-      return `${size.toFixed(size >= 10 || i === 0 ? 0 : 2)} ${units[i]}`;
-    }
+    imageInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) return;
 
-    async function fetchFolder(path) {
-      const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
-      const res = await fetch(apiUrl);
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        imageData = e.target.result;
+        preview.innerHTML = `<img src="${imageData}" alt="Preview">`;
+      };
+      reader.readAsDataURL(file);
+    });
 
-      if (!res.ok) {
-        throw new Error(`Erro GitHub API: ${res.status}`);
-      }
+    saveBtn.addEventListener("click", function () {
+      const title = titleInput.value.trim();
+      const link = linkInput.value.trim();
 
-      const data = await res.json();
-
-      if (!Array.isArray(data)) {
-        return [];
+      if (!title || !link) {
+        alert("Preenche o título e o link.");
+        return;
       }
 
-      const folders = data.filter(item => item.type === "dir").sort((a, b) => a.name.localeCompare(b.name));
-      const files = data.filter(item => item.type === "file").sort((a, b) => a.name.localeCompare(b.name));
-      const ordered = [...folders, ...files];
+      const items = getItems();
+      items.unshift({
+        title,
+        link,
+        image: imageData
+      });
 
-      const result = [];
+      saveItems(items);
+      renderItems();
+      closeModal();
+    });
 
-      for (const item of ordered) {
-        if (item.type === "dir") {
-          const children = await fetchFolder(item.path);
-          result.push({
-            type: "folder",
-            name: item.name,
-            path: item.path,
-            children
-          });
-        } else if (item.type === "file") {
-          result.push({
-            type: "file",
-            name: item.name,
-            path: item.path,
-            size: item.size || 0,
-            download_url: item.download_url
-          });
-        }
+    openModalBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        closeModal();
       }
+    });
 
-      return result;
-    }
-
-    function renderItems(items) {
-      if (!items || items.length === 0) {
-        return `<div class="empty">A pasta content está vazia.</div>`;
+    clearAllBtn.addEventListener("click", function () {
+      if (confirm("Queres apagar todos os itens?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderItems();
       }
+    });
 
-      let html = `<ul class="tree">`;
-
-      for (const item of items) {
-        if (item.type === "folder") {
-          html += `
-            <li class="item">
-              <div class="row">
-                <div>
-                  <div class="name folder">📁 ${escapeHtml(item.name)}</div>
-                  <div class="meta">Pasta</div>
-                </div>
-              </div>
-              ${item.children && item.children.length
-                ? renderItems(item.children)
-                : `<div class="meta" style="margin-top:10px;">Vazia</div>`}
-            </li>
-          `;
-        } else {
-          html += `
-            <li class="item">
-              <div class="row">
-                <div>
-                  <div class="name file">📄 ${escapeHtml(item.name)}</div>
-                  <div class="meta">${formatSize(item.size)}</div>
-                </div>
-                <a class="download" href="${item.download_url}" download target="_blank" rel="noopener noreferrer">
-                  Download
-                </a>
-              </div>
-            </li>
-          `;
-        }
-      }
-
-      html += `</ul>`;
-      return html;
-    }
-
-    async function loadContent() {
-      const status = document.getElementById("status");
-      const content = document.getElementById("content");
-
-      status.className = "status";
-      status.textContent = "A carregar...";
-      content.innerHTML = "";
-
-      try {
-        const items = await fetchFolder(CONTENT_PATH);
-
-        if (items.length > 0) {
-          status.className = "status ok";
-          status.textContent = "A pasta content tem conteúdo disponível.";
-        } else {
-          status.className = "status";
-          status.textContent = "A pasta content está vazia.";
-        }
-
-        content.innerHTML = renderItems(items);
-      } catch (err) {
-        status.className = "status error";
-        status.textContent = "Erro ao ler a pasta content do GitHub.";
-        content.innerHTML = `
-          <div class="empty">
-            Confirma se:
-            <br><br>
-            - o repositório existe
-            <br>
-            - o nome do utilizador está correto
-            <br>
-            - o branch está certo
-            <br>
-            - a pasta <strong>content</strong> existe
-            <br>
-            - o repositório é público
-          </div>
-        `;
-        console.error(err);
-      }
-    }
-
-    loadContent();
+    renderItems();
   </script>
 </body>
 </html>
