@@ -709,16 +709,22 @@
       await signOut(auth);
     });
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        loginScreen.classList.remove("active");
-        appLayout.classList.add("active");
-        await loadItems();
-      } else {
-        appLayout.classList.remove("active");
-        loginScreen.classList.add("active");
-      }
-    });
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    loginScreen.classList.remove("active");
+    appLayout.classList.add("active");
+
+    // 👇 esconder botão se não for admin
+    if (user.email !== "enzo@xsousa.com") {
+      document.querySelector(".add-btn").style.display = "none";
+    }
+
+    await loadItems();
+  } else {
+    appLayout.classList.remove("active");
+    loginScreen.classList.add("active");
+  }
+});
   </script>
 </body>
 </html>
