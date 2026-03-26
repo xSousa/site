@@ -6,42 +6,98 @@
   <title>Downloads</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #0b0b0b;
       color: #fff;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #111;
+      border-right: 1px solid #232323;
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px;
+      font-size: 26px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .menu button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #2d2d2d;
+      background: #1a1a1a;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: #fff;
+      color: #000;
+    }
+
+    .content {
+      flex: 1;
       padding: 24px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #aaa;
-      margin-bottom: 20px;
     }
 
     .topbar {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topbar-left h1 {
+      margin: 0 0 6px;
+      font-size: 36px;
+    }
+
+    .subtitle {
+      color: #aaa;
+    }
+
+    .topbar-right {
+      display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     button {
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 11px 16px;
+      border-radius: 12px;
       border: none;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s ease;
     }
 
     .add-btn {
@@ -49,80 +105,148 @@
       color: #000;
     }
 
+    .add-btn:hover {
+      opacity: 0.92;
+    }
+
     .clear-btn {
-      background: #222;
+      background: #1f1f1f;
       color: #fff;
       border: 1px solid #333;
     }
 
+    .clear-btn:hover {
+      background: #2a2a2a;
+    }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 250px));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
+      gap: 18px;
       justify-content: start;
     }
 
-    /* CARD */
     .card {
-      width: 250px;
-      height: 350px;
+      width: 220px;
+      height: 320px;
       position: relative;
-      border-radius: 16px;
+      border-radius: 18px;
       overflow: hidden;
-      border: 1px solid #2d2d2d;
+      border: 1px solid #2a2a2a;
+      background: #151515;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+      z-index: 2;
     }
 
     .thumb-wrap {
       width: 100%;
       height: 100%;
+      background: #161616;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .thumb-wrap img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      display: block;
+      background: #111;
     }
 
-    /* OVERLAY */
+    .placeholder {
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+
     .overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.2));
+      background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.18));
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      padding: 12px;
+      padding: 14px;
       opacity: 0;
-      transition: 0.25s;
+      transition: 0.25s ease;
     }
 
     .card:hover .overlay {
       opacity: 1;
     }
 
-    .overlay .title {
-      font-weight: bold;
+    .overlay .category-tag {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #eaeaea;
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 999px;
       margin-bottom: 10px;
+    }
+
+    .overlay .title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    .overlay .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .overlay .download-btn,
+    .overlay .delete-btn {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
     }
 
     .overlay .download-btn {
       background: #fff;
       color: #000;
-      text-align: center;
-      padding: 8px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
     }
 
-    /* MODAL */
+    .overlay .delete-btn {
+      background: #272727;
+      color: #fff;
+      border: 1px solid #3a3a3a;
+    }
+
+    .empty {
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      border-radius: 18px;
+      padding: 40px 20px;
+      color: #888;
+      text-align: center;
+      max-width: 520px;
+    }
+
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.72);
       display: none;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      z-index: 1000;
     }
 
     .modal.active {
@@ -130,149 +254,390 @@
     }
 
     .modal-box {
-      background: #111;
-      padding: 20px;
-      border-radius: 16px;
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
+      background: #111;
+      border: 1px solid #2b2b2b;
+      border-radius: 18px;
+      padding: 20px;
     }
 
-    input {
+    .modal-box h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d7d7d7;
+      font-size: 14px;
+    }
+
+    .field input,
+    .field select {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      padding: 11px 12px;
+      border-radius: 10px;
       border: 1px solid #333;
       background: #1a1a1a;
       color: white;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #666;
     }
 
     .preview {
-      width: 100%;
-      aspect-ratio: 1;
-      background: #222;
+      width: 220px;
+      height: 320px;
+      background: #191919;
+      border: 1px dashed #3a3a3a;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
       overflow: hidden;
+      margin-top: 8px;
     }
 
     .preview img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      background: #111;
     }
 
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .save-btn {
+      background: #fff;
+      color: #000;
+      flex: 1;
+    }
+
+    .cancel-btn {
+      background: #222;
+      color: #fff;
+      border: 1px solid #333;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #232323;
+      }
+
+      .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .menu button {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .content {
+        padding: 16px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
+      }
+
+      .card {
+        width: 160px;
+        height: 235px;
+      }
+
+      .preview {
+        width: 160px;
+        height: 235px;
+      }
+
+      .modal-actions,
+      .overlay .actions {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h1>Os meus downloads</h1>
-  <div class="subtitle">Hover para ver opções</div>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Menu</h2>
 
-  <div class="topbar">
-    <button class="add-btn" onclick="openModal()">+ Adicionar</button>
-    <button class="clear-btn" onclick="clearAll()">Limpar</button>
-  </div>
+      <div class="menu">
+        <button class="filter-btn active" data-filter="all">Tudo</button>
+        <button class="filter-btn" data-filter="tools">Tools</button>
+        <button class="filter-btn" data-filter="jogos">Jogos</button>
+        <button class="filter-btn" data-filter="filmes">Filmes</button>
+      </div>
+    </aside>
 
-  <div id="grid" class="grid"></div>
-</div>
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1>Os meus downloads</h1>
+          <div class="subtitle">Passa o rato por cima para ver opções</div>
+        </div>
 
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3>Adicionar</h3>
-
-    <input id="title" placeholder="Título">
-    <input id="link" placeholder="Link">
-
-    <input type="file" id="image">
-    <div class="preview" id="preview">Imagem</div>
-
-    <button onclick="save()">Guardar</button>
-    <button onclick="closeModal()">Cancelar</button>
-  </div>
-</div>
-
-<script>
-const KEY = "items";
-
-let imageData = "";
-
-function getItems() {
-  return JSON.parse(localStorage.getItem(KEY) || "[]");
-}
-
-function saveItems(items) {
-  localStorage.setItem(KEY, JSON.stringify(items));
-}
-
-function render() {
-  const items = getItems();
-  const grid = document.getElementById("grid");
-
-  grid.innerHTML = items.map(item => `
-    <div class="card">
-      <div class="thumb-wrap">
-        <img src="${item.image}">
+        <div class="topbar-right">
+          <button class="add-btn" onclick="openModal()">+ Adicionar</button>
+          <button class="clear-btn" onclick="clearAll()">Limpar tudo</button>
+        </div>
       </div>
 
-      <div class="overlay">
-        <div class="title">${item.title}</div>
-        <a class="download-btn" href="${item.link}" target="_blank">Download</a>
+      <div id="grid" class="grid"></div>
+    </main>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <h3>Adicionar item</h3>
+
+      <div class="field">
+        <label for="title">Título</label>
+        <input id="title" type="text" placeholder="Ex: Call of Duty 2">
+      </div>
+
+      <div class="field">
+        <label for="link">Link</label>
+        <input id="link" type="url" placeholder="https://...">
+      </div>
+
+      <div class="field">
+        <label for="category">Categoria</label>
+        <select id="category">
+          <option value="tools">Tools</option>
+          <option value="jogos">Jogos</option>
+          <option value="filmes">Filmes</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fitMode">Ajuste da imagem</label>
+        <select id="fitMode">
+          <option value="cover">Cover (preencher tudo)</option>
+          <option value="contain">Contain (mostrar imagem inteira)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="image">Imagem</label>
+        <input type="file" id="image" accept="image/*">
+        <div class="preview" id="preview">Pré-visualização</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="save-btn" onclick="save()">Guardar</button>
+        <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
       </div>
     </div>
-  `).join("");
-}
+  </div>
 
-function openModal() {
-  document.getElementById("modal").classList.add("active");
-}
+  <script>
+    const KEY = "items_v2";
+    let imageData = "";
+    let currentFilter = "all";
 
-function closeModal() {
-  document.getElementById("modal").classList.remove("active");
-}
+    function getItems() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
 
-document.getElementById("image").addEventListener("change", e => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
+    function saveItems(items) {
+      localStorage.setItem(KEY, JSON.stringify(items));
+    }
 
-  reader.onload = function(ev) {
-    imageData = ev.target.result;
-    document.getElementById("preview").innerHTML = `<img src="${imageData}">`;
-  };
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
 
-  reader.readAsDataURL(file);
-});
+    function getCategoryLabel(category) {
+      if (category === "tools") return "Tools";
+      if (category === "jogos") return "Jogos";
+      if (category === "filmes") return "Filmes";
+      return category;
+    }
 
-function save() {
-  const title = document.getElementById("title").value;
-  const link = document.getElementById("link").value;
+    function render() {
+      const grid = document.getElementById("grid");
+      let items = getItems();
 
-  if (!title || !link) return alert("Preenche tudo");
+      if (currentFilter !== "all") {
+        items = items.filter(item => item.category === currentFilter);
+      }
 
-  const items = getItems();
+      if (!items.length) {
+        grid.innerHTML = `
+          <div class="empty">
+            Não existem itens nesta categoria.
+          </div>
+        `;
+        return;
+      }
 
-  items.unshift({
-    title,
-    link,
-    image: imageData
-  });
+      grid.innerHTML = items.map((item, index) => `
+        <div class="card">
+          <div class="thumb-wrap">
+            ${
+              item.image
+                ? `<img src="${item.image}" alt="${escapeHtml(item.title)}" style="object-fit:${item.fitMode || 'cover'};">`
+                : `<div class="placeholder">Sem imagem</div>`
+            }
+          </div>
 
-  saveItems(items);
-  render();
-  closeModal();
-}
+          <div class="overlay">
+            <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
+            <div class="title">${escapeHtml(item.title)}</div>
 
-function clearAll() {
-  localStorage.removeItem(KEY);
-  render();
-}
+            <div class="actions">
+              <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+              <a class="delete-btn" href="#" onclick="deleteItem(${index}); return false;">Apagar</a>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
 
-render();
-</script>
+    function openModal() {
+      document.getElementById("modal").classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("active");
+      document.getElementById("title").value = "";
+      document.getElementById("link").value = "";
+      document.getElementById("category").value = "tools";
+      document.getElementById("fitMode").value = "cover";
+      document.getElementById("image").value = "";
+      document.getElementById("preview").innerHTML = "Pré-visualização";
+      imageData = "";
+    }
+
+    function save() {
+      const title = document.getElementById("title").value.trim();
+      const link = document.getElementById("link").value.trim();
+      const category = document.getElementById("category").value;
+      const fitMode = document.getElementById("fitMode").value;
+
+      if (!title || !link) {
+        alert("Preenche o título e o link.");
+        return;
+      }
+
+      const items = getItems();
+      items.unshift({
+        title,
+        link,
+        category,
+        fitMode,
+        image: imageData
+      });
+
+      saveItems(items);
+      render();
+      closeModal();
+    }
+
+    function deleteItem(filteredIndex) {
+      const allItems = getItems();
+
+      let visibleItems = allItems;
+      if (currentFilter !== "all") {
+        visibleItems = allItems.filter(item => item.category === currentFilter);
+      }
+
+      const itemToDelete = visibleItems[filteredIndex];
+      if (!itemToDelete) return;
+
+      const realIndex = allItems.findIndex(item =>
+        item.title === itemToDelete.title &&
+        item.link === itemToDelete.link &&
+        item.category === itemToDelete.category &&
+        item.image === itemToDelete.image
+      );
+
+      if (realIndex > -1) {
+        allItems.splice(realIndex, 1);
+        saveItems(allItems);
+        render();
+      }
+    }
+
+    function clearAll() {
+      if (!confirm("Queres apagar todos os itens?")) return;
+      localStorage.removeItem(KEY);
+      render();
+    }
+
+    document.getElementById("image").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        imageData = ev.target.result;
+
+        const fitMode = document.getElementById("fitMode").value;
+        document.getElementById("preview").innerHTML =
+          `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("fitMode").addEventListener("change", function() {
+      if (!imageData) return;
+      const fitMode = this.value;
+      document.getElementById("preview").innerHTML =
+        `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        currentFilter = this.dataset.filter;
+        render();
+      });
+    });
+
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    render();
+  </script>
 
 </body>
 </html>
