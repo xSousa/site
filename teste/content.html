@@ -426,7 +426,7 @@
         </div>
 
         <div class="topbar-right">
-          <button class="add-btn" onclick="openModal()">+ Adicionar</button>
+          <button id="addBtn" class="add-btn" onclick="openModal()">+ Adicionar</button>
           <button class="logout-btn" id="logoutBtn">Sair</button>
         </div>
       </div>
@@ -588,7 +588,11 @@
 
             <div class="actions">
               <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
-              <a class="delete-btn" href="#" data-id="${item.id}">Apagar</a>
+              ${
+              auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+              ? `<a class="delete-btn" href="#" data-id="${item.id}">Apagar</a>`
+              : ``
+              }
             </div>
           </div>
         </div>
@@ -610,6 +614,8 @@
     }
 
     window.openModal = function() {
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) return;
       document.getElementById("modal").classList.add("active");
     };
 
@@ -709,20 +715,25 @@
       await signOut(auth);
     });
 
+const ADMIN_EMAIL = "enzo@xsousa.com";
+const addBtn = document.getElementById("addBtn");
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     loginScreen.classList.remove("active");
     appLayout.classList.add("active");
 
-    // 👇 esconder botão se não for admin
-    if (user.email !== "enzo@xsousa.com") {
-      document.querySelector(".add-btn").style.display = "none";
+    if (user.email === ADMIN_EMAIL) {
+      addBtn.style.display = "inline-block";
+    } else {
+      addBtn.style.display = "none";
     }
 
     await loadItems();
   } else {
     appLayout.classList.remove("active");
     loginScreen.classList.add("active");
+    addBtn.style.display = "none";
   }
 });
   </script>
