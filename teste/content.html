@@ -405,7 +405,6 @@
 
         <div class="topbar-right">
           <button class="add-btn" onclick="openModal()">+ Adicionar</button>
-          <button class="clear-btn" onclick="clearAll()">Limpar tudo</button>
         </div>
       </div>
 
@@ -457,22 +456,34 @@
     </div>
   </div>
 
-  <script>
-    const KEY = "items_v2";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc,
+      orderBy,
+      query
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
+      authDomain: "content-729f5.firebaseapp.com",
+      projectId: "content-729f5",
+      storageBucket: "content-729f5.firebasestorage.app",
+      messagingSenderId: "541149104135",
+      appId: "1:541149104135:web:25b1bd0d8e31f2bb64c2a2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     let imageData = "";
     let currentFilter = "all";
-
-    function getItems() {
-      try {
-        return JSON.parse(localStorage.getItem(KEY) || "[]");
-      } catch {
-        return [];
-      }
-    }
-
-    function saveItems(items) {
-      localStorage.setItem(KEY, JSON.stringify(items));
-    }
+    let allItems = [];
 
     function escapeHtml(text) {
       return String(text)
@@ -490,9 +501,30 @@
       return category;
     }
 
+    async function loadItems() {
+      try {
+        const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+
+        allItems = snapshot.docs.map(itemDoc => ({
+          id: itemDoc.id,
+          ...itemDoc.data()
+        }));
+
+        render();
+      } catch (error) {
+        console.error(error);
+        document.getElementById("grid").innerHTML = `
+          <div class="empty">
+            Erro ao carregar os itens do Firebase.
+          </div>
+        `;
+      }
+    }
+
     function render() {
       const grid = document.getElementById("grid");
-      let items = getItems();
+      let items = allItems;
 
       if (currentFilter !== "all") {
         items = items.filter(item => item.category === currentFilter);
@@ -507,7 +539,7 @@
         return;
       }
 
-      grid.innerHTML = items.map((item, index) => `
+      grid.innerHTML = items.map(item => `
         <div class="card">
           <div class="thumb-wrap">
             ${
@@ -523,18 +555,34 @@
 
             <div class="actions">
               <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
-              <a class="delete-btn" href="#" onclick="deleteItem(${index}); return false;">Apagar</a>
+              <a class="delete-btn" href="#" data-id="${item.id}">Apagar</a>
             </div>
           </div>
         </div>
       `).join("");
+
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", async function(e) {
+          e.preventDefault();
+
+          const itemId = this.dataset.id;
+
+          try {
+            await deleteDoc(doc(db, "items", itemId));
+            await loadItems();
+          } catch (error) {
+            console.error(error);
+            alert("Erro ao apagar item.");
+          }
+        });
+      });
     }
 
-    function openModal() {
+    window.openModal = function() {
       document.getElementById("modal").classList.add("active");
-    }
+    };
 
-    function closeModal() {
+    window.closeModal = function() {
       document.getElementById("modal").classList.remove("active");
       document.getElementById("title").value = "";
       document.getElementById("link").value = "";
@@ -543,9 +591,9 @@
       document.getElementById("image").value = "";
       document.getElementById("preview").innerHTML = "Pré-visualização";
       imageData = "";
-    }
+    };
 
-    function save() {
+    window.save = async function() {
       const title = document.getElementById("title").value.trim();
       const link = document.getElementById("link").value.trim();
       const category = document.getElementById("category").value;
@@ -556,68 +604,43 @@
         return;
       }
 
-      const items = getItems();
-      items.unshift({
-        title,
-        link,
-        category,
-        fitMode,
-        image: imageData
-      });
+      try {
+        await addDoc(collection(db, "items"), {
+          title,
+          link,
+          category,
+          fitMode,
+          image: imageData,
+          createdAt: Date.now()
+        });
 
-      saveItems(items);
-      render();
-      closeModal();
-    }
-
-    function deleteItem(filteredIndex) {
-      const allItems = getItems();
-
-      let visibleItems = allItems;
-      if (currentFilter !== "all") {
-        visibleItems = allItems.filter(item => item.category === currentFilter);
+        await loadItems();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao guardar item no Firebase.");
       }
-
-      const itemToDelete = visibleItems[filteredIndex];
-      if (!itemToDelete) return;
-
-      const realIndex = allItems.findIndex(item =>
-        item.title === itemToDelete.title &&
-        item.link === itemToDelete.link &&
-        item.category === itemToDelete.category &&
-        item.image === itemToDelete.image
-      );
-
-      if (realIndex > -1) {
-        allItems.splice(realIndex, 1);
-        saveItems(allItems);
-        render();
-      }
-    }
-
-    function clearAll() {
-      if (!confirm("Queres apagar todos os itens?")) return;
-      localStorage.removeItem(KEY);
-      render();
-    }
+    };
 
     document.getElementById("image").addEventListener("change", function(e) {
       const file = e.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
+
       reader.onload = function(ev) {
         imageData = ev.target.result;
-
         const fitMode = document.getElementById("fitMode").value;
         document.getElementById("preview").innerHTML =
           `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
       };
+
       reader.readAsDataURL(file);
     });
 
     document.getElementById("fitMode").addEventListener("change", function() {
       if (!imageData) return;
+
       const fitMode = this.value;
       document.getElementById("preview").innerHTML =
         `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
@@ -636,7 +659,7 @@
       if (e.target === this) closeModal();
     });
 
-    render();
+    loadItems();
   </script>
 
 </body>
