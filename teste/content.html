@@ -1,270 +1,789 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Downloads</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Downloads</title>
 
-<style>
-* { box-sizing: border-box; }
+  <style>
+    * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0b0b0b;
-  color: #fff;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b0b;
+      color: #fff;
+    }
 
-.layout { display: none; }
-.layout.active { display: flex; }
+    .layout {
+      display: none;
+      min-height: 100vh;
+    }
 
-.sidebar {
-  width: 240px;
-  background: #111;
-  padding: 20px;
-}
+    .layout.active {
+      display: flex;
+    }
 
-.menu button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #1a1a1a;
-  color: white;
-  border: 1px solid #333;
-  border-radius: 10px;
-  cursor: pointer;
-}
+    .sidebar {
+      width: 240px;
+      background: #111;
+      border-right: 1px solid #232323;
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
 
-.menu button.active {
-  background: white;
-  color: black;
-}
+    .sidebar h2 {
+      margin: 0 0 20px;
+      font-size: 26px;
+    }
 
-.content { flex: 1; padding: 20px; }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
+    .menu button {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #2d2d2d;
+      background: #1a1a1a;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 200px);
-  gap: 15px;
-}
+    .menu button:hover,
+    .menu button.active {
+      background: #fff;
+      color: #000;
+    }
 
-.card {
-  width: 200px;
-  height: 300px;
-  border-radius: 15px;
-  overflow: hidden;
-  position: relative;
-  background: #111;
-}
+    .content {
+      flex: 1;
+      padding: 24px;
+    }
 
-.card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, black, transparent);
-  opacity: 0;
-  transition: 0.2s;
-  padding: 10px;
-}
+    .topbar-left h1 {
+      margin: 0 0 6px;
+      font-size: 36px;
+    }
 
-.card:hover .overlay { opacity: 1; }
+    .subtitle {
+      color: #aaa;
+    }
 
-.download-btn, .delete-btn {
-  display: block;
-  margin-top: 5px;
-  padding: 8px;
-  text-align: center;
-  border-radius: 8px;
-}
+    .topbar-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
-.download-btn { background: white; color: black; }
-.delete-btn { background: red; color: white; }
+    button {
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
 
-.login-screen {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .add-btn {
+      background: #fff;
+      color: #000;
+    }
 
-.login-box {
-  background: #111;
-  padding: 20px;
-  border-radius: 15px;
-}
+    .add-btn:hover {
+      opacity: 0.92;
+    }
 
-#sortSelect {
-  padding: 10px;
-  border-radius: 10px;
-  background: #1a1a1a;
-  color: white;
-  border: 1px solid #333;
-}
-</style>
+    .logout-btn,
+    .cancel-btn {
+      background: #1f1f1f;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .logout-btn:hover,
+    .cancel-btn:hover {
+      background: #2a2a2a;
+    }
+
+    #sortSelect {
+      padding: 11px 12px;
+      border-radius: 12px;
+      background: #1a1a1a;
+      color: white;
+      border: 1px solid #333;
+      outline: none;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
+      gap: 18px;
+      justify-content: start;
+    }
+
+    .card {
+      width: 220px;
+      height: 320px;
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+      background: #151515;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+      z-index: 2;
+    }
+
+    .thumb-wrap {
+      width: 100%;
+      height: 100%;
+      background: #161616;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #111;
+    }
+
+    .placeholder {
+      color: #777;
+      font-size: 14px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.18));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 14px;
+      opacity: 0;
+      transition: 0.25s ease;
+    }
+
+    .card:hover .overlay {
+      opacity: 1;
+    }
+
+    .category-tag {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #eaeaea;
+      font-size: 12px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .download-btn,
+    .delete-btn {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .download-btn {
+      background: #fff;
+      color: #000;
+    }
+
+    .delete-btn {
+      background: #272727;
+      color: #fff;
+      border: 1px solid #3a3a3a;
+      cursor: pointer;
+    }
+
+    .empty {
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      border-radius: 18px;
+      padding: 40px 20px;
+      color: #888;
+      text-align: center;
+      max-width: 520px;
+    }
+
+    .modal,
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.active,
+    .login-screen.active {
+      display: flex;
+    }
+
+    .modal-box,
+    .login-box {
+      width: 100%;
+      max-width: 500px;
+      background: #111;
+      border: 1px solid #2b2b2b;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .login-box {
+      max-width: 420px;
+    }
+
+    .modal-box h3,
+    .login-box h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d7d7d7;
+      font-size: 14px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #666;
+    }
+
+    .preview {
+      width: 220px;
+      height: 320px;
+      background: #191919;
+      border: 1px dashed #3a3a3a;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .preview img {
+      width: 100%;
+      height: 100%;
+      background: #111;
+    }
+
+    .modal-actions,
+    .login-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .save-btn,
+    .login-btn {
+      background: #fff;
+      color: #000;
+      flex: 1;
+    }
+
+    .error-box {
+      color: #ff8f8f;
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid #232323;
+      }
+
+      .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .menu button {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .content {
+        padding: 16px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 160px));
+      }
+
+      .card {
+        width: 160px;
+        height: 235px;
+      }
+
+      .preview {
+        width: 160px;
+        height: 235px;
+      }
+
+      .modal-actions,
+      .actions,
+      .login-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div id="loginScreen" class="login-screen active">
-  <div class="login-box">
-    <input id="loginEmail" placeholder="Email"><br><br>
-    <input id="loginPassword" type="password" placeholder="Password"><br><br>
-    <button id="loginBtn">Entrar</button>
-  </div>
-</div>
+  <div id="loginScreen" class="login-screen active">
+    <div class="login-box">
+      <h2>Entrar</h2>
 
-<div id="appLayout" class="layout">
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" placeholder="o-teu-email@email.com">
+      </div>
 
-<div class="sidebar">
-  <div class="menu">
-    <button class="filter-btn active" data-filter="all">Tudo</button>
-    <button class="filter-btn" data-filter="tools">Ferramentas</button>
-    <button class="filter-btn" data-filter="jogos">Jogos</button>
-    <button class="filter-btn" data-filter="filmes">Filmes</button>
-    <button class="filter-btn" data-filter="vsts">VSTs</button>
-  </div>
-</div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" placeholder="********">
+      </div>
 
-<div class="content">
+      <div class="login-actions">
+        <button class="login-btn" id="loginBtn">Entrar</button>
+      </div>
 
-<div class="topbar">
-  <div>
-    <select id="sortSelect">
-      <option value="new">Mais recentes</option>
-      <option value="old">Mais antigos</option>
-    </select>
+      <div id="loginError" class="error-box"></div>
+    </div>
   </div>
 
-  <div>
-    <button id="addBtn">+ Adicionar</button>
-    <button id="logoutBtn">Sair</button>
+  <div id="appLayout" class="layout">
+    <aside class="sidebar">
+      <h2>Menu</h2>
+
+      <div class="menu">
+        <button class="filter-btn active" data-filter="all">Tudo</button>
+        <button class="filter-btn" data-filter="tools">Ferramentas</button>
+        <button class="filter-btn" data-filter="jogos">Jogos</button>
+        <button class="filter-btn" data-filter="filmes">Filmes</button>
+        <button class="filter-btn" data-filter="vsts">VSTs</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1>Os meus downloads</h1>
+          <div class="subtitle">Passa o rato por cima para ver opções</div>
+        </div>
+
+        <div class="topbar-right">
+          <select id="sortSelect">
+            <option value="new">Mais recentes</option>
+            <option value="old">Mais antigos</option>
+          </select>
+
+          <button id="addBtn" class="add-btn" onclick="openModal()">+ Adicionar</button>
+          <button class="logout-btn" id="logoutBtn">Sair</button>
+        </div>
+      </div>
+
+      <div id="grid" class="grid"></div>
+    </main>
   </div>
-</div>
 
-<div id="grid" class="grid"></div>
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <h3>Adicionar item</h3>
 
-</div>
-</div>
+      <div class="field">
+        <label for="title">Título</label>
+        <input id="title" type="text" placeholder="Ex: Call of Duty 2">
+      </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, addDoc, getDocs, deleteDoc, doc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      <div class="field">
+        <label for="link">Link</label>
+        <input id="link" type="url" placeholder="https://...">
+      </div>
 
-import {
-  getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      <div class="field">
+        <label for="category">Categoria</label>
+        <select id="category">
+          <option value="tools">Ferramentas</option>
+          <option value="jogos">Jogos</option>
+          <option value="filmes">Filmes</option>
+          <option value="vsts">VSTs</option>
+        </select>
+      </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
-  authDomain: "content-729f5.firebaseapp.com",
-  projectId: "content-729f5",
-};
+      <div class="field">
+        <label for="fitMode">Ajuste da imagem</label>
+        <select id="fitMode">
+          <option value="cover">Cover (preencher tudo)</option>
+          <option value="contain">Contain (mostrar imagem inteira)</option>
+        </select>
+      </div>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+      <div class="field">
+        <label for="image">Imagem</label>
+        <input type="file" id="image" accept="image/*">
+        <div class="preview" id="preview">Pré-visualização</div>
+      </div>
 
-const ADMIN_EMAIL = "enzo@xsousa.com";
-
-let allItems = [];
-let currentFilter = "all";
-let currentSort = "new";
-
-const grid = document.getElementById("grid");
-const addBtn = document.getElementById("addBtn");
-
-async function loadItems() {
-  const snapshot = await getDocs(collection(db, "items"));
-  allItems = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-  render();
-}
-
-function render() {
-  let items = allItems;
-
-  if (currentFilter !== "all") {
-    items = items.filter(i => i.category === currentFilter);
-  }
-
-  items = items.sort((a,b) =>
-    currentSort === "new"
-      ? b.createdAt - a.createdAt
-      : a.createdAt - b.createdAt
-  );
-
-  grid.innerHTML = items.map(item => `
-    <div class="card">
-      <img src="${item.image || ''}">
-      <div class="overlay">
-        <b>${item.title}</b>
-        <a class="download-btn" href="${item.link}" target="_blank">Abrir</a>
-        ${
-          auth.currentUser?.email === ADMIN_EMAIL
-          ? `<a class="delete-btn" data-id="${item.id}">Apagar</a>`
-          : ""
-        }
+      <div class="modal-actions">
+        <button class="save-btn" onclick="save()">Guardar</button>
+        <button class="cancel-btn" onclick="closeModal()">Cancelar</button>
       </div>
     </div>
-  `).join("");
+  </div>
 
-  document.querySelectorAll(".delete-btn").forEach(btn=>{
-    btn.onclick = async ()=>{
-      await deleteDoc(doc(db,"items",btn.dataset.id));
-      loadItems();
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
+      authDomain: "content-729f5.firebaseapp.com",
+      projectId: "content-729f5",
+      storageBucket: "content-729f5.firebasestorage.app",
+      messagingSenderId: "541149104135",
+      appId: "1:541149104135:web:25b1bd0d8e31f2bb64c2a2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const ADMIN_EMAIL = "enzo@xsousa.com";
+
+    let imageData = "";
+    let currentFilter = "all";
+    let currentSort = "new";
+    let allItems = [];
+
+    const loginScreen = document.getElementById("loginScreen");
+    const appLayout = document.getElementById("appLayout");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginError = document.getElementById("loginError");
+    const addBtn = document.getElementById("addBtn");
+    const grid = document.getElementById("grid");
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
-  });
-}
 
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentFilter = btn.dataset.filter;
-    render();
-  }
-});
+    function getCategoryLabel(category) {
+      if (category === "tools") return "Ferramentas";
+      if (category === "jogos") return "Jogos";
+      if (category === "filmes") return "Filmes";
+      if (category === "vsts") return "VSTs";
+      return category;
+    }
 
-document.getElementById("sortSelect").onchange = e=>{
-  currentSort = e.target.value;
-  render();
-};
+    async function loadItems() {
+      try {
+        const snapshot = await getDocs(collection(db, "items"));
 
-document.getElementById("loginBtn").onclick = async ()=>{
-  await signInWithEmailAndPassword(
-    auth,
-    loginEmail.value,
-    loginPassword.value
-  );
-};
+        allItems = snapshot.docs.map(itemDoc => ({
+          id: itemDoc.id,
+          ...itemDoc.data()
+        }));
 
-document.getElementById("logoutBtn").onclick = ()=>signOut(auth);
+        render();
+      } catch (error) {
+        console.error(error);
+        grid.innerHTML = `<div class="empty">Erro ao carregar os itens.</div>`;
+      }
+    }
 
-onAuthStateChanged(auth, async user=>{
-  if(user){
-    loginScreen.style.display="none";
-    appLayout.classList.add("active");
+    function render() {
+      let items = [...allItems];
 
-    addBtn.style.display =
-      user.email === ADMIN_EMAIL ? "inline-block" : "none";
+      if (currentFilter !== "all") {
+        items = items.filter(item => item.category === currentFilter);
+      }
 
-    loadItems();
-  }
-});
-</script>
+      items.sort((a, b) => {
+        const aDate = Number(a.createdAt || 0);
+        const bDate = Number(b.createdAt || 0);
 
+        if (currentSort === "new") {
+          return bDate - aDate;
+        } else {
+          return aDate - bDate;
+        }
+      });
+
+      if (!items.length) {
+        grid.innerHTML = `<div class="empty">Não existem itens nesta categoria.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="card">
+          <div class="thumb-wrap">
+            ${
+              item.image
+                ? `<img src="${item.image}" alt="${escapeHtml(item.title)}" style="object-fit:${item.fitMode || 'cover'};">`
+                : `<div class="placeholder">Sem imagem</div>`
+            }
+          </div>
+
+          <div class="overlay">
+            <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
+            <div class="title">${escapeHtml(item.title)}</div>
+
+            <div class="actions">
+              <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+              ${
+                auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+                  ? `<a class="delete-btn" href="#" data-id="${item.id}">Apagar</a>`
+                  : ``
+              }
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", async function(e) {
+          e.preventDefault();
+
+          try {
+            await deleteDoc(doc(db, "items", this.dataset.id));
+            await loadItems();
+          } catch (error) {
+            console.error(error);
+            alert("Erro ao apagar item.");
+          }
+        });
+      });
+    }
+
+    window.openModal = function() {
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) return;
+      document.getElementById("modal").classList.add("active");
+    };
+
+    window.closeModal = function() {
+      document.getElementById("modal").classList.remove("active");
+      document.getElementById("title").value = "";
+      document.getElementById("link").value = "";
+      document.getElementById("category").value = "tools";
+      document.getElementById("fitMode").value = "cover";
+      document.getElementById("image").value = "";
+      document.getElementById("preview").innerHTML = "Pré-visualização";
+      imageData = "";
+    };
+
+    window.save = async function() {
+      const user = auth.currentUser;
+      if (!user || user.email !== ADMIN_EMAIL) return;
+
+      const title = document.getElementById("title").value.trim();
+      const link = document.getElementById("link").value.trim();
+      const category = document.getElementById("category").value;
+      const fitMode = document.getElementById("fitMode").value;
+
+      if (!title || !link) {
+        alert("Preenche o título e o link.");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "items"), {
+          title,
+          link,
+          category,
+          fitMode,
+          image: imageData,
+          createdAt: Date.now()
+        });
+
+        await loadItems();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao guardar item.");
+      }
+    };
+
+    document.getElementById("image").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        imageData = ev.target.result;
+        const fitMode = document.getElementById("fitMode").value;
+        document.getElementById("preview").innerHTML =
+          `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("fitMode").addEventListener("change", function() {
+      if (!imageData) return;
+      document.getElementById("preview").innerHTML =
+        `<img src="${imageData}" alt="Preview" style="object-fit:${this.value};">`;
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        currentFilter = this.dataset.filter;
+        render();
+      });
+    });
+
+    document.getElementById("sortSelect").addEventListener("change", function() {
+      currentSort = this.value;
+      render();
+    });
+
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    loginBtn.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      loginError.textContent = "";
+
+      if (!email || !password) {
+        loginError.textContent = "Preenche o email e a password.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        console.error(error);
+        loginError.textContent = "Login inválido.";
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        loginScreen.classList.remove("active");
+        appLayout.classList.add("active");
+
+        if (user.email === ADMIN_EMAIL) {
+          addBtn.style.display = "inline-block";
+        } else {
+          addBtn.style.display = "none";
+        }
+
+        await loadItems();
+      } else {
+        appLayout.classList.remove("active");
+        loginScreen.classList.add("active");
+        addBtn.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>
