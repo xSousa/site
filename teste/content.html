@@ -8,25 +8,21 @@
   <style>
     * { box-sizing: border-box; }
 
+    #searchInput {
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      outline: none;
+      font-size: 14px;
+      min-width: 220px;
+    }
 
-    .menu-search {
-        margin-bottom: 14px;
-      }
-      
-      .menu-search input {
-        width: 100%;
-        padding: 11px 12px;
-        border-radius: 12px;
-        border: 1px solid #2d2d2d;
-        background: #1a1a1a;
-        color: white;
-        outline: none;
-        font-size: 14px;
-      }
-      
-      .menu-search input:focus {
-        border-color: #666;
-      }
+    #searchInput:focus {
+      border-color: #666;
+    }
+
     .logo {
       width: 100%;
       margin-bottom: 20px;
@@ -568,6 +564,10 @@
       .chat-input button {
         width: 100%;
       }
+
+      #searchInput {
+        min-width: 100%;
+      }
     }
   </style>
 </head>
@@ -603,10 +603,6 @@
 
       <h2>Menu</h2>
 
-      <div class="menu-search">
-        <input id="categorySearch" type="text" placeholder="Pesquisar categorias...">
-      </div>
-
       <div class="menu">
         <button class="filter-btn active" data-filter="all">Tudo</button>
         <button class="filter-btn" data-filter="tools">Ferramentas</button>
@@ -624,6 +620,8 @@
         </div>
 
         <div class="topbar-right">
+          <input id="searchInput" type="text" placeholder="Pesquisar downloads...">
+
           <select id="sortSelect">
             <option value="new">Mais recentes</option>
             <option value="old">Mais antigos</option>
@@ -733,6 +731,7 @@
     let imageData = "";
     let currentFilter = "all";
     let currentSort = "new";
+    let searchTerm = "";
     let allItems = [];
     let messagesUnsubscribe = null;
 
@@ -746,15 +745,8 @@
     const messagesDiv = document.getElementById("messages");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
-    const categorySearch = document.getElementById("categorySearch");
-    categorySearch.addEventListener("input", function() {
-      const term = this.value.trim().toLowerCase();
-    
-      document.querySelectorAll(".menu .filter-btn").forEach(btn => {
-        const text = btn.textContent.toLowerCase();
-        btn.style.display = text.includes(term) ? "" : "none";
-      });
-    });
+    const searchInput = document.getElementById("searchInput");
+
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
@@ -801,6 +793,12 @@
         items = items.filter(item => item.category === currentFilter);
       }
 
+      if (searchTerm) {
+        items = items.filter(item =>
+          (item.title || "").toLowerCase().includes(searchTerm)
+        );
+      }
+
       items.sort((a, b) => {
         const aDate = Number(a.createdAt || 0);
         const bDate = Number(b.createdAt || 0);
@@ -813,7 +811,7 @@
       });
 
       if (!items.length) {
-        grid.innerHTML = `<div class="empty">Não existem itens nesta categoria.</div>`;
+        grid.innerHTML = `<div class="empty">Não existem itens com esse filtro/pesquisa.</div>`;
         return;
       }
 
@@ -989,6 +987,11 @@
         currentFilter = this.dataset.filter;
         render();
       });
+    });
+
+    searchInput.addEventListener("input", function() {
+      searchTerm = this.value.trim().toLowerCase();
+      render();
     });
 
     document.getElementById("sortSelect").addEventListener("change", function() {
