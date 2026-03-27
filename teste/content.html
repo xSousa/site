@@ -14,14 +14,14 @@
       display: flex;
       justify-content: center;
     }
-    
+
     .logo img {
       width: 100%;
       max-width: 180px;
       border-radius: 12px;
       object-fit: cover;
     }
-    
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -46,6 +46,7 @@
       position: sticky;
       top: 0;
       height: 100vh;
+      overflow-y: auto;
     }
 
     .sidebar h2 {
@@ -153,6 +154,7 @@
       grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
       gap: 18px;
       justify-content: start;
+      margin-bottom: 30px;
     }
 
     .card {
@@ -236,7 +238,8 @@
     }
 
     .download-btn,
-    .delete-btn {
+    .delete-btn,
+    .chat-delete-btn {
       flex: 1;
       text-align: center;
       text-decoration: none;
@@ -244,6 +247,8 @@
       border-radius: 10px;
       font-weight: bold;
       font-size: 14px;
+      border: none;
+      cursor: pointer;
     }
 
     .download-btn {
@@ -251,11 +256,11 @@
       color: #000;
     }
 
-    .delete-btn {
+    .delete-btn,
+    .chat-delete-btn {
       background: #272727;
       color: #fff;
       border: 1px solid #3a3a3a;
-      cursor: pointer;
     }
 
     .empty {
@@ -266,6 +271,93 @@
       color: #888;
       text-align: center;
       max-width: 520px;
+    }
+
+    .chat-box {
+      margin-top: 18px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .chat-box h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 24px;
+    }
+
+    #messages {
+      max-height: 340px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+      margin-bottom: 14px;
+    }
+
+    .msg {
+      background: #1a1a1a;
+      border: 1px solid #2b2b2b;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .msg-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .msg-user {
+      font-size: 13px;
+      color: #cfcfcf;
+      font-weight: bold;
+      word-break: break-all;
+    }
+
+    .msg-time {
+      font-size: 12px;
+      color: #8f8f8f;
+    }
+
+    .msg-text {
+      color: #f0f0f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+
+    .msg-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chat-input input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      outline: none;
+    }
+
+    .chat-input button {
+      background: #fff;
+      color: #000;
     }
 
     .modal,
@@ -417,7 +509,8 @@
 
       .modal-actions,
       .actions,
-      .login-actions {
+      .login-actions,
+      .chat-input {
         flex-direction: column;
       }
     }
@@ -449,7 +542,6 @@
 
   <div id="appLayout" class="layout">
     <aside class="sidebar">
-
       <div class="logo">
         <img src="xSousa-Repacks-26-03-2026 (1).gif" alt="Logo">
       </div>
@@ -484,6 +576,17 @@
       </div>
 
       <div id="grid" class="grid"></div>
+
+      <div class="chat-box">
+        <h2>Mensagens</h2>
+
+        <div id="messages"></div>
+
+        <div class="chat-input">
+          <input id="messageInput" type="text" placeholder="Escreve uma mensagem...">
+          <button id="sendBtn">Enviar</button>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -540,7 +643,10 @@
       addDoc,
       getDocs,
       deleteDoc,
-      doc
+      doc,
+      onSnapshot,
+      query,
+      orderBy
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     import {
@@ -569,6 +675,7 @@
     let currentFilter = "all";
     let currentSort = "new";
     let allItems = [];
+    let messagesUnsubscribe = null;
 
     const loginScreen = document.getElementById("loginScreen");
     const appLayout = document.getElementById("appLayout");
@@ -577,6 +684,9 @@
     const loginError = document.getElementById("loginError");
     const addBtn = document.getElementById("addBtn");
     const grid = document.getElementById("grid");
+    const messagesDiv = document.getElementById("messages");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
 
     function escapeHtml(text) {
       return String(text)
@@ -585,6 +695,12 @@
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+    }
+
+    function formatDateTime(timestamp) {
+      if (!timestamp) return "";
+      const date = new Date(Number(timestamp));
+      return date.toLocaleString("pt-PT");
     }
 
     function getCategoryLabel(category) {
@@ -652,7 +768,7 @@
               <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
               ${
                 auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
-                  ? `<a class="delete-btn" href="#" data-id="${item.id}">Apagar</a>`
+                  ? `<button class="delete-btn" data-id="${item.id}">Apagar</button>`
                   : ``
               }
             </div>
@@ -672,6 +788,63 @@
             alert("Erro ao apagar item.");
           }
         });
+      });
+    }
+
+    function startMessagesListener() {
+      if (messagesUnsubscribe) {
+        messagesUnsubscribe();
+      }
+
+      const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+
+      messagesUnsubscribe = onSnapshot(q, (snapshot) => {
+        const docs = snapshot.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        }));
+
+        if (!docs.length) {
+          messagesDiv.innerHTML = `<div class="empty">Ainda não existem mensagens.</div>`;
+          return;
+        }
+
+        messagesDiv.innerHTML = docs.map(message => `
+          <div class="msg">
+            <div class="msg-top">
+              <div class="msg-user">${escapeHtml(message.user || "Utilizador")}</div>
+              <div class="msg-time">${escapeHtml(formatDateTime(message.createdAt))}</div>
+            </div>
+
+            <div class="msg-text">${escapeHtml(message.text || "")}</div>
+
+            ${
+              auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+                ? `
+                  <div class="msg-actions">
+                    <button class="chat-delete-btn" data-id="${message.id}">Apagar</button>
+                  </div>
+                `
+                : ``
+            }
+          </div>
+        `).join("");
+
+        document.querySelectorAll(".chat-delete-btn").forEach(btn => {
+          btn.addEventListener("click", async function() {
+            try {
+              await deleteDoc(doc(db, "messages", this.dataset.id));
+            } catch (error) {
+              console.error(error);
+              alert("Erro ao apagar mensagem.");
+            }
+          });
+        });
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }, (error) => {
+        console.error(error);
+        messagesDiv.innerHTML = `<div class="empty">Erro ao carregar mensagens.</div>`;
       });
     }
 
@@ -785,6 +958,33 @@
       await signOut(auth);
     });
 
+    sendBtn.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      const text = messageInput.value.trim();
+
+      if (!user || !text) return;
+
+      try {
+        await addDoc(collection(db, "messages"), {
+          text,
+          user: user.email || "Utilizador",
+          createdAt: Date.now()
+        });
+
+        messageInput.value = "";
+      } catch (error) {
+        console.error(error);
+        alert("Erro ao enviar mensagem.");
+      }
+    });
+
+    messageInput.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         loginScreen.classList.remove("active");
@@ -797,10 +997,18 @@
         }
 
         await loadItems();
+        startMessagesListener();
       } else {
         appLayout.classList.remove("active");
         loginScreen.classList.add("active");
         addBtn.style.display = "none";
+        grid.innerHTML = "";
+        messagesDiv.innerHTML = "";
+
+        if (messagesUnsubscribe) {
+          messagesUnsubscribe();
+          messagesUnsubscribe = null;
+        }
       }
     });
   </script>
