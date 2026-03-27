@@ -8,6 +8,25 @@
   <style>
     * { box-sizing: border-box; }
 
+
+    .menu-search {
+        margin-bottom: 14px;
+      }
+      
+      .menu-search input {
+        width: 100%;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid #2d2d2d;
+        background: #1a1a1a;
+        color: white;
+        outline: none;
+        font-size: 14px;
+      }
+      
+      .menu-search input:focus {
+        border-color: #666;
+      }
     .logo {
       width: 100%;
       margin-bottom: 20px;
@@ -584,6 +603,10 @@
 
       <h2>Menu</h2>
 
+      <div class="menu-search">
+        <input id="categorySearch" type="text" placeholder="Pesquisar categorias...">
+      </div>
+
       <div class="menu">
         <button class="filter-btn active" data-filter="all">Tudo</button>
         <button class="filter-btn" data-filter="tools">Ferramentas</button>
@@ -723,7 +746,15 @@
     const messagesDiv = document.getElementById("messages");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
-
+    const categorySearch = document.getElementById("categorySearch");
+    categorySearch.addEventListener("input", function() {
+      const term = this.value.trim().toLowerCase();
+    
+      document.querySelectorAll(".menu .filter-btn").forEach(btn => {
+        const text = btn.textContent.toLowerCase();
+        btn.style.display = text.includes(term) ? "" : "none";
+      });
+    });
     function escapeHtml(text) {
       return String(text)
         .replaceAll("&", "&amp;")
