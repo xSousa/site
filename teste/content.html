@@ -238,8 +238,7 @@
     }
 
     .download-btn,
-    .delete-btn,
-    .chat-delete-btn {
+    .delete-btn {
       flex: 1;
       text-align: center;
       text-decoration: none;
@@ -256,8 +255,7 @@
       color: #000;
     }
 
-    .delete-btn,
-    .chat-delete-btn {
+    .delete-btn {
       background: #272727;
       color: #fff;
       border: 1px solid #3a3a3a;
@@ -288,7 +286,7 @@
     }
 
     #messages {
-      max-height: 340px;
+      max-height: 420px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -304,54 +302,94 @@
       padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      transition: 0.2s;
+      gap: 8px;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
-    
+
     .msg:hover {
       background: #202020;
+      border-color: #383838;
     }
-    
+
     .msg-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    
+
     .msg-user {
       font-size: 13px;
       color: #7bdff2;
       font-weight: bold;
+      word-break: break-all;
     }
-    
+
     .msg-time {
       font-size: 11px;
-      color: #666;
+      color: #7f7f7f;
+      white-space: nowrap;
     }
-    
+
     .msg-text {
       color: #eaeaea;
       font-size: 14px;
-      line-height: 1.4;
+      line-height: 1.45;
+      word-break: break-word;
+      white-space: pre-wrap;
     }
-    
+
     .msg-actions {
       display: flex;
       justify-content: flex-end;
+      margin-top: 2px;
     }
-    
+
     .chat-delete-btn {
       background: transparent;
       border: none;
       color: #ff6b6b;
-      font-size: 12px;
+      font-size: 13px;
       cursor: pointer;
-      padding: 4px 6px;
+      padding: 4px 8px;
       border-radius: 6px;
+      font-weight: bold;
+      line-height: 1;
+      flex: 0 0 auto;
     }
-    
+
     .chat-delete-btn:hover {
       background: rgba(255, 0, 0, 0.1);
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+
+    .chat-input input {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input input:focus {
+      border-color: #666;
+    }
+
+    .chat-input button {
+      background: #fff;
+      color: #000;
+      flex: 0 0 auto;
     }
 
     .modal,
@@ -506,6 +544,10 @@
       .login-actions,
       .chat-input {
         flex-direction: column;
+      }
+
+      .chat-input button {
+        width: 100%;
       }
     }
   </style>
@@ -790,7 +832,8 @@
         messagesUnsubscribe();
       }
 
-        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+
       messagesUnsubscribe = onSnapshot(q, (snapshot) => {
         const docs = snapshot.docs.map(d => ({
           id: d.id,
@@ -815,7 +858,7 @@
               auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
                 ? `
                   <div class="msg-actions">
-                    <button class="chat-delete-btn" data-id="${message.id}">Apagar</button>
+                    <button class="chat-delete-btn" data-id="${message.id}" title="Apagar">🗑</button>
                   </div>
                 `
                 : ``
@@ -833,7 +876,6 @@
             }
           });
         });
-
       }, (error) => {
         console.error(error);
         messagesDiv.innerHTML = `<div class="empty">Erro ao carregar mensagens.</div>`;
@@ -954,7 +996,15 @@
       const user = auth.currentUser;
       const text = messageInput.value.trim();
 
-      if (!user || !text) return;
+      if (!user) {
+        alert("Tens de iniciar sessão para enviar mensagens.");
+        return;
+      }
+
+      if (!text) {
+        alert("Escreve uma mensagem.");
+        return;
+      }
 
       try {
         await addDoc(collection(db, "messages"), {
@@ -965,12 +1015,12 @@
 
         messageInput.value = "";
       } catch (error) {
-        console.error(error);
-        alert("Erro ao enviar mensagem.");
+        console.error("Erro Firebase ao enviar mensagem:", error);
+        alert("Erro ao enviar mensagem: " + (error.message || "desconhecido"));
       }
     });
 
-    messageInput.addEventListener("keydown", async (e) => {
+    messageInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         sendBtn.click();
