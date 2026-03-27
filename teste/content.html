@@ -790,8 +790,7 @@
         messagesUnsubscribe();
       }
 
-      const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-
+        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
       messagesUnsubscribe = onSnapshot(q, (snapshot) => {
         const docs = snapshot.docs.map(d => ({
           id: d.id,
@@ -835,7 +834,6 @@
           });
         });
 
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
       }, (error) => {
         console.error(error);
         messagesDiv.innerHTML = `<div class="empty">Erro ao carregar mensagens.</div>`;
