@@ -196,6 +196,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     .thumb-wrap img {
@@ -203,6 +204,7 @@
       height: 100%;
       display: block;
       background: #111;
+      transition: filter 0.25s ease, transform 0.25s ease;
     }
 
     .placeholder {
@@ -472,6 +474,20 @@
       border-color: #666;
     }
 
+    .field-checkbox label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .field-checkbox input[type="checkbox"] {
+      width: auto;
+      padding: 0;
+      margin: 0;
+      transform: scale(1.1);
+    }
+
     .preview {
       width: 220px;
       height: 320px;
@@ -510,6 +526,32 @@
       margin-top: 10px;
       min-height: 20px;
       font-size: 14px;
+    }
+
+    .nsfw-blur {
+      filter: blur(18px);
+      transform: scale(1.04);
+    }
+
+    .card:hover .nsfw-blur {
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    .nsfw-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      background: rgba(0,0,0,0.72);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 6px 9px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
     }
 
     @media (max-width: 900px) {
@@ -604,23 +646,19 @@
       <h2>Menu</h2>
 
       <div class="menu">
-        <button class="filter-btn active" data-filter="all">Tudo</button>
-        <button class="filter-btn" data-filter="tools">Ferramentas</button>
-        <button class="filter-btn" data-filter="jogos">Jogos</button>
-        <button class="filter-btn" data-filter="filmes">Filmes</button>
-        <button class="filter-btn" data-filter="vsts">VSTs</button>
+        <button class="filter-btn active" data-filter="jogos">Jogos</button>
       </div>
     </aside>
 
     <main class="content">
       <div class="topbar">
         <div class="topbar-left">
-          <h1>Os meus downloads</h1>
+          <h1>Jogos</h1>
           <div class="subtitle">Passa o rato por cima para ver opções</div>
         </div>
 
         <div class="topbar-right">
-          <input id="searchInput" type="text" placeholder="Pesquisar downloads...">
+          <input id="searchInput" type="text" placeholder="Pesquisar jogos...">
 
           <select id="sortSelect">
             <option value="new">Mais recentes</option>
@@ -664,11 +702,19 @@
       <div class="field">
         <label for="category">Categoria</label>
         <select id="category">
-          <option value="tools">Ferramentas</option>
           <option value="jogos">Jogos</option>
+          <option value="musica">Música</option>
+          <option value="tools">Ferramentas</option>
           <option value="filmes">Filmes</option>
           <option value="vsts">VSTs</option>
         </select>
+      </div>
+
+      <div class="field field-checkbox">
+        <label for="nsfw">
+          <input type="checkbox" id="nsfw">
+          Marcar como NSFW
+        </label>
       </div>
 
       <div class="field">
@@ -729,7 +775,7 @@
     const ADMIN_EMAIL = "enzo@xsousa.com";
 
     let imageData = "";
-    let currentFilter = "all";
+    let currentFilter = "jogos";
     let currentSort = "new";
     let searchTerm = "";
     let allItems = [];
@@ -767,6 +813,7 @@
       if (category === "jogos") return "Jogos";
       if (category === "filmes") return "Filmes";
       if (category === "vsts") return "VSTs";
+      if (category === "musica") return "Música";
       return category;
     }
 
@@ -789,9 +836,7 @@
     function render() {
       let items = [...allItems];
 
-      if (currentFilter !== "all") {
-        items = items.filter(item => item.category === currentFilter);
-      }
+      items = items.filter(item => item.category === "jogos");
 
       if (searchTerm) {
         items = items.filter(item =>
@@ -817,10 +862,17 @@
 
       grid.innerHTML = items.map(item => `
         <div class="card">
+          ${item.nsfw ? `<div class="nsfw-badge">NSFW</div>` : ""}
+
           <div class="thumb-wrap">
             ${
               item.image
-                ? `<img src="${item.image}" alt="${escapeHtml(item.title)}" style="object-fit:${item.fitMode || 'cover'};">`
+                ? `<img
+                    src="${item.image}"
+                    alt="${escapeHtml(item.title)}"
+                    class="${item.nsfw ? "nsfw-blur" : ""}"
+                    style="object-fit:${item.fitMode || 'cover'};"
+                  >`
                 : `<div class="placeholder">Sem imagem</div>`
             }
           </div>
@@ -921,9 +973,10 @@
       document.getElementById("modal").classList.remove("active");
       document.getElementById("title").value = "";
       document.getElementById("link").value = "";
-      document.getElementById("category").value = "tools";
+      document.getElementById("category").value = "jogos";
       document.getElementById("fitMode").value = "cover";
       document.getElementById("image").value = "";
+      document.getElementById("nsfw").checked = false;
       document.getElementById("preview").innerHTML = "Pré-visualização";
       imageData = "";
     };
@@ -936,6 +989,7 @@
       const link = document.getElementById("link").value.trim();
       const category = document.getElementById("category").value;
       const fitMode = document.getElementById("fitMode").value;
+      const nsfw = document.getElementById("nsfw").checked;
 
       if (!title || !link) {
         alert("Preenche o título e o link.");
@@ -948,6 +1002,7 @@
           link,
           category,
           fitMode,
+          nsfw,
           image: imageData,
           createdAt: Date.now()
         });
