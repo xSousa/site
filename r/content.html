@@ -164,6 +164,17 @@
       font-weight: bold;
     }
 
+    .toggle-btn {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .toggle-btn.active {
+      background: #fff;
+      color: #000;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 220px));
@@ -533,11 +544,6 @@
       transform: scale(1.04);
     }
 
-    .card:hover .nsfw-blur {
-      filter: blur(0);
-      transform: scale(1);
-    }
-
     .nsfw-badge {
       position: absolute;
       top: 10px;
@@ -599,11 +605,15 @@
       .modal-actions,
       .actions,
       .login-actions,
-      .chat-input {
+      .chat-input,
+      .topbar-right {
         flex-direction: column;
       }
 
-      .chat-input button {
+      .chat-input button,
+      .topbar-right button,
+      .topbar-right select,
+      .topbar-right input {
         width: 100%;
       }
 
@@ -647,23 +657,30 @@
 
       <div class="menu">
         <button class="filter-btn active" data-filter="jogos">Jogos</button>
+        <button class="filter-btn" data-filter="tools">Ferramentas</button>
+        <button class="filter-btn" data-filter="filmes">Filmes</button>
+        <button class="filter-btn" data-filter="vsts">VSTs</button>
+        <button class="filter-btn" data-filter="musica">Música</button>
+        <button class="filter-btn" data-filter="all">Tudo</button>
       </div>
     </aside>
 
     <main class="content">
       <div class="topbar">
         <div class="topbar-left">
-          <h1>Jogos</h1>
+          <h1 id="pageTitle">Jogos</h1>
           <div class="subtitle">Passa o rato por cima para ver opções</div>
         </div>
 
         <div class="topbar-right">
-          <input id="searchInput" type="text" placeholder="Pesquisar jogos...">
+          <input id="searchInput" type="text" placeholder="Pesquisar downloads...">
 
           <select id="sortSelect">
             <option value="new">Mais recentes</option>
             <option value="old">Mais antigos</option>
           </select>
+
+          <button id="toggleNsfwBtn" class="toggle-btn">NSFW: Oculto</button>
 
           <button id="addBtn" class="add-btn" onclick="openModal()">+ Adicionar</button>
           <button class="logout-btn" id="logoutBtn">Sair</button>
@@ -780,6 +797,7 @@
     let searchTerm = "";
     let allItems = [];
     let messagesUnsubscribe = null;
+    let showNsfw = false;
 
     const loginScreen = document.getElementById("loginScreen");
     const appLayout = document.getElementById("appLayout");
@@ -792,6 +810,8 @@
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
     const searchInput = document.getElementById("searchInput");
+    const toggleNsfwBtn = document.getElementById("toggleNsfwBtn");
+    const pageTitle = document.getElementById("pageTitle");
 
     function escapeHtml(text) {
       return String(text)
@@ -817,6 +837,25 @@
       return category;
     }
 
+    function updatePageTitle() {
+      if (currentFilter === "all") {
+        pageTitle.textContent = "Todos";
+      } else {
+        pageTitle.textContent = getCategoryLabel(currentFilter);
+      }
+    }
+
+    function updateNsfwButton() {
+      toggleNsfwBtn.textContent = showNsfw ? "NSFW: Visível" : "NSFW: Oculto";
+      toggleNsfwBtn.classList.toggle("active", showNsfw);
+    }
+
+    function getStoredNsfwPreference() {
+      const saved = localStorage.getItem("showNsfw");
+      showNsfw = saved === "true";
+      updateNsfwButton();
+    }
+
     async function loadItems() {
       try {
         const snapshot = await getDocs(collection(db, "items"));
@@ -836,7 +875,9 @@
     function render() {
       let items = [...allItems];
 
-      items = items.filter(item => item.category === "jogos");
+      if (currentFilter !== "all") {
+        items = items.filter(item => item.category === currentFilter);
+      }
 
       if (searchTerm) {
         items = items.filter(item =>
@@ -855,43 +896,49 @@
         }
       });
 
+      updatePageTitle();
+
       if (!items.length) {
         grid.innerHTML = `<div class="empty">Não existem itens com esse filtro/pesquisa.</div>`;
         return;
       }
 
-      grid.innerHTML = items.map(item => `
-        <div class="card">
-          ${item.nsfw ? `<div class="nsfw-badge">NSFW</div>` : ""}
+      grid.innerHTML = items.map(item => {
+        const shouldBlur = item.nsfw && !showNsfw;
 
-          <div class="thumb-wrap">
-            ${
-              item.image
-                ? `<img
-                    src="${item.image}"
-                    alt="${escapeHtml(item.title)}"
-                    class="${item.nsfw ? "nsfw-blur" : ""}"
-                    style="object-fit:${item.fitMode || 'cover'};"
-                  >`
-                : `<div class="placeholder">Sem imagem</div>`
-            }
-          </div>
+        return `
+          <div class="card">
+            ${item.nsfw ? `<div class="nsfw-badge">NSFW</div>` : ""}
 
-          <div class="overlay">
-            <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
-            <div class="title">${escapeHtml(item.title)}</div>
-
-            <div class="actions">
-              <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+            <div class="thumb-wrap">
               ${
-                auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
-                  ? `<button class="delete-btn" data-id="${item.id}">Apagar</button>`
-                  : ``
+                item.image
+                  ? `<img
+                      src="${item.image}"
+                      alt="${escapeHtml(item.title)}"
+                      class="${shouldBlur ? "nsfw-blur" : ""}"
+                      style="object-fit:${item.fitMode || 'cover'};"
+                    >`
+                  : `<div class="placeholder">Sem imagem</div>`
               }
             </div>
+
+            <div class="overlay">
+              <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
+              <div class="title">${escapeHtml(item.title)}</div>
+
+              <div class="actions">
+                <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+                ${
+                  auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+                    ? `<button class="delete-btn" data-id="${item.id}">Apagar</button>`
+                    : ``
+                }
+              </div>
+            </div>
           </div>
-        </div>
-      `).join("");
+        `;
+      }).join("");
 
       document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", async function(e) {
@@ -1044,6 +1091,13 @@
       });
     });
 
+    toggleNsfwBtn.addEventListener("click", function() {
+      showNsfw = !showNsfw;
+      localStorage.setItem("showNsfw", String(showNsfw));
+      updateNsfwButton();
+      render();
+    });
+
     searchInput.addEventListener("input", function() {
       searchTerm = this.value.trim().toLowerCase();
       render();
@@ -1127,6 +1181,8 @@
           addBtn.style.display = "none";
         }
 
+        getStoredNsfwPreference();
+        updatePageTitle();
         await loadItems();
         startMessagesListener();
       } else {
