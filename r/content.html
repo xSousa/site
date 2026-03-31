@@ -572,31 +572,6 @@
       border-top: 1px solid #252525;
     }
 
-    .music-player {
-      width: 100%;
-      margin-top: 8px;
-      margin-bottom: 10px;
-    }
-
-    .track-select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      background: #1a1a1a;
-      color: #fff;
-      border: 1px solid #333;
-      outline: none;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-
-    .track-count {
-      color: #aaa;
-      font-size: 13px;
-      margin-top: -4px;
-      margin-bottom: 8px;
-    }
-
     @media (max-width: 900px) {
       .layout {
         flex-direction: column;
@@ -769,11 +744,6 @@
         </select>
       </div>
 
-      <div class="field" id="zipField" style="display:none;">
-        <label for="musicZip">ZIP com músicas</label>
-        <input id="musicZip" type="file" accept=".zip,application/zip">
-      </div>
-
       <div class="field field-checkbox">
         <label for="nsfw">
           <input type="checkbox" id="nsfw">
@@ -823,15 +793,6 @@
       signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    import {
-      getStorage,
-      ref,
-      uploadBytes,
-      getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-    import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
-
     const firebaseConfig = {
       apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
       authDomain: "content-729f5.firebaseapp.com",
@@ -844,7 +805,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const storage = getStorage(app);
 
     const ADMIN_EMAIL = "enzo@xsousa.com";
 
@@ -913,62 +873,11 @@
 
     function updateMusicFields() {
       const category = categorySelect.value;
-      const zipField = document.getElementById("zipField");
-      const linkField = document.getElementById("linkField");
-
       if (category === "musica") {
-        zipField.style.display = "block";
-        linkField.style.display = "none";
         preview.classList.add("music-preview");
       } else {
-        zipField.style.display = "none";
-        linkField.style.display = "block";
         preview.classList.remove("music-preview");
       }
-    }
-
-    async function readMusicZipAndUpload(file, albumTitle) {
-      const zip = await JSZip.loadAsync(file);
-      const tracks = [];
-      const audioExtensions = [".mp3", ".wav", ".ogg", ".m4a", ".flac", ".aac"];
-      const entries = Object.values(zip.files);
-
-      for (const entry of entries) {
-        if (entry.dir) continue;
-
-        const lowerName = entry.name.toLowerCase();
-        const isAudio = audioExtensions.some(ext => lowerName.endsWith(ext));
-        if (!isAudio) continue;
-
-        const blob = await entry.async("blob");
-        const fileName = entry.name.split("/").pop();
-
-        const safeAlbum = String(albumTitle || "musica")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^\w\-]+/g, "_");
-
-        const safeName = String(fileName || "track")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^\w.\-]+/g, "_");
-
-        const storageRef = ref(
-          storage,
-          `music/${safeAlbum}/${Date.now()}_${safeName}`
-        );
-
-        await uploadBytes(storageRef, blob);
-        const url = await getDownloadURL(storageRef);
-
-        tracks.push({
-          name: fileName,
-          url
-        });
-      }
-
-      tracks.sort((a, b) => a.name.localeCompare(b.name, "pt"));
-      return tracks;
     }
 
     async function loadItems() {
@@ -1014,8 +923,6 @@
       grid.innerHTML = items.map(item => {
         const shouldBlur = item.nsfw && !showNsfw;
         const isMusic = item.category === "musica";
-        const tracks = Array.isArray(item.tracks) ? item.tracks : [];
-        const firstTrack = tracks.length ? tracks[0] : null;
 
         if (isMusic) {
           return `
@@ -1044,35 +951,15 @@
 
                 <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
                 <div class="title">${escapeHtml(item.title)}</div>
-                <div class="track-count">${tracks.length} faixa(s)</div>
 
-                ${
-                  firstTrack
-                    ? `<audio class="music-player" controls src="${firstTrack.url}"></audio>`
-                    : `<div class="placeholder">Sem faixa disponível</div>`
-                }
-
-                ${
-                  tracks.length > 1
-                    ? `
-                      <select class="track-select" data-item-id="${item.id}">
-                        ${tracks.map((track, index) => `
-                          <option value="${index}">${escapeHtml(track.name)}</option>
-                        `).join("")}
-                      </select>
-                    `
-                    : ``
-                }
-
-                ${
-                  auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
-                    ? `
-                      <div class="actions">
-                        <button class="delete-btn" data-id="${item.id}">Apagar</button>
-                      </div>
-                    `
-                    : ``
-                }
+                <div class="actions">
+                  <a class="download-btn" href="${item.link || '#'}" target="_blank" rel="noopener noreferrer">Abrir</a>
+                  ${
+                    auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+                      ? `<button class="delete-btn" data-id="${item.id}">Apagar</button>`
+                      : ``
+                  }
+                </div>
               </div>
             </div>
           `;
@@ -1127,23 +1014,6 @@
             console.error(error);
             alert("Erro ao apagar item.");
           }
-        });
-      });
-
-      document.querySelectorAll(".track-select").forEach(select => {
-        select.addEventListener("change", function() {
-          const card = this.closest(".music-card");
-          const audio = card.querySelector(".music-player");
-          const itemId = this.dataset.itemId;
-          const item = allItems.find(x => x.id === itemId);
-
-          if (!item || !Array.isArray(item.tracks)) return;
-
-          const track = item.tracks[Number(this.value)];
-          if (!track) return;
-
-          audio.src = track.url;
-          audio.play().catch(() => {});
         });
       });
     }
@@ -1217,7 +1087,6 @@
       document.getElementById("category").value = "jogos";
       document.getElementById("fitMode").value = "cover";
       document.getElementById("image").value = "";
-      document.getElementById("musicZip").value = "";
       document.getElementById("nsfw").checked = false;
       preview.innerHTML = "Pré-visualização";
       imageData = "";
@@ -1233,48 +1102,20 @@
       const category = document.getElementById("category").value;
       const fitMode = document.getElementById("fitMode").value;
       const nsfw = document.getElementById("nsfw").checked;
-      const zipFile = document.getElementById("musicZip").files[0];
 
-      if (!title) {
-        alert("Preenche o título.");
-        return;
-      }
-
-      if (!imageData) {
-        alert("Escolhe uma imagem/capa.");
-        return;
-      }
-
-      if (category !== "musica" && !link) {
-        alert("Preenche o link.");
-        return;
-      }
-
-      if (category === "musica" && !zipFile) {
-        alert("Escolhe um ZIP com as músicas.");
+      if (!title || !link) {
+        alert("Preenche o título e o link.");
         return;
       }
 
       try {
-        let musicTracks = [];
-
-        if (category === "musica") {
-          musicTracks = await readMusicZipAndUpload(zipFile, title);
-
-          if (!musicTracks.length) {
-            alert("O ZIP não contém ficheiros de áudio suportados.");
-            return;
-          }
-        }
-
         await addDoc(collection(db, "items"), {
           title,
-          link: category === "musica" ? "" : link,
+          link,
           category,
           fitMode,
           nsfw,
           image: imageData,
-          tracks: musicTracks,
           createdAt: Date.now()
         });
 
@@ -1282,7 +1123,7 @@
         closeModal();
       } catch (error) {
         console.error(error);
-        alert("Erro ao guardar item: " + (error.message || "desconhecido"));
+        alert("Erro ao guardar item.");
       }
     };
 
