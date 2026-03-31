@@ -181,6 +181,7 @@
       gap: 18px;
       justify-content: start;
       margin-bottom: 30px;
+      align-items: start;
     }
 
     .card {
@@ -544,20 +545,44 @@
       transform: scale(1.04);
     }
 
-    .nsfw-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 3;
-      background: rgba(0,0,0,0.72);
-      border: 1px solid rgba(255,255,255,0.18);
+    .music-card {
+      height: auto;
+      overflow: hidden;
+    }
+
+    .music-card .thumb-wrap {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .music-card .thumb-wrap img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .music-content {
+      padding: 14px;
+      background: #151515;
+      border-top: 1px solid #252525;
+    }
+
+    .music-player {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .track-select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      background: #1a1a1a;
       color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 6px 9px;
-      border-radius: 999px;
-      backdrop-filter: blur(4px);
-      pointer-events: none;
+      border: 1px solid #333;
+      outline: none;
+      margin-top: 6px;
+      margin-bottom: 10px;
     }
 
     @media (max-width: 900px) {
@@ -595,6 +620,11 @@
       .card {
         width: 160px;
         height: 235px;
+      }
+
+      .music-card {
+        width: 160px;
+        height: auto;
       }
 
       .preview {
@@ -661,7 +691,6 @@
         <button class="filter-btn" data-filter="filmes">Filmes</button>
         <button class="filter-btn" data-filter="vsts">VSTs</button>
         <button class="filter-btn" data-filter="musica">Música</button>
-        <button class="filter-btn" data-filter="all">Tudo</button>
       </div>
     </aside>
 
@@ -711,7 +740,7 @@
         <input id="title" type="text" placeholder="Ex: Call of Duty 2">
       </div>
 
-      <div class="field">
+      <div class="field" id="linkField">
         <label for="link">Link</label>
         <input id="link" type="url" placeholder="https://...">
       </div>
@@ -725,6 +754,11 @@
           <option value="filmes">Filmes</option>
           <option value="vsts">VSTs</option>
         </select>
+      </div>
+
+      <div class="field" id="zipField" style="display:none;">
+        <label for="musicZip">ZIP com músicas</label>
+        <input id="musicZip" type="file" accept=".zip,application/zip">
       </div>
 
       <div class="field field-checkbox">
@@ -775,6 +809,8 @@
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
@@ -838,11 +874,7 @@
     }
 
     function updatePageTitle() {
-      if (currentFilter === "all") {
-        pageTitle.textContent = "Todos";
-      } else {
-        pageTitle.textContent = getCategoryLabel(currentFilter);
-      }
+      pageTitle.textContent = getCategoryLabel(currentFilter);
     }
 
     function updateNsfwButton() {
@@ -854,6 +886,56 @@
       const saved = localStorage.getItem("showNsfw");
       showNsfw = saved === "true";
       updateNsfwButton();
+    }
+
+    function updateMusicFields() {
+      const category = document.getElementById("category").value;
+      const zipField = document.getElementById("zipField");
+      const linkField = document.getElementById("linkField");
+
+      if (category === "musica") {
+        zipField.style.display = "block";
+        linkField.style.display = "none";
+      } else {
+        zipField.style.display = "none";
+        linkField.style.display = "block";
+      }
+    }
+
+    function blobToDataURL(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function readMusicZip(file) {
+      const zip = await JSZip.loadAsync(file);
+      const tracks = [];
+      const audioExtensions = [".mp3", ".wav", ".ogg", ".m4a", ".flac", ".aac"];
+      const entries = Object.values(zip.files);
+
+      for (const entry of entries) {
+        if (entry.dir) continue;
+
+        const lowerName = entry.name.toLowerCase();
+        const isAudio = audioExtensions.some(ext => lowerName.endsWith(ext));
+
+        if (!isAudio) continue;
+
+        const blob = await entry.async("blob");
+        const dataUrl = await blobToDataURL(blob);
+
+        tracks.push({
+          name: entry.name.split("/").pop(),
+          data: dataUrl
+        });
+      }
+
+      tracks.sort((a, b) => a.name.localeCompare(b.name, "pt"));
+      return tracks;
     }
 
     async function loadItems() {
@@ -875,9 +957,7 @@
     function render() {
       let items = [...allItems];
 
-      if (currentFilter !== "all") {
-        items = items.filter(item => item.category === currentFilter);
-      }
+      items = items.filter(item => item.category === currentFilter);
 
       if (searchTerm) {
         items = items.filter(item =>
@@ -905,10 +985,75 @@
 
       grid.innerHTML = items.map(item => {
         const shouldBlur = item.nsfw && !showNsfw;
+        const isMusic = item.category === "musica";
+        const tracks = Array.isArray(item.tracks) ? item.tracks : [];
+        const firstTrack = tracks.length ? tracks[0] : null;
+
+        if (isMusic) {
+          return `
+            <div class="card music-card">
+              ${
+                item.image
+                  ? `
+                    <div class="thumb-wrap">
+                      <img
+                        src="${item.image}"
+                        alt="${escapeHtml(item.title)}"
+                        class="${shouldBlur ? "nsfw-blur" : ""}"
+                        style="object-fit:${item.fitMode || 'cover'};"
+                      >
+                    </div>
+                  `
+                  : `
+                    <div class="thumb-wrap">
+                      <div class="placeholder">Sem imagem</div>
+                    </div>
+                  `
+              }
+
+              <div class="music-content">
+                <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
+                <div class="title">${escapeHtml(item.title)}</div>
+
+                ${
+                  firstTrack
+                    ? `<audio class="music-player" controls src="${firstTrack.data}"></audio>`
+                    : `<div class="placeholder">Sem faixa disponível</div>`
+                }
+
+                ${
+                  tracks.length > 1
+                    ? `
+                      <select class="track-select" data-item-id="${item.id}">
+                        ${tracks.map((track, index) => `
+                          <option value="${index}">${escapeHtml(track.name)}</option>
+                        `).join("")}
+                      </select>
+                    `
+                    : ``
+                }
+
+                ${
+                  auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
+                    ? `
+                      <div class="actions">
+                        <button class="delete-btn" data-id="${item.id}">Apagar</button>
+                      </div>
+                    `
+                    : ``
+                }
+              </div>
+            </div>
+          `;
+        }
 
         return `
           <div class="card">
-            ${item.nsfw ? `<div class="nsfw-badge">NSFW</div>` : ""}
+            ${
+              item.nsfw && !showNsfw
+                ? `<div class="category-tag" style="position:absolute; top:10px; left:10px; z-index:3; margin-bottom:0;">NSFW</div>`
+                : ``
+            }
 
             <div class="thumb-wrap">
               ${
@@ -928,7 +1073,7 @@
               <div class="title">${escapeHtml(item.title)}</div>
 
               <div class="actions">
-                <a class="download-btn" href="${item.link}" target="_blank" rel="noopener noreferrer">Abrir</a>
+                <a class="download-btn" href="${item.link || '#'}" target="_blank" rel="noopener noreferrer">Abrir</a>
                 ${
                   auth.currentUser && auth.currentUser.email === ADMIN_EMAIL
                     ? `<button class="delete-btn" data-id="${item.id}">Apagar</button>`
@@ -951,6 +1096,23 @@
             console.error(error);
             alert("Erro ao apagar item.");
           }
+        });
+      });
+
+      document.querySelectorAll(".track-select").forEach(select => {
+        select.addEventListener("change", function() {
+          const card = this.closest(".music-card");
+          const audio = card.querySelector(".music-player");
+          const itemId = this.dataset.itemId;
+          const item = allItems.find(x => x.id === itemId);
+
+          if (!item || !Array.isArray(item.tracks)) return;
+
+          const track = item.tracks[Number(this.value)];
+          if (!track) return;
+
+          audio.src = track.data;
+          audio.play().catch(() => {});
         });
       });
     }
@@ -1014,6 +1176,7 @@
       const user = auth.currentUser;
       if (!user || user.email !== ADMIN_EMAIL) return;
       document.getElementById("modal").classList.add("active");
+      updateMusicFields();
     };
 
     window.closeModal = function() {
@@ -1023,9 +1186,11 @@
       document.getElementById("category").value = "jogos";
       document.getElementById("fitMode").value = "cover";
       document.getElementById("image").value = "";
+      document.getElementById("musicZip").value = "";
       document.getElementById("nsfw").checked = false;
       document.getElementById("preview").innerHTML = "Pré-visualização";
       imageData = "";
+      updateMusicFields();
     };
 
     window.save = async function() {
@@ -1037,20 +1202,43 @@
       const category = document.getElementById("category").value;
       const fitMode = document.getElementById("fitMode").value;
       const nsfw = document.getElementById("nsfw").checked;
+      const zipFile = document.getElementById("musicZip").files[0];
 
-      if (!title || !link) {
-        alert("Preenche o título e o link.");
+      if (!title) {
+        alert("Preenche o título.");
+        return;
+      }
+
+      if (category !== "musica" && !link) {
+        alert("Preenche o link.");
+        return;
+      }
+
+      if (category === "musica" && !zipFile) {
+        alert("Escolhe um ZIP com as músicas.");
         return;
       }
 
       try {
+        let musicTracks = [];
+
+        if (category === "musica") {
+          musicTracks = await readMusicZip(zipFile);
+
+          if (!musicTracks.length) {
+            alert("O ZIP não contém ficheiros de áudio suportados.");
+            return;
+          }
+        }
+
         await addDoc(collection(db, "items"), {
           title,
-          link,
+          link: category === "musica" ? "" : link,
           category,
           fitMode,
           nsfw,
           image: imageData,
+          tracks: musicTracks,
           createdAt: Date.now()
         });
 
@@ -1081,6 +1269,8 @@
       document.getElementById("preview").innerHTML =
         `<img src="${imageData}" alt="Preview" style="object-fit:${this.value};">`;
     });
+
+    document.getElementById("category").addEventListener("change", updateMusicFields);
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", function() {
@@ -1182,6 +1372,7 @@
         }
 
         getStoredNsfwPreference();
+        updateMusicFields();
         updatePageTitle();
         await loadItems();
         startMessagesListener();
