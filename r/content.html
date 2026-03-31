@@ -513,6 +513,11 @@
       margin-top: 8px;
     }
 
+    .preview.music-preview {
+      width: 220px;
+      height: 220px;
+    }
+
     .preview img {
       width: 100%;
       height: 100%;
@@ -585,6 +590,13 @@
       margin-bottom: 10px;
     }
 
+    .track-count {
+      color: #aaa;
+      font-size: 13px;
+      margin-top: -4px;
+      margin-bottom: 8px;
+    }
+
     @media (max-width: 900px) {
       .layout {
         flex-direction: column;
@@ -627,9 +639,10 @@
         height: auto;
       }
 
-      .preview {
+      .preview,
+      .preview.music-preview {
         width: 160px;
-        height: 235px;
+        height: 160px;
       }
 
       .modal-actions,
@@ -810,6 +823,13 @@
       signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+    import {
+      getStorage,
+      ref,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
     import JSZip from "https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm";
 
     const firebaseConfig = {
@@ -824,6 +844,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+    const storage = getStorage(app);
 
     const ADMIN_EMAIL = "enzo@xsousa.com";
 
@@ -848,6 +869,8 @@
     const searchInput = document.getElementById("searchInput");
     const toggleNsfwBtn = document.getElementById("toggleNsfwBtn");
     const pageTitle = document.getElementById("pageTitle");
+    const categorySelect = document.getElementById("category");
+    const preview = document.getElementById("preview");
 
     function escapeHtml(text) {
       return String(text)
@@ -889,29 +912,22 @@
     }
 
     function updateMusicFields() {
-      const category = document.getElementById("category").value;
+      const category = categorySelect.value;
       const zipField = document.getElementById("zipField");
       const linkField = document.getElementById("linkField");
 
       if (category === "musica") {
         zipField.style.display = "block";
         linkField.style.display = "none";
+        preview.classList.add("music-preview");
       } else {
         zipField.style.display = "none";
         linkField.style.display = "block";
+        preview.classList.remove("music-preview");
       }
     }
 
-    function blobToDataURL(blob) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    }
-
-    async function readMusicZip(file) {
+    async function readMusicZipAndUpload(file, albumTitle) {
       const zip = await JSZip.loadAsync(file);
       const tracks = [];
       const audioExtensions = [".mp3", ".wav", ".ogg", ".m4a", ".flac", ".aac"];
@@ -922,15 +938,32 @@
 
         const lowerName = entry.name.toLowerCase();
         const isAudio = audioExtensions.some(ext => lowerName.endsWith(ext));
-
         if (!isAudio) continue;
 
         const blob = await entry.async("blob");
-        const dataUrl = await blobToDataURL(blob);
+        const fileName = entry.name.split("/").pop();
+
+        const safeAlbum = String(albumTitle || "musica")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^\w\-]+/g, "_");
+
+        const safeName = String(fileName || "track")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^\w.\-]+/g, "_");
+
+        const storageRef = ref(
+          storage,
+          `music/${safeAlbum}/${Date.now()}_${safeName}`
+        );
+
+        await uploadBytes(storageRef, blob);
+        const url = await getDownloadURL(storageRef);
 
         tracks.push({
-          name: entry.name.split("/").pop(),
-          data: dataUrl
+          name: fileName,
+          url
         });
       }
 
@@ -968,12 +1001,7 @@
       items.sort((a, b) => {
         const aDate = Number(a.createdAt || 0);
         const bDate = Number(b.createdAt || 0);
-
-        if (currentSort === "new") {
-          return bDate - aDate;
-        } else {
-          return aDate - bDate;
-        }
+        return currentSort === "new" ? bDate - aDate : aDate - bDate;
       });
 
       updatePageTitle();
@@ -992,32 +1020,35 @@
         if (isMusic) {
           return `
             <div class="card music-card">
-              ${
-                item.image
-                  ? `
-                    <div class="thumb-wrap">
+              <div class="thumb-wrap">
+                ${
+                  item.image
+                    ? `
                       <img
                         src="${item.image}"
                         alt="${escapeHtml(item.title)}"
                         class="${shouldBlur ? "nsfw-blur" : ""}"
                         style="object-fit:${item.fitMode || 'cover'};"
                       >
-                    </div>
-                  `
-                  : `
-                    <div class="thumb-wrap">
-                      <div class="placeholder">Sem imagem</div>
-                    </div>
-                  `
-              }
+                    `
+                    : `<div class="placeholder">Sem imagem</div>`
+                }
+              </div>
 
               <div class="music-content">
+                ${
+                  item.nsfw && !showNsfw
+                    ? `<div class="category-tag">NSFW</div>`
+                    : ``
+                }
+
                 <div class="category-tag">${escapeHtml(getCategoryLabel(item.category))}</div>
                 <div class="title">${escapeHtml(item.title)}</div>
+                <div class="track-count">${tracks.length} faixa(s)</div>
 
                 ${
                   firstTrack
-                    ? `<audio class="music-player" controls src="${firstTrack.data}"></audio>`
+                    ? `<audio class="music-player" controls src="${firstTrack.url}"></audio>`
                     : `<div class="placeholder">Sem faixa disponível</div>`
                 }
 
@@ -1111,7 +1142,7 @@
           const track = item.tracks[Number(this.value)];
           if (!track) return;
 
-          audio.src = track.data;
+          audio.src = track.url;
           audio.play().catch(() => {});
         });
       });
@@ -1188,7 +1219,7 @@
       document.getElementById("image").value = "";
       document.getElementById("musicZip").value = "";
       document.getElementById("nsfw").checked = false;
-      document.getElementById("preview").innerHTML = "Pré-visualização";
+      preview.innerHTML = "Pré-visualização";
       imageData = "";
       updateMusicFields();
     };
@@ -1209,6 +1240,11 @@
         return;
       }
 
+      if (!imageData) {
+        alert("Escolhe uma imagem/capa.");
+        return;
+      }
+
       if (category !== "musica" && !link) {
         alert("Preenche o link.");
         return;
@@ -1223,7 +1259,7 @@
         let musicTracks = [];
 
         if (category === "musica") {
-          musicTracks = await readMusicZip(zipFile);
+          musicTracks = await readMusicZipAndUpload(zipFile, title);
 
           if (!musicTracks.length) {
             alert("O ZIP não contém ficheiros de áudio suportados.");
@@ -1246,7 +1282,7 @@
         closeModal();
       } catch (error) {
         console.error(error);
-        alert("Erro ao guardar item.");
+        alert("Erro ao guardar item: " + (error.message || "desconhecido"));
       }
     };
 
@@ -1258,19 +1294,17 @@
       reader.onload = function(ev) {
         imageData = ev.target.result;
         const fitMode = document.getElementById("fitMode").value;
-        document.getElementById("preview").innerHTML =
-          `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
+        preview.innerHTML = `<img src="${imageData}" alt="Preview" style="object-fit:${fitMode};">`;
       };
       reader.readAsDataURL(file);
     });
 
     document.getElementById("fitMode").addEventListener("change", function() {
       if (!imageData) return;
-      document.getElementById("preview").innerHTML =
-        `<img src="${imageData}" alt="Preview" style="object-fit:${this.value};">`;
+      preview.innerHTML = `<img src="${imageData}" alt="Preview" style="object-fit:${this.value};">`;
     });
 
-    document.getElementById("category").addEventListener("change", updateMusicFields);
+    categorySelect.addEventListener("change", updateMusicFields);
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", function() {
