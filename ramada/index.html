@@ -1,1 +1,235 @@
-echo a
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abrir</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#startScreen, #effectScreen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#startScreen {
+  background: linear-gradient(180deg, #111, #000);
+  gap: 16px;
+  text-align: center;
+  padding: 24px;
+}
+
+button {
+  padding: 14px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#openBtn {
+  background: white;
+  color: black;
+  font-weight: bold;
+}
+
+#effectScreen {
+  display: none;
+  background: black;
+  transition: filter 0.2s ease;
+}
+
+.invert {
+  filter: invert(1);
+}
+
+.glitch {
+  font-size: 56px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  animation: shake 0.18s infinite;
+  text-shadow: 2px 0 red, -2px 0 cyan;
+  user-select: none;
+  text-align: center;
+  padding: 20px;
+  max-width: 90vw;
+  word-break: break-word;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  animation: drift 6s linear infinite;
+}
+
+.exitHint {
+  position: absolute;
+  bottom: 20px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, -1px); }
+  50% { transform: translate(-1px, 1px); }
+  75% { transform: translate(1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(8px); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="startScreen">
+  <h1>skit ~invite generator </h1>
+  <p>real mesmo clique ali</p>
+  <button id="openBtn">aqui</button>
+</div>
+
+<div id="effectScreen">
+  <div class="overlay"></div>
+  <div class="glitch" id="text">PREPARING...</div>
+  <div class="exitHint">diga q é este o seu ip e elses dao</div>
+
+  <audio id="audio1" preload="auto" src="1.mp3"></audio>
+  <audio id="audio2" preload="auto" src="2.mp3"></audio>
+  <audio id="audio3" preload="auto" src="3.mp3"></audio>
+</div>
+
+<script>
+const openBtn = document.getElementById("openBtn");
+const startScreen = document.getElementById("startScreen");
+const effectScreen = document.getElementById("effectScreen");
+const text = document.getElementById("text");
+
+const audio1 = document.getElementById("audio1");
+const audio2 = document.getElementById("audio2");
+const audio3 = document.getElementById("audio3");
+
+let invertInterval = null;
+let cachedIP = "UNKNOWN";
+let effectStarted = false;
+
+/* buscar IP logo ao carregar */
+fetch("https://api.ipify.org?format=json")
+  .then(res => res.json())
+  .then(data => {
+    cachedIP = data.ip;
+    if (effectStarted) text.textContent = cachedIP;
+  })
+  .catch(() => {
+    cachedIP = "ERROR";
+    if (effectStarted) text.textContent = cachedIP;
+  });
+
+async function enterFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) {
+    await el.requestFullscreen();
+  }
+}
+
+function startInvertEffect() {
+  if (invertInterval) return;
+
+  let state = false;
+  invertInterval = setInterval(() => {
+    state = !state;
+    effectScreen.classList.toggle("invert", state);
+  }, 100);
+}
+
+function stopInvertEffect() {
+  clearInterval(invertInterval);
+  invertInterval = null;
+  effectScreen.classList.remove("invert");
+}
+
+function stopAllAudio() {
+  [audio1, audio2, audio3].forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+}
+
+async function startEffect() {
+  if (effectStarted) return;
+  effectStarted = true;
+
+  try {
+    await enterFullscreen();
+  } catch (e) {}
+
+  startScreen.style.display = "none";
+  effectScreen.style.display = "flex";
+
+  startInvertEffect();
+  text.textContent = cachedIP;
+
+  audio1.volume = 1;
+  audio2.volume = 1;
+  audio3.volume = 1;
+
+  audio1.play().catch(() => {});
+  setTimeout(() => audio2.play().catch(() => {}), 100);
+  setTimeout(() => audio3.play().catch(() => {}), 200);
+}
+
+openBtn.addEventListener("click", startEffect);
+
+document.addEventListener("keydown", async (e) => {
+  if (e.key === "Escape") {
+
+    /* parar tudo */
+    stopInvertEffect();
+    stopAllAudio();
+
+    effectStarted = false;
+
+    /* 💥 forçar fullscreen outra vez */
+    try {
+      await enterFullscreen();
+    } catch (err) {}
+
+    /* reiniciar efeito */
+    setTimeout(() => {
+      startEffect();
+    }, 50);
+  }
+});
+</script>
+
+</body>
+</html>
