@@ -1,0 +1,240 @@
+html,
+body{
+
+    margin:0;
+    padding:0;
+
+    background:#000;
+
+    color:#FFF;
+
+    font-family:Verdana, Arial, sans-serif;
+
+    font-size:12px;
+
+    font-style:italic;
+
+    font-weight:bold;
+
+}
+
+/* ========================= */
+/* Estrutura Principal       */
+/* ========================= */
+
+.layout{
+
+    width:100%;
+    height:100vh;
+
+    border-collapse:collapse;
+
+}
+
+/* ========================= */
+/* Header                    */
+/* ========================= */
+
+.header{
+
+    height:180px;
+
+    background:#000;
+
+    text-align:center;
+
+    border-bottom:1px solid #333;
+
+}
+
+#logo{
+
+    margin-top:20px;
+
+    height:130px;
+
+}
+
+/* ========================= */
+/* Menu                      */
+/* ========================= */
+
+.menu{
+
+    background:#080808;
+
+    border-top:1px solid #333;
+    border-bottom:1px solid #333;
+
+    text-align:center;
+
+    padding:0;
+
+    line-height:0;
+
+    font-size:0;
+
+    height:20px;
+
+}
+
+.menu a{
+
+    display:inline-block;
+
+    margin:0;
+    padding:0;
+
+    line-height:0;
+
+}
+
+.menu img{
+
+    display:block;
+
+    width:214px;
+    height:20px;
+
+    border:0;
+
+}
+
+.menu img:hover{
+
+    opacity:.8;
+
+}
+
+/* ========================= */
+/* Iframe                    */
+/* ========================= */
+
+.content{
+
+    padding:0;
+
+    background:#000;
+
+}
+
+iframe{
+
+    display:block;
+
+    width:100%;
+
+    height:calc(100vh - 232px);
+
+    border:0;
+
+    background:#000;
+
+}
+
+/* ========================= */
+/* Rodapé                    */
+/* ========================= */
+
+.footer{
+
+    height:30px;
+
+    background:#050505;
+
+    color:#666;
+
+    font-size:11px;
+
+    text-align:center;
+
+    border-top:1px solid #333;
+
+}
+
+/* ================================================= */
+/*                 PÁGINAS INTERNAS                  */
+/* ================================================= */
+
+.page-body{
+
+    margin:0;
+    padding:0;
+
+    background:#000 url("images/bg.jpg") top center no-repeat fixed;
+
+    color:#FFF;
+
+}
+
+.wrapper{
+
+    width:800px;
+
+    margin:0 auto;
+
+    display:flex;
+
+    min-height:100vh;
+
+}
+
+.side{
+
+    width:16px;
+
+    flex-shrink:0;
+
+    background:url("images/structure/sides.png") repeat-y top center;
+
+}
+
+.page-content{
+
+    flex:1;
+
+    background:#050505;
+
+    padding:25px;
+
+}
+
+.page-title{
+
+    margin:0 0 20px 0;
+
+    font-family:Verdana, Arial, sans-serif;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    font-style:italic;
+
+    color:#FFFFFF;
+
+    text-align:center;
+
+    letter-spacing:2px;
+
+}
+
+.page-content hr{
+
+    border:0;
+
+    border-top:1px solid #333;
+
+    margin:20px 0;
+
+}
+
+.page-text{
+
+    text-align:center;
+
+    line-height:15px;
+
+    color:#FFF;
+
+}
