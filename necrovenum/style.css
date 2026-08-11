@@ -234,14 +234,14 @@ iframe{
 
 }
 
-.page-content{
+.page-content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-    flex:1;
-
-    background:#050505;
-
-    padding:25px;
-
+.news-box {
+    margin-top: auto;
 }
 
 .page-title{
@@ -288,15 +288,6 @@ iframe{
 /* News                      */
 /* ========================= */
 
-.news-box{
-
-    margin-top:30px;
-
-    border:1px solid #333;
-
-    background:#070707;
-
-}
 
 .news-header{
 
