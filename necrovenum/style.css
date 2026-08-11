@@ -3,13 +3,8 @@ html,
 body {
     margin: 0;
     padding: 0;
-
-    width: 100%;
-    min-height: 100%;
-
-    background: #000 !important;
-    color: #FFF;
-
+    background: #000;
+    color: #fff;
     font-family: Verdana, Arial, sans-serif;
     font-size: 12px;
     font-style: italic;
@@ -17,62 +12,64 @@ body {
 }
 
 /* ========================= */
-/* Estrutura Principal        */
+/* ESTRUTURA                 */
 /* ========================= */
 
 .layout {
     width: 900px;
     margin: 0 auto;
-
+    padding: 0;
+    border: 0;
     border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #000;
+}
 
-    background: #000;
+/* Todas as células da tabela são pretas */
+.layout tr,
+.layout td {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: #000;
 }
 
 /* ========================= */
-/* Header                     */
+/* HEADER                    */
 /* ========================= */
 
 .header {
     width: 900px;
-
-    padding: 0;
-    margin: 0;
-
-    text-align: center;
-    vertical-align: middle;
-
-    background: #000 !important;
+    height: auto;
+    background-color: #000 !important;
 }
 
 #header-image {
+    display: block;
     width: 900px;
     height: auto;
-
-    display: block;
-
-    margin: 0 auto;
+    margin: 0;
     padding: 0;
+    border: 0;
 }
 
 /* ========================= */
-/* Menu                       */
+/* MENU                      */
 /* ========================= */
 
 .menu {
     width: 900px;
     height: 20px;
 
-    padding: 0;
+    padding: 0 !important;
     margin: 0;
 
-    background: #080808 !important;
+    background-color: #080808 !important;
 
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
+    border-top: 1px solid #333 !important;
+    border-bottom: 1px solid #333 !important;
 
     display: flex;
-
     justify-content: center;
     align-items: center;
 
@@ -85,10 +82,15 @@ body {
     width: 150px;
     height: 20px;
 
-    flex: 0 0 150px;
+    min-width: 150px;
+    max-width: 150px;
 
     padding: 0;
     margin: 0;
+
+    background-color: #080808;
+
+    flex: 0 0 150px;
 }
 
 .menu img {
@@ -108,21 +110,15 @@ body {
 }
 
 /* ========================= */
-/* Conteúdo                   */
+/* CONTEÚDO                  */
 /* ========================= */
 
 .content {
     width: 900px;
-
-    padding: 0;
+    padding: 0 !important;
     margin: 0;
-
-    background: #000 !important;
+    background-color: #000 !important;
 }
-
-/* ========================= */
-/* Iframe                     */
-/* ========================= */
 
 iframe {
     display: block;
@@ -135,11 +131,11 @@ iframe {
 
     border: 0;
 
-    background: #000 !important;
+    background-color: #000 !important;
 }
 
 /* ========================= */
-/* Rodapé                     */
+/* FOOTER                    */
 /* ========================= */
 
 .footer {
@@ -149,19 +145,18 @@ iframe {
     padding: 0;
     margin: 0;
 
-    background: #050505 !important;
+    background-color: #050505 !important;
 
     color: #666;
 
     font-size: 11px;
-
     text-align: center;
 
-    border-top: 1px solid #333;
+    border-top: 1px solid #333 !important;
 }
 
 /* ================================================= */
-/*                 PÁGINAS INTERNAS                  */
+/* PÁGINAS INTERNAS                                  */
 /* ================================================= */
 
 .page-body {
@@ -170,30 +165,24 @@ iframe {
 
     min-height: 100vh;
 
-    background:
-        #000
-        url("images/bg.jpg")
-        top center
-        no-repeat
-        fixed;
+    background-color: #000;
+    background-image: url("images/bg.jpg");
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 
-    color: #FFF;
+    color: #fff;
 }
-
-/* ========================= */
-/* Página                     */
-/* ========================= */
 
 .wrapper {
     width: 800px;
+    min-height: 100vh;
 
     margin: 0 auto;
 
     display: flex;
 
-    min-height: 100vh;
-
-    background: #000;
+    background-color: #000;
 }
 
 .side {
@@ -201,36 +190,30 @@ iframe {
 
     flex-shrink: 0;
 
-    background:
-        #000
-        url("images/structure/sides.png")
-        repeat-y
-        top center;
+    background-color: #000;
+    background-image: url("images/structure/sides.png");
+    background-repeat: repeat-y;
+    background-position: top center;
 }
 
 .page-content {
     flex: 1;
 
-    background: #050505;
+    background-color: #050505;
 
     padding: 25px;
 }
-
-/* ========================= */
-/* Títulos                    */
-/* ========================= */
 
 .page-title {
     margin: 0 0 20px 0;
 
     font-family: Verdana, Arial, sans-serif;
-
     font-size: 18px;
 
     font-weight: bold;
     font-style: italic;
 
-    color: #FFFFFF;
+    color: #fff;
 
     text-align: center;
 
@@ -239,7 +222,6 @@ iframe {
 
 .page-content hr {
     border: 0;
-
     border-top: 1px solid #333;
 
     margin: 20px 0;
@@ -247,14 +229,12 @@ iframe {
 
 .page-text {
     text-align: center;
-
     line-height: 15px;
-
-    color: #FFF;
+    color: #fff;
 }
 
 /* ========================= */
-/* Notícias                   */
+/* NEWS                      */
 /* ========================= */
 
 .news-box {
@@ -262,22 +242,20 @@ iframe {
 
     border: 1px solid #333;
 
-    background: #070707;
+    background-color: #070707;
 }
 
 .news-header {
-    background: #111;
+    background-color: #111;
 
     border-bottom: 1px solid #333;
 
-    color: #FFFFFF;
+    color: #fff;
 
     font-family: Verdana, Arial, sans-serif;
-
     font-size: 12px;
 
     font-style: normal;
-
     font-weight: bold;
 
     padding: 6px 10px;
@@ -292,7 +270,7 @@ iframe {
 
     border-bottom: 1px solid #222;
 
-    background: #070707;
+    background-color: #070707;
 }
 
 .news-item:last-child {
@@ -310,7 +288,7 @@ iframe {
 }
 
 .news-text {
-    color: #FFF;
+    color: #fff;
 
     font-size: 12px;
 
