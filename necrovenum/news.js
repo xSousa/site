@@ -10,9 +10,9 @@ import {
 
 const container = document.getElementById("news-container");
 
-async function loadNews(){
+async function loadNews() {
 
-    try{
+    try {
 
         const q = query(
             collection(db, "news"),
@@ -24,29 +24,31 @@ async function loadNews(){
 
         container.innerHTML = "";
 
-        snapshot.forEach(doc=>{
+        snapshot.forEach(doc => {
 
             const news = doc.data();
 
-container.innerHTML += `
-<div class="news-item">
+            container.innerHTML += `
+                <div class="news-item">
 
-    <div class="news-date">
-        ${news.date.toDate().toLocaleDateString("en-GB")}
-    </div>
+                    <div class="news-date">
+                        ${news.date.toDate().toLocaleDateString("en-GB")}
+                    </div>
 
-    <div class="news-title">
-        ${news.title}
-    </div>
+                    <div class="news-title">
+                        ${news.title}
+                    </div>
 
-    <div class="news-text">
-        ${news.text}
-    </div>
+                    <div class="news-text">
+                        ${news.text}
+                    </div>
 
-</div>
-`;
+                </div>
+            `;
 
-    }catch(err){
+        });
+
+    } catch (err) {
 
         console.error(err);
 
