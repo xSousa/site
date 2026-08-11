@@ -1,12 +1,12 @@
-css
 html,
 body {
     margin: 0;
     padding: 0;
-
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     background: #000 !important;
-    color: #fff;
-
+    color: #FFF;
     font-family: Verdana, Arial, sans-serif;
     font-size: 12px;
     font-style: italic;
@@ -14,103 +14,72 @@ body {
 }
 
 /* ========================= */
-/* SITE PRINCIPAL             */
+/* Estrutura Principal        */
 /* ========================= */
 
 .layout {
     width: 900px;
+    height: 100vh;
     margin: 0 auto;
-
     border-collapse: collapse;
-    border-spacing: 0;
-
-    background: #000 !important;
-}
-
-.layout tr,
-.layout td {
-    padding: 0;
-    margin: 0;
-    border: 0;
-
-    background: #000 !important;
+    background: #000;
+    table-layout: fixed;
 }
 
 /* ========================= */
-/* HEADER                    */
+/* Header                     */
 /* ========================= */
 
 .header {
     width: 900px;
-
-    padding: 0 !important;
+    padding: 0;
     margin: 0;
-
+    text-align: center;
+    vertical-align: middle;
     background: #000 !important;
 }
 
 #header-image {
-    display: block;
-
     width: 900px;
     height: auto;
-
+    display: block;
+    margin: 0 auto;
     padding: 0;
-    margin: 0;
-
-    border: 0;
 }
 
 /* ========================= */
-/* MENU                      */
+/* Menu                       */
 /* ========================= */
 
 .menu {
     width: 900px;
     height: 20px;
-
-    padding: 0 !important;
+    padding: 0;
     margin: 0;
-
     background: #080808 !important;
-
-    border-top: 1px solid #333 !important;
-    border-bottom: 1px solid #333 !important;
-
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
     display: flex;
-
     justify-content: center;
     align-items: center;
-
     overflow: hidden;
 }
 
 .menu a {
     display: block;
-
     width: 150px;
     height: 20px;
-
-    min-width: 150px;
-    max-width: 150px;
-
+    flex: 0 0 150px;
     padding: 0;
     margin: 0;
-
-    flex: 0 0 150px;
-
-    background: #080808;
 }
 
 .menu img {
     display: block;
-
     width: 150px;
     height: 20px;
-
     padding: 0;
     margin: 0;
-
     border: 0;
 }
 
@@ -119,54 +88,197 @@ body {
 }
 
 /* ========================= */
-/* IFRAME                    */
+/* Conteúdo                   */
 /* ========================= */
 
 .content {
     width: 900px;
-
-    padding: 0 !important;
+    padding: 0;
     margin: 0;
-
     background: #000 !important;
+    height: calc(100vh - 232px);
 }
+
+/* ========================= */
+/* Iframe                     */
+/* ========================= */
 
 iframe {
     display: block;
-
     width: 900px;
-
-    height: calc(100vh - 232px);
-
+    height: 100%;
     padding: 0;
     margin: 0;
-
     border: 0;
-
     background: #000 !important;
 }
 
 /* ========================= */
-/* FOOTER                    */
+/* Rodapé                     */
 /* ========================= */
 
 .footer {
     width: 900px;
     height: 30px;
-
     padding: 0;
     margin: 0;
-
     background: #050505 !important;
-
     color: #666;
-
     font-size: 11px;
-
     text-align: center;
-
-    border-top: 1px solid #333 !important;
+    border-top: 1px solid #333;
+    line-height: 30px;
 }
 
+/* ================================================= */
+/*                 PÁGINAS INTERNAS                  */
+/* ================================================= */
 
-/* ========================= */ /* PÁGINAS INTERNAS */ /* ========================= */ .page-body { margin: 0; padding: 0; min-height: 100vh; background: #000 url("../images/bg.jpg") top center no-repeat fixed; color: #fff; } .wrapper { width: 800px; min-height: 100vh; margin: 0 auto; display: flex; background: transparent; } /* ========================= */ /* BARRAS LATERAIS */ /* ========================= */ .side { width: 16px; min-width: 16px; max-width: 16px; flex-shrink: 0; background: #000 url("../images/structure/sides.png") repeat-y top center; background-size: 16px auto; } /* ========================= */ /* CONTEÚDO */ /* ========================= */ .page-content { flex: 1; background: #050505; padding: 25px; } /* ========================= */ /* TÍTULO */ /* ========================= */ .page-title { margin: 0 0 20px 0; font-family: Verdana, Arial, sans-serif; font-size: 18px; font-weight: bold; font-style: italic; color: #fff; text-align: center; letter-spacing: 2px; } /* ========================= */ /* SEPARADOR */ /* ========================= */ .page-content hr { border: 0; border-top: 1px solid #333; margin: 20px 0; } /* ========================= */ /* TEXTO */ /* ========================= */ .page-text { text-align: center; line-height: 15px; color: #fff; } /* ========================= */ /* NEWS */ /* ========================= */ .news-box { margin-top: 30px; border: 1px solid #333; background: #070707; } .news-header { background: #111; border-bottom: 1px solid #333; color: #fff; font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-weight: bold; padding: 6px 10px; text-transform: uppercase; letter-spacing: 1px; } .news-item { padding: 12px; border-bottom: 1px solid #222; background: #070707; } .news-item:last-child { border-bottom: none; } .news-date { color: #888; font-size: 10px; font-style: normal; margin-bottom: 5px; } .news-text { color: #fff; font-size: 12px; font-style: italic; line-height: 18px; }
+.page-body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #000 !important;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    width: 800px;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    background: transparent;
+    overflow: hidden;
+}
+
+/* ========================= */
+/* BARRAS LATERAIS */
+/* ========================= */
+
+.side {
+    width: 16px;
+    min-width: 16px;
+    max-width: 16px;
+    flex-shrink: 0;
+    height: 100vh;
+    background: #1a1a1a; /* Fallback color */
+    background-image: url("images/structure/sides.png");
+    background-repeat: repeat-y;
+    background-position: top center;
+    background-size: 16px auto;
+}
+
+/* ========================= */
+/* CONTEÚDO */
+/* ========================= */
+
+.page-content {
+    flex: 1;
+    background: #050505;
+    padding: 15px 25px 15px 25px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ========================= */
+/* TÍTULO */
+/* ========================= */
+
+.page-title {
+    margin: 0 0 10px 0;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 2px;
+    flex-shrink: 0;
+}
+
+/* ========================= */
+/* SEPARADOR */
+/* ========================= */
+
+.page-content hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 8px 0;
+    flex-shrink: 0;
+}
+
+/* ========================= */
+/* TEXTO */
+/* ========================= */
+
+.page-text {
+    text-align: center;
+    line-height: 15px;
+    color: #fff;
+    flex-shrink: 0;
+    font-size: 11px;
+}
+
+/* ========================= */
+/* NEWS - FIXO NO FUNDO */
+/* ========================= */
+
+.news-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 5px;
+    min-height: 0;
+}
+
+.news-box {
+    border: 1px solid #333;
+    background: #070707;
+    margin-top: auto;
+    flex-shrink: 0;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.news-header {
+    background: #111;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: bold;
+    padding: 4px 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.news-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid #222;
+    background: #070707;
+}
+
+.news-item:last-child {
+    border-bottom: none;
+}
+
+.news-date {
+    color: #888;
+    font-size: 9px;
+    font-style: normal;
+    margin-bottom: 3px;
+}
+
+.news-text {
+    color: #fff;
+    font-size: 11px;
+    font-style: italic;
+    line-height: 16px;
+}
