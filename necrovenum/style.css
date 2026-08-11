@@ -43,13 +43,7 @@ body{
     width: 900px;
     height: auto;
     display: block;
-}
-#logo{
-
-    margin-top:20px;
-
-    height:130px;
-
+    margin: 0 auto;
 }
 
 /* ========================= */
@@ -57,18 +51,43 @@ body{
 /* ========================= */
 
 .menu {
-    white-space: nowrap;
-    text-align: center;
+    background: #080808;
+
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+
+    height: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     padding: 0;
+    margin: 0;
+
+    overflow: hidden;
 }
 
 .menu a {
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
+
+    width: 214px;
+    height: 20px;
+
+    flex-shrink: 0;
 }
 
 .menu img {
     display: block;
+
+    width: 214px;
+    height: 20px;
+
+    border: 0;
+}
+
+.menu img:hover {
+    opacity: .8;
 }
 
 /* ========================= */
