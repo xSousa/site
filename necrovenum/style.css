@@ -1,3 +1,4 @@
+```css
 html,
 body {
     margin: 0;
@@ -7,167 +8,148 @@ body {
     min-height: 100%;
 
     background: #000 !important;
-
     color: #FFF;
 
     font-family: Verdana, Arial, sans-serif;
-
     font-size: 12px;
-
     font-style: italic;
-
     font-weight: bold;
 }
 
-
 /* ========================= */
-/* Estrutura Principal       */
+/* Estrutura Principal        */
 /* ========================= */
 
 .layout {
     width: 900px;
-
-    min-height: 100vh;
-
     margin: 0 auto;
 
-    background: #000;
-
     border-collapse: collapse;
+
+    background: #000;
 }
 
-
 /* ========================= */
-/* Header                    */
+/* Header                     */
 /* ========================= */
 
 .header {
     width: 900px;
 
-    text-align: center;
+    padding: 0;
+    margin: 0;
 
+    text-align: center;
     vertical-align: middle;
 
-    background: #000;
+    background: #000 !important;
 }
 
 #header-image {
     width: 900px;
-
     height: auto;
 
     display: block;
 
     margin: 0 auto;
+    padding: 0;
 }
-
-#logo {
-    margin-top: 20px;
-
-    height: 130px;
-}
-
 
 /* ========================= */
-/* Menu                      */
+/* Menu                       */
 /* ========================= */
 
 .menu {
     width: 900px;
-
     height: 20px;
 
-    background: #080808;
+    padding: 0;
+    margin: 0;
+
+    background: #080808 !important;
 
     border-top: 1px solid #333;
-
     border-bottom: 1px solid #333;
 
     display: flex;
 
     justify-content: center;
-
     align-items: center;
 
-    padding: 0;
-
-    margin: 0;
-
     overflow: hidden;
-
-    white-space: nowrap;
 }
 
 .menu a {
     display: block;
 
-    width: 214px;
-
+    width: 150px;
     height: 20px;
 
+    flex: 0 0 150px;
+
     padding: 0;
-
     margin: 0;
-
-    flex-shrink: 0;
 }
 
 .menu img {
     display: block;
 
-    width: 214px;
-
+    width: 150px;
     height: 20px;
+
+    padding: 0;
+    margin: 0;
 
     border: 0;
 }
 
 .menu img:hover {
-    opacity: .8;
+    opacity: 0.8;
 }
 
-
 /* ========================= */
-/* Iframe                    */
+/* Conteúdo                   */
 /* ========================= */
 
 .content {
     width: 900px;
 
     padding: 0;
-
     margin: 0;
 
-    background: #000;
+    background: #000 !important;
 }
+
+/* ========================= */
+/* Iframe                     */
+/* ========================= */
 
 iframe {
     display: block;
 
     width: 900px;
-
-    height: calc(100vh - 252px);
+    height: calc(100vh - 232px);
 
     padding: 0;
-
     margin: 0;
 
     border: 0;
 
-    background: #000;
+    background: #000 !important;
 }
 
-
 /* ========================= */
-/* Rodapé                    */
+/* Rodapé                     */
 /* ========================= */
 
 .footer {
     width: 900px;
-
     height: 30px;
 
-    background: #050505;
+    padding: 0;
+    margin: 0;
+
+    background: #050505 !important;
 
     color: #666;
 
@@ -176,10 +158,7 @@ iframe {
     text-align: center;
 
     border-top: 1px solid #333;
-
-    box-sizing: border-box;
 }
-
 
 /* ================================================= */
 /*                 PÁGINAS INTERNAS                  */
@@ -187,85 +166,58 @@ iframe {
 
 .page-body {
     margin: 0;
-
     padding: 0;
-
-    width: 100%;
 
     min-height: 100vh;
 
-    background-color: #000;
-
-    background-image: url("images/bg.jpg");
-
-    background-position: top center;
-
-    background-repeat: no-repeat;
-
-    background-attachment: fixed;
+    background:
+        #000
+        url("images/bg.jpg")
+        top center
+        no-repeat
+        fixed;
 
     color: #FFF;
 }
 
-
 /* ========================= */
-/* Estrutura Interna         */
+/* Página                     */
 /* ========================= */
 
 .wrapper {
     width: 800px;
 
-    min-height: 100vh;
-
     margin: 0 auto;
 
     display: flex;
 
-    background: #050505;
+    min-height: 100vh;
+
+    background: #000;
 }
-
-
-/* ========================= */
-/* Laterais                  */
-/* ========================= */
 
 .side {
     width: 16px;
 
-    min-height: 100vh;
-
     flex-shrink: 0;
 
     background:
+        #000
         url("images/structure/sides.png")
         repeat-y
         top center;
 }
 
-
-/* ========================= */
-/* Conteúdo Interno          */
-/* ========================= */
-
 .page-content {
     flex: 1;
-
-    min-height: 100vh;
 
     background: #050505;
 
     padding: 25px;
-
-    box-sizing: border-box;
-
-    display: flex;
-
-    flex-direction: column;
 }
 
-
 /* ========================= */
-/* Título da Página          */
+/* Títulos                    */
 /* ========================= */
 
 .page-title {
@@ -276,7 +228,6 @@ iframe {
     font-size: 18px;
 
     font-weight: bold;
-
     font-style: italic;
 
     color: #FFFFFF;
@@ -286,11 +237,6 @@ iframe {
     letter-spacing: 2px;
 }
 
-
-/* ========================= */
-/* Separador                 */
-/* ========================= */
-
 .page-content hr {
     border: 0;
 
@@ -298,11 +244,6 @@ iframe {
 
     margin: 20px 0;
 }
-
-
-/* ========================= */
-/* Texto                     */
-/* ========================= */
 
 .page-text {
     text-align: center;
@@ -312,13 +253,12 @@ iframe {
     color: #FFF;
 }
 
-
 /* ========================= */
-/* News                      */
+/* Notícias                   */
 /* ========================= */
 
 .news-box {
-    margin-top: auto;
+    margin-top: 30px;
 
     border: 1px solid #333;
 
@@ -351,6 +291,8 @@ iframe {
     padding: 12px;
 
     border-bottom: 1px solid #222;
+
+    background: #070707;
 }
 
 .news-item:last-child {
@@ -359,8 +301,6 @@ iframe {
 
 .news-date {
     color: #888;
-
-    font-family: Verdana, Arial, sans-serif;
 
     font-size: 10px;
 
@@ -372,11 +312,10 @@ iframe {
 .news-text {
     color: #FFF;
 
-    font-family: Verdana, Arial, sans-serif;
-
     font-size: 12px;
 
     font-style: italic;
 
     line-height: 18px;
 }
+```
