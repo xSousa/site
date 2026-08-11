@@ -18,7 +18,7 @@
         }
 
         .box {
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             background: #1c1c1c;
             padding: 25px;
@@ -63,8 +63,44 @@
             background: #444;
         }
 
+        .delete-button {
+            background: #600;
+            border-color: #900;
+            margin-top: 10px;
+        }
+
+        .delete-button:hover {
+            background: #900;
+        }
+
         #status {
             margin-top: 20px;
+        }
+
+        .news-list {
+            margin-top: 40px;
+        }
+
+        .news-item {
+            border: 1px solid #444;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #151515;
+        }
+
+        .news-date {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .news-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .news-text {
+            margin-top: 10px;
         }
 
     </style>
@@ -76,6 +112,8 @@
 <div class="box">
 
     <h1>Test News</h1>
+
+    <!-- PUBLICAR -->
 
     <form id="news-form">
 
@@ -108,6 +146,19 @@
 
     <div id="status"></div>
 
+
+    <!-- NOTÍCIAS -->
+
+    <div class="news-list">
+
+        <h2>Existing News</h2>
+
+        <div id="news-container">
+            Loading...
+        </div>
+
+    </div>
+
 </div>
 
 
@@ -118,13 +169,21 @@
     import {
         collection,
         addDoc,
-        serverTimestamp
+        serverTimestamp,
+        getDocs,
+        query,
+        orderBy,
+        deleteDoc,
+        doc
     } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 
     const form = document.getElementById("news-form");
     const status = document.getElementById("status");
+    const container = document.getElementById("news-container");
 
+
+    // PUBLICAR NOTÍCIA
 
     form.addEventListener("submit", async (event) => {
 
@@ -133,9 +192,7 @@
         const title = document.getElementById("title").value;
         const text = document.getElementById("text").value;
 
-
         status.textContent = "Publishing...";
-
 
         try {
 
@@ -147,11 +204,11 @@
 
             });
 
-
             status.textContent = "News published successfully!";
 
             form.reset();
 
+            loadNews();
 
         } catch (error) {
 
@@ -163,6 +220,125 @@
         }
 
     });
+
+
+    // CARREGAR NOTÍCIAS
+
+    async function loadNews() {
+
+        try {
+
+            const q = query(
+                collection(db, "news"),
+                orderBy("date", "desc")
+            );
+
+            const snapshot = await getDocs(q);
+
+            container.innerHTML = "";
+
+            if (snapshot.empty) {
+
+                container.innerHTML = "No news.";
+
+                return;
+
+            }
+
+
+            snapshot.forEach((newsDoc) => {
+
+                const news = newsDoc.data();
+
+                const item = document.createElement("div");
+
+                item.classList.add("news-item");
+
+
+                const date = news.date
+                    ? news.date.toDate().toLocaleDateString("en-GB")
+                    : "Unknown date";
+
+
+                item.innerHTML = `
+
+                    <div class="news-date">
+                        ${date}
+                    </div>
+
+                    <div class="news-title">
+                        ${news.title}
+                    </div>
+
+                    <div class="news-text">
+                        ${news.text}
+                    </div>
+
+                    <button class="delete-button">
+                        Delete
+                    </button>
+
+                `;
+
+
+                // BOTÃO APAGAR
+
+                const deleteButton =
+                    item.querySelector(".delete-button");
+
+
+                deleteButton.addEventListener("click", async () => {
+
+                    const confirmed = confirm(
+                        "Are you sure you want to delete this news?"
+                    );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+
+                    try {
+
+                        await deleteDoc(
+                            doc(db, "news", newsDoc.id)
+                        );
+
+                        item.remove();
+
+                    } catch (error) {
+
+                        console.error(error);
+
+                        alert(
+                            "Error deleting news: " +
+                            error.message
+                        );
+
+                    }
+
+                });
+
+
+                container.appendChild(item);
+
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            container.innerHTML =
+                "Error loading news.";
+
+        }
+
+    }
+
+
+    // CARREGAR AO ABRIR
+
+    loadNews();
 
 </script>
 
