@@ -28,14 +28,23 @@ async function loadNews(){
 
             const news = doc.data();
 
-            container.innerHTML += `
-                <div class="news-item">
-                    <div class="news-date">${news.date}</div>
-                    <div class="news-text">${news.text}</div>
-                </div>
-            `;
+container.innerHTML += `
+<div class="news-item">
 
-        });
+    <div class="news-date">
+        ${news.date.toDate().toLocaleDateString("en-GB")}
+    </div>
+
+    <div class="news-title">
+        ${news.title}
+    </div>
+
+    <div class="news-text">
+        ${news.text}
+    </div>
+
+</div>
+`;
 
     }catch(err){
 

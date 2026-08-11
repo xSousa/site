@@ -168,6 +168,20 @@ iframe{
 
 }
 
+.news-title{
+
+    color:#FFF;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    font-style:normal;
+
+    margin-bottom:6px;
+
+}
+
 .wrapper{
 
     width:800px;
