@@ -1,10 +1,12 @@
-```css
+css
 html,
 body {
     margin: 0;
     padding: 0;
-    background: #000;
+
+    background: #000 !important;
     color: #fff;
+
     font-family: Verdana, Arial, sans-serif;
     font-size: 12px;
     font-style: italic;
@@ -12,26 +14,26 @@ body {
 }
 
 /* ========================= */
-/* ESTRUTURA                 */
+/* SITE PRINCIPAL             */
 /* ========================= */
 
 .layout {
     width: 900px;
     margin: 0 auto;
-    padding: 0;
-    border: 0;
+
     border-collapse: collapse;
     border-spacing: 0;
-    background-color: #000;
+
+    background: #000 !important;
 }
 
-/* Todas as células da tabela são pretas */
 .layout tr,
 .layout td {
     padding: 0;
     margin: 0;
     border: 0;
-    background-color: #000;
+
+    background: #000 !important;
 }
 
 /* ========================= */
@@ -40,16 +42,22 @@ body {
 
 .header {
     width: 900px;
-    height: auto;
-    background-color: #000 !important;
+
+    padding: 0 !important;
+    margin: 0;
+
+    background: #000 !important;
 }
 
 #header-image {
     display: block;
+
     width: 900px;
     height: auto;
-    margin: 0;
+
     padding: 0;
+    margin: 0;
+
     border: 0;
 }
 
@@ -64,12 +72,13 @@ body {
     padding: 0 !important;
     margin: 0;
 
-    background-color: #080808 !important;
+    background: #080808 !important;
 
     border-top: 1px solid #333 !important;
     border-bottom: 1px solid #333 !important;
 
     display: flex;
+
     justify-content: center;
     align-items: center;
 
@@ -88,9 +97,9 @@ body {
     padding: 0;
     margin: 0;
 
-    background-color: #080808;
-
     flex: 0 0 150px;
+
+    background: #080808;
 }
 
 .menu img {
@@ -110,20 +119,23 @@ body {
 }
 
 /* ========================= */
-/* CONTEÚDO                  */
+/* IFRAME                    */
 /* ========================= */
 
 .content {
     width: 900px;
+
     padding: 0 !important;
     margin: 0;
-    background-color: #000 !important;
+
+    background: #000 !important;
 }
 
 iframe {
     display: block;
 
     width: 900px;
+
     height: calc(100vh - 232px);
 
     padding: 0;
@@ -131,7 +143,7 @@ iframe {
 
     border: 0;
 
-    background-color: #000 !important;
+    background: #000 !important;
 }
 
 /* ========================= */
@@ -145,18 +157,20 @@ iframe {
     padding: 0;
     margin: 0;
 
-    background-color: #050505 !important;
+    background: #050505 !important;
 
     color: #666;
 
     font-size: 11px;
+
     text-align: center;
 
     border-top: 1px solid #333 !important;
 }
 
+
 /* ================================================= */
-/* PÁGINAS INTERNAS                                  */
+/* PÁGINAS DENTRO DO IFRAME                          */
 /* ================================================= */
 
 .page-body {
@@ -165,24 +179,26 @@ iframe {
 
     min-height: 100vh;
 
-    background-color: #000;
-    background-image: url("images/bg.jpg");
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background:
+        #000
+        url("../images/bg.jpg")
+        top center
+        no-repeat
+        fixed;
 
     color: #fff;
 }
 
 .wrapper {
     width: 800px;
+
     min-height: 100vh;
 
     margin: 0 auto;
 
     display: flex;
 
-    background-color: #000;
+    background: transparent;
 }
 
 .side {
@@ -190,16 +206,17 @@ iframe {
 
     flex-shrink: 0;
 
-    background-color: #000;
-    background-image: url("images/structure/sides.png");
-    background-repeat: repeat-y;
-    background-position: top center;
+    background:
+        transparent
+        url("../images/structure/sides.png")
+        repeat-y
+        top center;
 }
 
 .page-content {
     flex: 1;
 
-    background-color: #050505;
+    background: #050505;
 
     padding: 25px;
 }
@@ -208,6 +225,7 @@ iframe {
     margin: 0 0 20px 0;
 
     font-family: Verdana, Arial, sans-serif;
+
     font-size: 18px;
 
     font-weight: bold;
@@ -222,6 +240,7 @@ iframe {
 
 .page-content hr {
     border: 0;
+
     border-top: 1px solid #333;
 
     margin: 20px 0;
@@ -229,9 +248,12 @@ iframe {
 
 .page-text {
     text-align: center;
+
     line-height: 15px;
+
     color: #fff;
 }
+
 
 /* ========================= */
 /* NEWS                      */
@@ -242,20 +264,22 @@ iframe {
 
     border: 1px solid #333;
 
-    background-color: #070707;
+    background: #070707;
 }
 
 .news-header {
-    background-color: #111;
+    background: #111;
 
     border-bottom: 1px solid #333;
 
     color: #fff;
 
     font-family: Verdana, Arial, sans-serif;
+
     font-size: 12px;
 
     font-style: normal;
+
     font-weight: bold;
 
     padding: 6px 10px;
@@ -270,7 +294,7 @@ iframe {
 
     border-bottom: 1px solid #222;
 
-    background-color: #070707;
+    background: #070707;
 }
 
 .news-item:last-child {
