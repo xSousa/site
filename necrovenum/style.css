@@ -56,51 +56,19 @@ body{
 /* Menu                      */
 /* ========================= */
 
-.menu{
-
-    background:#080808;
-
-    border-top:1px solid #333;
-    border-bottom:1px solid #333;
-
-    text-align:center;
-
-    padding:0;
-
-    line-height:0;
-
-    font-size:0;
-
-    height:20px;
-
+.menu {
+    white-space: nowrap;
+    text-align: center;
+    padding: 0;
 }
 
-.menu a{
-
-    display:inline-block;
-
-    margin:0;
-    padding:0;
-
-    line-height:0;
-
+.menu a {
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.menu img{
-
-    display:block;
-
-    width:214px;
-    height:20px;
-
-    border:0;
-
-}
-
-.menu img:hover{
-
-    opacity:.8;
-
+.menu img {
+    display: block;
 }
 
 /* ========================= */
