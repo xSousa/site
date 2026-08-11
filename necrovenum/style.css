@@ -1,23 +1,18 @@
+```css
 html,
+body {
+    margin: 0;
+    padding: 0;
 
-body{
+    background: #000;
+    color: #FFF;
 
-    margin:0;
-    padding:0;
-
-    background:#000;
-
-    color:#FFF;
-
-    font-family:Verdana, Arial, sans-serif;
-
-    font-size:12px;
-
-    font-style:italic;
-
-    font-weight:bold;
-
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
 }
+
 
 /* ========================= */
 /* Estrutura Principal       */
@@ -25,9 +20,16 @@ body{
 
 .layout {
     width: 900px;
+    min-height: 100vh;
+
     margin: 0 auto;
+
     border-collapse: collapse;
+
+    display: flex;
+    flex-direction: column;
 }
+
 
 /* ========================= */
 /* Header                    */
@@ -35,22 +37,34 @@ body{
 
 .header {
     width: 900px;
+
     text-align: center;
     vertical-align: middle;
+
+    flex-shrink: 0;
 }
 
 #header-image {
     width: 900px;
     height: auto;
+
     display: block;
     margin: 0 auto;
 }
+
+#logo {
+    margin-top: 20px;
+    height: 130px;
+}
+
 
 /* ========================= */
 /* Menu                      */
 /* ========================= */
 
 .menu {
+    width: 900px;
+
     background: #080808;
 
     border-top: 1px solid #333;
@@ -66,6 +80,8 @@ body{
     margin: 0;
 
     overflow: hidden;
+
+    flex-shrink: 0;
 }
 
 .menu a {
@@ -73,6 +89,9 @@ body{
 
     width: 214px;
     height: 20px;
+
+    padding: 0;
+    margin: 0;
 
     flex-shrink: 0;
 }
@@ -90,255 +109,222 @@ body{
     opacity: .8;
 }
 
+
 /* ========================= */
 /* Iframe                    */
 /* ========================= */
 
-.content{
+.content {
+    padding: 0;
+    background: #000;
 
-    padding:0;
-
-    background:#000;
-
+    flex: 1;
 }
 
-iframe{
+iframe {
+    display: block;
 
-    display:block;
+    width: 100%;
 
-    width:100%;
+    height: calc(100vh - 252px);
 
-    height:calc(100vh - 232px);
+    border: 0;
 
-    border:0;
-
-    background:#000;
-
+    background: #000;
 }
+
 
 /* ========================= */
 /* Rodapé                    */
 /* ========================= */
 
-.footer{
+.footer {
+    width: 900px;
 
-    height:30px;
+    height: 30px;
 
-    background:#050505;
+    background: #050505;
 
-    color:#666;
+    color: #666;
 
-    font-size:11px;
+    font-size: 11px;
 
-    text-align:center;
+    text-align: center;
 
-    border-top:1px solid #333;
+    border-top: 1px solid #333;
 
+    flex-shrink: 0;
+
+    box-sizing: border-box;
 }
+
 
 /* ================================================= */
 /*                 PÁGINAS INTERNAS                  */
 /* ================================================= */
 
-.page-body{
+.page-body {
+    margin: 0;
+    padding: 0;
 
-    margin:0;
-    padding:0;
+    background:
+        #000 url("images/bg.jpg")
+        top center
+        no-repeat
+        fixed;
 
-    background:#000 url("images/bg.jpg") top center no-repeat fixed;
-
-    color:#FFF;
-
+    color: #FFF;
 }
 
-.news-title{
 
-    color:#FFF;
+/* ========================= */
+/* Estrutura Interna         */
+/* ========================= */
 
-    font-size:13px;
+.wrapper {
+    width: 800px;
 
-    font-family:Verdana, Arial, sans-serif;
+    margin: 0 auto;
 
-    font-style:normal;
+    display: flex;
 
-    font-weight:bold;
-
-    margin-bottom:5px;
-
+    min-height: 100vh;
 }
 
-.news-date{
+.side {
+    width: 16px;
 
-    color:#777;
+    flex-shrink: 0;
 
-    font-size:10px;
-
-    font-family:Verdana, Arial, sans-serif;
-
-    font-style:normal;
-
-    margin-bottom:6px;
-
+    background:
+        url("images/structure/sides.png")
+        repeat-y
+        top center;
 }
 
-.news-text{
+.page-content {
+    flex: 1;
 
-    color:#FFF;
+    background: #050505;
 
-    font-size:12px;
+    padding: 25px;
 
-    font-family:Verdana, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
 
-    font-style:italic;
-
-    line-height:18px;
-
+    box-sizing: border-box;
 }
 
-.wrapper{
 
-    width:800px;
+/* ========================= */
+/* Título da Página          */
+/* ========================= */
 
-    margin:0 auto;
+.page-title {
+    margin: 0 0 20px 0;
 
-    display:flex;
+    font-family: Verdana, Arial, sans-serif;
 
-    min-height:100vh;
+    font-size: 18px;
 
+    font-weight: bold;
+
+    font-style: italic;
+
+    color: #FFFFFF;
+
+    text-align: center;
+
+    letter-spacing: 2px;
 }
 
-.side{
 
-    width:16px;
+/* ========================= */
+/* Texto                     */
+/* ========================= */
 
-    flex-shrink:0;
+.page-content hr {
+    border: 0;
 
-    background:url("images/structure/sides.png") repeat-y top center;
+    border-top: 1px solid #333;
 
+    margin: 20px 0;
 }
 
-.page-content{
+.page-text {
+    text-align: center;
 
-    flex:1;
+    line-height: 15px;
 
-    background:#050505;
-
-    padding:25px;
-
+    color: #FFF;
 }
 
-.page-title{
-
-    margin:0 0 20px 0;
-
-    font-family:Verdana, Arial, sans-serif;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    font-style:italic;
-
-    color:#FFFFFF;
-
-    text-align:center;
-
-    letter-spacing:2px;
-
-}
-
-.page-content hr{
-
-    border:0;
-
-    border-top:1px solid #333;
-
-    margin:20px 0;
-
-}
-
-.page-text{
-
-    text-align:center;
-
-    line-height:15px;
-
-    color:#FFF;
-
-}
 
 /* ========================= */
 /* News                      */
 /* ========================= */
 
-.news-box{
+.news-box {
+    margin-top: auto;
 
-    margin-top:30px;
+    border: 1px solid #333;
 
-    border:1px solid #333;
-
-    background:#070707;
-
+    background: #070707;
 }
 
-.news-header{
+.news-header {
+    background: #111;
 
-    background:#111;
+    border-bottom: 1px solid #333;
 
-    border-bottom:1px solid #333;
+    color: #FFFFFF;
 
-    color:#FFFFFF;
+    font-family: Verdana, Arial, sans-serif;
 
-    font-family:Verdana, Arial, sans-serif;
+    font-size: 12px;
 
-    font-size:12px;
+    font-style: normal;
 
-    font-style:normal;
+    font-weight: bold;
 
-    font-weight:bold;
+    padding: 6px 10px;
 
-    padding:6px 10px;
+    text-transform: uppercase;
 
-    text-transform:uppercase;
-
-    letter-spacing:1px;
-
+    letter-spacing: 1px;
 }
 
-.news-item{
+.news-item {
+    padding: 12px;
 
-    padding:12px;
-
-    border-bottom:1px solid #222;
-
+    border-bottom: 1px solid #222;
 }
 
-.news-item:last-child{
-
-    border-bottom:none;
-
+.news-item:last-child {
+    border-bottom: none;
 }
 
-.news-date{
+.news-date {
+    color: #888;
 
-    color:#888;
+    font-family: Verdana, Arial, sans-serif;
 
-    font-size:10px;
+    font-size: 10px;
 
-    font-style:normal;
+    font-style: normal;
 
-    margin-bottom:5px;
-
+    margin-bottom: 5px;
 }
 
-.news-text{
+.news-text {
+    color: #FFF;
 
-    color:#FFF;
+    font-family: Verdana, Arial, sans-serif;
 
-    font-size:12px;
+    font-size: 12px;
 
-    font-style:italic;
+    font-style: italic;
 
-    line-height:18px;
-
+    line-height: 18px;
 }
+```
