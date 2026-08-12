@@ -138,19 +138,11 @@ iframe {
 .page-body {
     margin: 0;
     padding: 0;
-    min-min-height:100vh;
-    background: #000;
+    background: #050505;
     color: #FFF;
 }
 
-.wrapper {
-    width: 800px;
-    height:100%;
-    align-items:stretch;
-    margin: 0 auto;
-    display: flex;
-    background: transparent;
-}
+
 
 /* ========================= */
 /* BARRAS LATERAIS */
@@ -167,11 +159,12 @@ iframe {
 /* ========================= */
 
 .page-content {
-    flex: 1;
+    min-height: 670px;
     background: #050505;
     padding: 15px 25px;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 /* ========================= */
@@ -268,4 +261,31 @@ iframe {
     font-size: 11px;
     font-style: italic;
     line-height: 16px;
+}
+
+/* ========================= */
+/* Estrutura do iframe */
+/* ========================= */
+
+.content-layout{
+    width:100%;
+    height:100%;
+    border-collapse:collapse;
+}
+
+.content-layout .side{
+    width:16px;
+    background:url("images/structure/sides.png") repeat-y;
+}
+
+.iframe-cell{
+    background:#050505;
+}
+
+.iframe-cell iframe{
+    display:block;
+    width:100%;
+    height:700px;
+    border:0;
+    background:#050505;
 }
