@@ -157,8 +157,8 @@ iframe {
 
 .side {
     width: 16px;
-    min-width: 16px;
-    background: url("../images/structure/sides.png") repeat-y center top;
+    flex: 0 0 16px;
+    background: url("images/structure/sides.png") repeat-y center top;
 }
 
 /* ========================= */
