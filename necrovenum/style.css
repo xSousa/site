@@ -178,11 +178,10 @@ iframe {
 .page-content {
     flex: 1;
     background: #050505;
-    padding: 15px 25px 15px 25px;
+    padding: 15px 25px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 0;
 }
 
 /* ========================= */
@@ -238,12 +237,16 @@ iframe {
 }
 
 .news-box {
+    margin-top: auto;
     border: 1px solid #333;
     background: #070707;
-    margin-top: auto;
-    flex-shrink: 0;
-    max-height: 200px;
-    overflow: hidden;
+    height: 180px;
+    overflow-y: auto;
+}
+
+#news-container {
+    height: calc(180px - 25px);
+    overflow-y: auto;
 }
 
 .news-header {
