@@ -145,7 +145,8 @@ iframe {
 
 .wrapper {
     width: 800px;
-    min-min-height:100vh;
+    height:100%;
+    align-items:stretch;
     margin: 0 auto;
     display: flex;
     background: transparent;
@@ -155,10 +156,10 @@ iframe {
 /* BARRAS LATERAIS */
 /* ========================= */
 
-.side {
-    width: 16px;
-    flex: 0 0 16px;
-    background: url("images/structure/sides.png") repeat-y center top;
+.side{
+    width:16px;
+    flex:0 0 16px;
+    background:url("images/structure/sides.png") repeat-y top center;
 }
 
 /* ========================= */
@@ -167,10 +168,10 @@ iframe {
 
 .page-content {
     flex: 1;
-    position: relative;
     background: #050505;
-    padding: 15px 25px 200px 25px;
-    box-sizing: border-box;
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ========================= */
@@ -217,15 +218,14 @@ iframe {
 /* ========================= */
 
 .news-wrapper {
-    position: absolute;
-    left: 25px;
-    right: 25px;
-    bottom: 15px;
+    margin-top: auto;
+    padding-top: 30px;
 }
 
 .news-box {
     border: 1px solid #333;
     background: #070707;
+    margin-bottom: 15px;
 }
 
 #news-container {
