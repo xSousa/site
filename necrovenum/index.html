@@ -2,51 +2,72 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>NECROVENUM</title>
-    <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<title>NECROVENUM</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<div id="container">
+<table class="layout" cellspacing="0" cellpadding="0">
 
-    <div id="top">
-        <img src="images/header.png" id="logo" alt="Necrovenum">
-    </div>
+<tr>
 
-    <div id="menu">
-        <a href="pages/home.html" target="main"><img src="images/buttons/home.png" alt="Home"></a>
-        <a href="pages/news.html" target="main"><img src="images/buttons/news.png" alt="News"></a>
-        <a href="pages/band.html" target="main"><img src="images/buttons/band.png" alt="Band"></a>
-        <a href="pages/music.html" target="main"><img src="images/buttons/music.png" alt="Music"></a>
-        <a href="pages/gallery.html" target="main"><img src="images/buttons/gallery.png" alt="Gallery"></a>
-        <a href="pages/contact.html" target="main"><img src="images/buttons/contact.png" alt="Contact"></a>
-    </div>
+<td class="header">
+    <img src="images/header.png" id="header-image">
+</td>
 
-    <div id="content">
+</tr>
 
-        <table class="content-layout" cellspacing="0" cellpadding="0">
-            <tr>
+<tr>
 
-                <td class="side"></td>
+<td class="menu">
+    <a href="pages/home.html" target="main"><img src="images/buttons/home.png" alt="Home"></a>
+    <a href="pages/news.html" target="main"><img src="images/buttons/news.png" alt="News"></a>
+    <a href="pages/band.html" target="main"><img src="images/buttons/band.png" alt="Band"></a>
+    <a href="pages/music.html" target="main"><img src="images/buttons/music.png" alt="Music"></a>
+    <a href="pages/gallery.html" target="main"><img src="images/buttons/gallery.png" alt="Gallery"></a>
+    <a href="pages/contact.html" target="main"><img src="images/buttons/contact.png" alt="Contact"></a>
+</td>
 
-                <td class="iframe-cell">
-                    <iframe id="mainframe" src="pages/home.html" name="main"></iframe>
-                </td>
+</tr>
 
-                <td class="side"></td>
+<tr>
 
-            </tr>
-        </table>
+<td class="content">
 
-    </div>
+    <table class="content-layout" cellspacing="0" cellpadding="0">
+        <tr>
 
-    <div id="footer">
-        © 2026 NECROVENUM
-    </div>
+            <td class="side"></td>
 
-</div>
+            <td class="iframe-cell">
+                <iframe src="pages/home.html" name="main"></iframe>
+            </td>
+
+            <td class="side"></td>
+
+        </tr>
+    </table>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td class="footer">
+
+© 2026 NECROVENUM
+
+</td>
+
+</tr>
+
+</table>
 
 </body>
 </html>

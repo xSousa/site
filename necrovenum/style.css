@@ -3,10 +3,9 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-    min-height:100%;
-    overflow-x:hidden;
-    overflow-y:auto;
-    background: #000 !important;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
     color: #FFF;
     font-family: Verdana, Arial, sans-serif;
     font-size: 12px;
@@ -15,20 +14,19 @@ body {
 }
 
 /* ========================= */
-/* Estrutura Principal        */
+/* Estrutura Principal */
 /* ========================= */
 
-.layout {
-    width: 900px;
-    min-height:100vh;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background: #000;
-    table-layout: fixed;
+.layout{
+    width:900px;
+    height:100vh;
+    margin:0 auto;
+    border-collapse:collapse;
+    table-layout:fixed;
 }
 
 /* ========================= */
-/* Header                     */
+/* Header */
 /* ========================= */
 
 .header {
@@ -37,32 +35,29 @@ body {
     margin: 0;
     text-align: center;
     vertical-align: middle;
-    background: #000 !important;
+    background: #000;
 }
 
 #header-image {
+    display: block;
     width: 900px;
     height: auto;
-    display: block;
     margin: 0 auto;
-    padding: 0;
 }
 
 /* ========================= */
-/* Menu                       */
+/* Menu */
 /* ========================= */
 
 .menu {
     width: 900px;
     height: 20px;
-    padding: 0;
-    margin: 0;
-    background: #080808 !important;
-    border-top: 1px solid #333;
-    border-bottom: 1px solid #333;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #080808;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
     overflow: hidden;
 }
 
@@ -71,16 +66,12 @@ body {
     width: 150px;
     height: 20px;
     flex: 0 0 150px;
-    padding: 0;
-    margin: 0;
 }
 
 .menu img {
     display: block;
     width: 150px;
     height: 20px;
-    padding: 0;
-    margin: 0;
     border: 0;
 }
 
@@ -89,102 +80,106 @@ body {
 }
 
 /* ========================= */
-/* Conteúdo                   */
+/* Conteúdo */
 /* ========================= */
 
 .content {
     width: 900px;
+    height: calc(100vh - 232px);
     padding: 0;
     margin: 0;
-    background: #000 !important;
-    height:700px;
+    background: #000;
 }
 
 /* ========================= */
-/* Iframe                     */
+/* Iframe */
 /* ========================= */
 
 iframe {
     display: block;
     width: 900px;
     height: 100%;
-    padding: 0;
-    margin: 0;
     border: 0;
-    background: #000 !important;
+    background: #000;
 }
 
 /* ========================= */
-/* Rodapé                     */
+/* Rodapé */
 /* ========================= */
 
 .footer {
     width: 900px;
     height: 30px;
-    padding: 0;
-    margin: 0;
-    background: #050505 !important;
+    line-height: 30px;
+    text-align: center;
+    background: #050505;
     color: #666;
     font-size: 11px;
-    text-align: center;
     border-top: 1px solid #333;
-    line-height: 30px;
 }
 
 /* ================================================= */
-/*                 PÁGINAS INTERNAS                  */
+/* Páginas Internas */
 /* ================================================= */
 
 .page-body {
     margin: 0;
     padding: 0;
-    background: #050505;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
     color: #FFF;
-}
-
-
-
-/* ========================= */
-/* BARRAS LATERAIS */
-/* ========================= */
-
-.side{
-    width:16px;
-    flex:0 0 16px;
-    background:url("images/structure/sides.png") repeat-y top center;
-}
-
-/* ========================= */
-/* CONTEÚDO */
-/* ========================= */
-
-.page-content {
-    min-height: 670px;
-    background: #050505;
-    padding: 15px 25px;
     display: flex;
     flex-direction: column;
+}
+
+.wrapper {
+    width: 800px;
+    height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Laterais */
+
+.side {
+    width: 16px;
+    min-width: 16px;
+    flex-shrink: 0;
+    background: #1a1a1a url("images/structure/sides.png") repeat-y top center;
+    background-size: 16px auto;
+}
+
+/* Conteúdo */
+
+.page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: #050505;
+    padding: 15px 25px;
     box-sizing: border-box;
 }
 
 /* ========================= */
-/* TÍTULO */
+/* Título */
 /* ========================= */
 
 .page-title {
-    margin: 0 0 10px 0;
-    font-family: Verdana, Arial, sans-serif;
+    margin: 0 0 10px;
+    text-align: center;
     font-size: 16px;
     font-weight: bold;
     font-style: italic;
-    color: #fff;
-    text-align: center;
     letter-spacing: 2px;
+    color: #FFF;
     flex-shrink: 0;
 }
 
 /* ========================= */
-/* SEPARADOR */
+/* Separador */
 /* ========================= */
 
 .page-content hr {
@@ -195,48 +190,78 @@ iframe {
 }
 
 /* ========================= */
-/* TEXTO */
-/* ========================= */
-
-.page-text {
-    text-align: center;
-    line-height: 15px;
-    color: #fff;
-    flex-shrink: 0;
-    font-size: 11px;
-}
-
-/* ========================= */
-/* NEWS - FIXO NO FUNDO */
+/* Notícias */
 /* ========================= */
 
 .news-wrapper {
-    margin-top: auto;
-    padding-top: 30px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 0;
 }
 
-.news-box {
-    border: 1px solid #333;
-    background: #070707;
-    margin-bottom: 15px;
+.news-box{
+    margin-top:auto;
+    height:220px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
 
-#news-container {
-    max-height: 155px;
-    overflow-y: auto;
+#news-container{
+    flex:1;
+    overflow-y:auto;
+}
+
+.news-item{
+    padding:10px;
+    border-bottom:1px solid #222;
+    flex-shrink:0;
+}
+
+.news-title{
+    color:#fff;
+    font-size:18px;
+    font-weight:bold;
+    margin:4px 0 8px;
+    font-style:italic;
+}
+
+.news-text{
+    color:#fff;
+    font-size:11px;
+    line-height:16px;
+    white-space:pre-wrap;
+}
+
+.news-footer{
+    height:22px;
+    line-height:22px;
+    background:#111;
+    border-top:1px solid #333;
+    color:#666;
+    font-size:10px;
+    font-style:normal;
+    text-align:center;
+    flex-shrink:0;
 }
 
 .news-header {
     background: #111;
     border-bottom: 1px solid #333;
-    color: #fff;
-    font-family: Verdana, Arial, sans-serif;
+    color: #FFF;
+    padding: 4px 10px;
     font-size: 11px;
     font-style: normal;
     font-weight: bold;
-    padding: 4px 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+#news-container{
+    flex:1;
+    overflow-y:auto;
 }
 
 .news-item {
@@ -257,35 +282,23 @@ iframe {
 }
 
 .news-text {
-    color: #fff;
+    color: #FFF;
     font-size: 11px;
     font-style: italic;
     line-height: 16px;
 }
 
-/* ========================= */
-/* Estrutura do iframe */
-/* ========================= */
-
 .content-layout{
     width:100%;
     height:100%;
-    border-collapse:collapse;
-}
-
-.content-layout .side{
-    width:16px;
-    background:url("images/structure/sides.png") repeat-y;
 }
 
 .iframe-cell{
-    background:#050505;
+    height:100%;
 }
 
-.iframe-cell iframe{
+iframe{
     display:block;
     width:100%;
-    height:700px;
-    border:0;
-    background:#050505;
+    height:100%;
 }
