@@ -1,64 +1,87 @@
-// news.js - Adicionar limpeza do texto
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
+// news.js
+import { db } from "./firebase.js";
 
-const firebaseConfig = {
-    // Seu config aqui
-};
+import {
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    limit
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const newsRef = ref(database, 'news');
+const container = document.getElementById("news-container");
 
 // FUNÇÃO PARA LIMPAR TEXTO
 function cleanText(text) {
     if (!text) return '';
-    // Remove espaços no início e fim
-    let cleaned = text.trim();
-    // Substitui quebras de linha por espaço
-    cleaned = cleaned.replace(/\n/g, ' ');
-    // Remove espaços duplicados
-    cleaned = cleaned.replace(/\s+/g, ' ');
-    return cleaned;
+    return text
+        .trim()
+        .replace(/\n/g, ' ')
+        .replace(/\r/g, ' ')
+        .replace(/\t/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
-onValue(newsRef, (snapshot) => {
-    const container = document.getElementById('news-container');
-    container.innerHTML = '';
-    
-    const data = snapshot.val();
-    
-    if (data) {
-        const newsArray = Object.values(data);
-        
-        newsArray.sort((a, b) => {
-            if (a.timestamp && b.timestamp) {
-                return b.timestamp - a.timestamp;
-            }
-            return 0;
-        });
-        
-        newsArray.forEach((item) => {
-            const newsItem = document.createElement('div');
-            newsItem.className = 'news-item';
-            
-            // LIMPAR O TEXTO
-            const cleanTextContent = cleanText(item.text);
-            const cleanDate = item.date ? item.date.trim() : '';
-            
-            newsItem.innerHTML = `
-                <div class="news-date">${cleanDate}</div>
-                <div class="news-text">${cleanTextContent}</div>
+async function loadNews() {
+    try {
+        const q = query(
+            collection(db, "news"),
+            orderBy("date", "desc"),
+            limit(10) // AUMENTEI PARA 10
+        );
+
+        const snapshot = await getDocs(q);
+
+        container.innerHTML = "";
+
+        if (snapshot.empty) {
+            container.innerHTML = `
+                <div class="news-item">
+                    <div class="news-date">No news available</div>
+                    <div class="news-text">Check back later for updates.</div>
+                </div>
             `;
-            
-            container.appendChild(newsItem);
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const news = doc.data();
+
+            // FORMATAR DATA
+            let dateStr = "";
+            if (news.date) {
+                if (news.date.toDate) {
+                    // Se for Timestamp do Firebase
+                    dateStr = news.date.toDate().toLocaleDateString("en-GB");
+                } else if (typeof news.date === 'string') {
+                    dateStr = news.date;
+                } else {
+                    dateStr = String(news.date);
+                }
+            }
+
+            // LIMPAR TEXTO
+            const cleanTextContent = cleanText(news.text || '');
+            const cleanTitle = cleanText(news.title || '');
+
+            container.innerHTML += `
+                <div class="news-item">
+                    <div class="news-date">${dateStr}</div>
+                    <div class="news-text">${cleanTextContent}</div>
+                </div>
+            `;
         });
-    } else {
+
+    } catch (err) {
+        console.error("Erro ao carregar notícias:", err);
         container.innerHTML = `
             <div class="news-item">
-                <div class="news-date">No news available</div>
-                <div class="news-text">Check back later for updates.</div>
+                <div class="news-date">Error</div>
+                <div class="news-text">Failed to load news. Please try again later.</div>
             </div>
         `;
     }
-});
+}
+
+loadNews();
