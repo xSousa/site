@@ -1,59 +1,64 @@
-import { db } from "./firebase.js";
+// news.js - Adicionar limpeza do texto
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-database.js";
 
-import {
-    collection,
-    getDocs,
-    query,
-    orderBy,
-    limit
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+const firebaseConfig = {
+    // Seu config aqui
+};
 
-const container = document.getElementById("news-container");
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const newsRef = ref(database, 'news');
 
-async function loadNews() {
-
-    try {
-
-        const q = query(
-            collection(db, "news"),
-            orderBy("date", "desc"),
-            limit(5)
-        );
-
-        const snapshot = await getDocs(q);
-
-        container.innerHTML = "";
-
-        snapshot.forEach(doc => {
-
-            const news = doc.data();
-
-            container.innerHTML += `
-                <div class="news-item">
-
-                    <div class="news-date">
-                        ${news.date.toDate().toLocaleDateString("en-GB")}
-                    </div>
-
-                    <div class="news-title">
-                        ${news.title}
-                    </div>
-
-                    <div class="news-text">
-                        ${news.text}
-                    </div>
-
-                </div>
-            `;
-
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-    }
-
+// FUNÇÃO PARA LIMPAR TEXTO
+function cleanText(text) {
+    if (!text) return '';
+    // Remove espaços no início e fim
+    let cleaned = text.trim();
+    // Substitui quebras de linha por espaço
+    cleaned = cleaned.replace(/\n/g, ' ');
+    // Remove espaços duplicados
+    cleaned = cleaned.replace(/\s+/g, ' ');
+    return cleaned;
 }
 
-loadNews();
+onValue(newsRef, (snapshot) => {
+    const container = document.getElementById('news-container');
+    container.innerHTML = '';
+    
+    const data = snapshot.val();
+    
+    if (data) {
+        const newsArray = Object.values(data);
+        
+        newsArray.sort((a, b) => {
+            if (a.timestamp && b.timestamp) {
+                return b.timestamp - a.timestamp;
+            }
+            return 0;
+        });
+        
+        newsArray.forEach((item) => {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            
+            // LIMPAR O TEXTO
+            const cleanTextContent = cleanText(item.text);
+            const cleanDate = item.date ? item.date.trim() : '';
+            
+            newsItem.innerHTML = `
+                <div class="news-date">${cleanDate}</div>
+                <div class="news-text">${cleanTextContent}</div>
+            `;
+            
+            container.appendChild(newsItem);
+        });
+    } else {
+        container.innerHTML = `
+            <div class="news-item">
+                <div class="news-date">No news available</div>
+                <div class="news-text">Check back later for updates.</div>
+            </div>
+        `;
+    }
+});
