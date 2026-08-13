@@ -1,80 +1,65 @@
-html,
-body{
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    background:#000;
-    color:#fff;
-    font-family:Verdana,Arial,sans-serif;
-    overflow:hidden;
-}
+<!DOCTYPE html>
+<html lang="en">
 
-#container{
-    width:900px;
-    height:100%;
-    margin:0 auto;
-    background:#000;
-}
+<head>
+    <meta charset="UTF-8">
+    <title>Necrovenum</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
 
-#top{
-    background:#050505;
-    text-align:center;
-    border-bottom:1px solid #333;
-}
+<body class="page-body">
 
-#logo{
-    display:block;
-    width:900px;
-    height:auto;
-}
+<div class="wrapper">
 
-#menu{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:20px;
-    background:#111;
-    border-top:1px solid #333;
-    border-bottom:1px solid #333;
-}
+    <!-- SIDE ESQUERDA - ADICIONAR DE VOLTA -->
+    <div class="side"></div>
 
-#menu a{
-    display:block;
-    width:150px;
-    height:20px;
-}
+    <div class="page-content">
 
-#menu img{
-    display:block;
-    width:150px;
-    height:20px;
-    border:0;
-}
+        <h2 class="page-title">WELCOME</h2>
 
-#menu img:hover{
-    opacity:.8;
-}
+        <hr>
 
-#content{
-    height:calc(100% - 221px);
-    background:#050505;
-}
+        <p class="page-text">
+            Welcome to the official website of Necrovenum.<br>
+            This website is currently under construction.
+        </p>
 
-#mainframe{
-    display:block;
-    width:100%;
-    height:100%;
-    border:0;
-    background:#050505;
-}
+        <div class="news-wrapper">
 
-#footer{
-    height:30px;
-    line-height:30px;
-    text-align:center;
-    font-size:11px;
-    color:#666;
-    background:#050505;
-    border-top:1px solid #333;
-}
+            <div class="news-box">
+
+                <div class="news-header">
+                    Latest News
+                </div>
+
+                <div id="news-container">
+
+                    <div class="news-item">
+
+                        <div class="news-date">
+                            Loading...
+                        </div>
+
+                        <div class="news-text">
+                            Please wait while news are being loaded.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SIDE DIREITA - ADICIONAR DE VOLTA -->
+    <div class="side"></div>
+
+</div>
+
+<script type="module" src="../news.js"></script>
+</body>
+</html>

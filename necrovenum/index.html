@@ -2,12 +2,52 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-<title>NECROVENUM</title>
-
-<link rel="stylesheet" href="style.css" rel="icon" type="image/png" href="images/icon.png">
-
+    <meta charset="UTF-8">
+    <title>NECROVENUM</title>
+    <link rel="icon" type="image/png" href="images/icon.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* SIDES APENAS NO CONTEÚDO - NÃO PASSAM PELO HEADER/FOOTER */
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            background: #050505;
+        }
+        
+        .content::before,
+        .content::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 16px;
+            background-image: url('images/structure/sides.png');
+            background-repeat: repeat-y;
+            background-position: top center;
+            background-size: 16px auto;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .content::before {
+            left: 0;
+        }
+        
+        .content::after {
+            right: 0;
+        }
+        
+        /* Ajustar o iframe para não cobrir as sides */
+        .content iframe {
+            width: calc(100% - 32px) !important;
+            height: 100%;
+            margin: 0 16px;
+            display: block;
+            border: 0;
+            background: #000;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,56 +55,32 @@
 <table class="layout" cellspacing="0" cellpadding="0">
 
 <tr>
-
-<td class="header">
-    <img src="images/header.png" id="header-image">
-</td>
-
+    <td class="header">
+        <img src="images/header.png" id="header-image" alt="NECROVENUM Header">
+    </td>
 </tr>
 
 <tr>
-
-<td class="menu">
-    <a href="pages/home.html" target="main"><img src="images/buttons/home.png" alt="Home"></a>
-    <a href="pages/news.html" target="main"><img src="images/buttons/news.png" alt="News"></a>
-    <a href="pages/band.html" target="main"><img src="images/buttons/band.png" alt="Band"></a>
-    <a href="pages/music.html" target="main"><img src="images/buttons/music.png" alt="Music"></a>
-    <a href="pages/gallery.html" target="main"><img src="images/buttons/gallery.png" alt="Gallery"></a>
-    <a href="pages/contact.html" target="main"><img src="images/buttons/contact.png" alt="Contact"></a>
-</td>
-
+    <td class="menu">
+        <a href="pages/home.html" target="main"><img src="images/buttons/home.png" alt="Home"></a>
+        <a href="pages/news.html" target="main"><img src="images/buttons/news.png" alt="News"></a>
+        <a href="pages/band.html" target="main"><img src="images/buttons/band.png" alt="Band"></a>
+        <a href="pages/music.html" target="main"><img src="images/buttons/music.png" alt="Music"></a>
+        <a href="pages/gallery.html" target="main"><img src="images/buttons/gallery.png" alt="Gallery"></a>
+        <a href="pages/contact.html" target="main"><img src="images/buttons/contact.png" alt="Contact"></a>
+    </td>
 </tr>
 
 <tr>
-
-<td class="content">
-
-    <table class="content-layout" cellspacing="0" cellpadding="0">
-        <tr>
-
-            <td class="side"></td>
-
-            <td class="iframe-cell">
-                <iframe src="pages/home.html" name="main"></iframe>
-            </td>
-
-            <td class="side"></td>
-
-        </tr>
-    </table>
-
-</td>
-
+    <td class="content" style="height:100%;">
+        <iframe src="pages/home.html" name="main"></iframe>
+    </td>
 </tr>
 
 <tr>
-
-<td class="footer">
-
-© 2026 NECROVENUM
-
-</td>
-
+    <td class="footer">
+        © 2026 NECROVENUM
+    </td>
 </tr>
 
 </table>
