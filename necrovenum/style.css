@@ -238,20 +238,19 @@ iframe {
 }
 
 /* ========================= */
-/* NEWS - COM 1cm DE DISTÂNCIA DO FOOTER */
+/* NEWS - CORRIGIDO */
 /* ========================= */
 
 .news-wrapper {
-    flex-shrink: 0; /* NÃO CRESCE */
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    margin-top: auto; /* EMPURRA PARA BAIXO */
-    padding-bottom: 1cm; /* 1cm = 37.795px ≈ 38px, mas 1cm = 0.3937 polegadas */
-    /* OU USE px: padding-bottom: 38px; */
+    margin-top: auto;
+    padding-bottom: 38px; /* 1cm de distância do footer */
 }
 
 .news-box {
-    height: 150px; /* TAMANHO FIXO */
+    height: 150px;
     border: 1px solid #333;
     background: #070707;
     display: flex;
@@ -300,7 +299,8 @@ iframe {
     color: #fff;
     font-size: 11px;
     line-height: 16px;
-    white-space: pre-wrap;
+    white-space: normal; /* ← MUDAR DE pre-wrap PARA normal */
+    word-wrap: break-word;
 }
 
 .content-layout {
